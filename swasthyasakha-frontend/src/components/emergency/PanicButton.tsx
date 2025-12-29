@@ -27,21 +27,21 @@ export function PanicButton() {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto">
+        <div className="w-full h-full flex flex-col justify-center">
             {!showOptions ? (
                 <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={handlePanicClick}
-                    className="w-full aspect-video bg-red-600 rounded-3xl shadow-xl shadow-red-500/30 flex flex-col items-center justify-center gap-4 text-white border-4 border-red-500 relative overflow-hidden group"
+                    className="w-full h-full min-h-[160px] bg-red-600 rounded-3xl shadow-xl shadow-red-500/30 flex flex-col items-center justify-center gap-3 text-white border-4 border-red-500 relative overflow-hidden group transition-all"
                 >
                     <div className="absolute inset-0 bg-gradient-to-t from-red-900/50 to-transparent" />
-                    <div className="relative z-10 flex flex-col items-center gap-2">
-                        <div className="p-4 bg-white/10 rounded-full animate-pulse">
-                            <AlertTriangle className="h-12 w-12" />
+                    <div className="relative z-10 flex flex-col items-center gap-1">
+                        <div className="p-3 bg-white/10 rounded-full animate-pulse">
+                            <AlertTriangle className="h-8 w-8" />
                         </div>
-                        <span className="text-3xl font-black tracking-wider">EMERGENCY SOS</span>
-                        <span className="text-red-200 text-sm font-medium">Tap for Ambulance / Medical</span>
+                        <span className="text-xl font-black tracking-wider">EMERGENCY SOS</span>
+                        <span className="text-red-200 text-xs font-medium">Tap for Help</span>
                     </div>
                 </motion.button>
             ) : (

@@ -48,7 +48,7 @@ export function PreparednessChecklist() {
     );
 
     return (
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm h-full flex flex-col">
             <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600">
                     <ClipboardList className="h-6 w-6" />

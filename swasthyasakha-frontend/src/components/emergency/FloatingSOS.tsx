@@ -18,12 +18,12 @@ export function FloatingSOS() {
         animate={{ scale: 1, opacity: 1 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        className="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-red-600 shadow-lg shadow-red-600/30 ring-4 ring-red-600/20 transition-all hover:bg-red-700 hover:shadow-red-600/50 focus:outline-none focus:ring-red-500"
+        className="fixed bottom-6 right-6 z-50 flex h-10 w-10 items-center justify-center rounded-full bg-red-600 shadow-lg shadow-red-600/30 ring-4 ring-red-600/20 transition-all hover:bg-red-700 hover:shadow-red-600/50 focus:outline-none focus:ring-red-500"
         aria-label="Emergency SOS"
       >
         <div className="flex flex-col items-center justify-center">
-          <span className="text-[10px] font-bold text-white">SOS</span>
-          <Phone className="h-6 w-6 text-white animate-pulse" fill="currentColor" />
+          <span className="text-[7px] font-bold text-white">SOS</span>
+          <Phone className="h-3.5 w-3.5 text-white animate-pulse" fill="currentColor" />
         </div>
       </motion.button>
     </Link>
