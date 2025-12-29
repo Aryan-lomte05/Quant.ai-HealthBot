@@ -52,9 +52,13 @@ type Citation = {
 
 type SymptomCluster = {
   id: string;
+  icon: string;
+  title: string;
   symptoms: string[];
-  severity: "low" | "medium" | "high";
-  relatedConditions: string[];
+  description: string;
+  color: string;
+  severity?: "low" | "medium" | "high";
+  relatedConditions?: string[];
 };
 
 type ProactiveTip = {
@@ -135,6 +139,59 @@ const mockTips: ProactiveTip[] = [
     bookmarked: false,
   },
 ];
+
+// Symptom Clusters for Quick Selection
+const symptomClusters = [
+  {
+    id: "fever-cold",
+    icon: "🤒",
+    title: "Fever & Cold",
+    symptoms: ["fever", "runny nose", "cough", "sore throat"],
+    description: "Common cold or flu symptoms",
+    color: "from-orange-500/20 to-red-500/20",
+  },
+  {
+    id: "headache",
+    icon: "🤕",
+    title: "Headache",
+    symptoms: ["headache", "dizziness", "nausea"],
+    description: "Head pain and related symptoms",
+    color: "from-purple-500/20 to-pink-500/20",
+  },
+  {
+    id: "stomach",
+    icon: "🤢",
+    title: "Stomach Issues",
+    symptoms: ["stomach pain", "nausea", "vomiting", "diarrhea"],
+    description: "Digestive problems",
+    color: "from-yellow-500/20 to-orange-500/20",
+  },
+  {
+    id: "respiratory",
+    icon: "😷",
+    title: "Breathing Issues",
+    symptoms: ["shortness of breath", "chest tightness", "wheezing"],
+    description: "Respiratory difficulties",
+    color: "from-blue-500/20 to-cyan-500/20",
+  },
+  {
+    id: "body-pain",
+    icon: "💪",
+    title: "Body Pain",
+    symptoms: ["body ache", "joint pain", "muscle pain", "fatigue"],
+    description: "General body discomfort",
+    color: "from-emerald-500/20 to-teal-500/20",
+  },
+  {
+    id: "skin",
+    icon: "🩹",
+    title: "Skin Problems",
+    symptoms: ["rash", "itching", "redness", "swelling"],
+    description: "Skin-related issues",
+    color: "from-pink-500/20 to-rose-500/20",
+  },
+];
+
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>(mockResponses);
@@ -449,289 +506,91 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden" style={{ scrollBehavior: 'smooth' }}>
-      {/* ULTRA-PREMIUM Animated Background with Advanced Effects */}
-      <div className="fixed inset-0 -z-10">
-        {/* Base Animated Gradient Layer */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundSize: '400% 400%',
-            animation: 'gradient-flow 20s ease-in-out infinite',
-            backgroundImage: 'linear-gradient(135deg, #0B5345 0%, #196F3D 10%, #1E8449 20%, #7D3C00 30%, #A04000 40%, #C87000 50%, #985A00 60%, #6B4500 70%, #4A3200 80%, #2C1810 90%, #1A120B 100%)'
-          }}
-        />
-
-        {/* Mesh Gradient Overlay for Depth */}
-        <div
-          className="absolute inset-0 opacity-50"
-          style={{
-            background: 'radial-gradient(circle at 20% 50%, rgba(25, 111, 61, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(160, 64, 0, 0.35) 0%, transparent 50%), radial-gradient(circle at 40% 20%, rgba(30, 132, 73, 0.3) 0%, transparent 50%)',
-            mixBlendMode: 'overlay'
-          }}
-        />
-
-        {/* Grain Texture for Premium Feel */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.15] mix-blend-overlay">
-          <filter id="noise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
-            <feColorMatrix type="saturate" values="0" />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noise)" />
-        </svg>
-
-        {/* Animated Light Rays */}
-        <motion.div
-          className="absolute inset-0 opacity-20"
-          style={{
-            background: 'linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%)',
-            backgroundSize: '200% 200%'
-          }}
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%']
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            repeatType: 'reverse',
-            ease: 'linear'
-          }}
-        />
-
-        {/* Vignette Effect */}
-        <div
-          className="absolute inset-0 opacity-40"
-          style={{
-            background: 'radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%)'
-          }}
-        />
-
-        {/* Animated Gradient Blobs with Glow */}
-        <div className="absolute inset-0" style={{ filter: "blur(100px)", opacity: 0.8 }}>
+    <div className="relative h-screen overflow-hidden flex flex-col">
+      {/* Clean Emerald Background - Matching Home Page */}
+      <div className="fixed inset-0 -z-10 bg-emerald-950">
+        {/* Subtle Animated Gradient Blobs */}
+        <div className="absolute inset-0" style={{ filter: "blur(120px)", opacity: 0.4 }}>
           <motion.div
-            className="absolute top-0 left-1/4 h-[600px] w-[600px] rounded-full"
-            style={{
-              backgroundImage: 'radial-gradient(circle, #1E8449 0%, #196F3D 30%, #B8860B 60%, rgba(11, 83, 69, 0.9) 100%)',
-              backgroundSize: '200% 200%',
-              animation: 'gradient-flow 16s ease-in-out infinite',
-              boxShadow: '0 0 120px 60px rgba(25, 111, 61, 0.25)'
-            }}
+            className="absolute top-0 left-1/4 h-[500px] w-[500px] rounded-full bg-emerald-600"
             animate={{
-              x: [0, 120, -40, 0],
-              y: [0, -60, 40, 0],
-              scale: [1, 1.4, 1.1, 1],
+              x: [0, 100, 0],
+              y: [0, -50, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-0 right-1/4 h-[500px] w-[500px] rounded-full bg-teal-600"
+            animate={{
+              x: [0, -80, 0],
+              y: [0, 60, 0],
+              scale: [1, 1.15, 1],
+            }}
+            transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute top-1/2 left-1/2 h-[400px] w-[400px] rounded-full bg-emerald-700"
+            animate={{
+              x: [0, -60, 0],
+              y: [0, -40, 0],
+              scale: [1, 1.1, 1],
             }}
             transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
           />
-          <motion.div
-            className="absolute bottom-0 right-1/4 h-[600px] w-[600px] rounded-full"
-            style={{
-              backgroundImage: 'radial-gradient(circle, #196F3D 0%, #0B5345 30%, #C87000 60%, rgba(6, 95, 70, 0.9) 100%)',
-              backgroundSize: '200% 200%',
-              animation: 'gradient-flow 22s ease-in-out infinite',
-              boxShadow: '0 0 140px 70px rgba(200, 112, 0, 0.3)'
-            }}
-            animate={{
-              x: [0, -100, 60, 0],
-              y: [0, 80, -30, 0],
-              scale: [1, 1.3, 1.15, 1],
-            }}
-            transition={{ duration: 32, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute top-1/3 right-1/3 h-[500px] w-[500px] rounded-full"
-            style={{
-              backgroundImage: 'radial-gradient(circle, #065F46 0%, #0B5345 25%, #DAA520 55%, rgba(30, 132, 73, 0.9) 100%)',
-              backgroundSize: '200% 200%',
-              animation: 'gradient-flow 14s ease-in-out infinite',
-              boxShadow: '0 0 100px 50px rgba(218, 165, 32, 0.25)'
-            }}
-            animate={{
-              x: [0, 70, -50, 0],
-              y: [0, -90, 50, 0],
-              scale: [1, 0.85, 1.2, 1],
-            }}
-            transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
-          />
-
-          {/* Additional Small Accent Blobs */}
-          <motion.div
-            className="absolute top-1/4 right-1/2 h-64 w-64 rounded-full"
-            style={{
-              backgroundImage: 'radial-gradient(circle, #DAA520 0%, #B8860B 50%, transparent 100%)',
-              boxShadow: '0 0 70px 35px rgba(218, 165, 32, 0.2)'
-            }}
-            animate={{
-              x: [0, -50, 30, 0],
-              y: [0, 40, -20, 0],
-              opacity: [0.5, 0.7, 0.4, 0.5]
-            }}
-            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          />
         </div>
-
-        {/* Shimmer Overlay */}
-        <motion.div
-          className="absolute inset-0 opacity-10"
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%)',
-            backgroundSize: '200% 100%'
-          }}
-          animate={{
-            backgroundPosition: ['-200% 0%', '200% 0%']
-          }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: 'linear'
-          }}
-        />
       </div>
 
-      {/* Main Chat Container */}
-      <motion.div
-        className="relative mx-auto max-w-5xl p-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        {/* Header Section */}
-        <motion.div
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 20 }}
-          className="mb-6"
-        >
-          {/* AI Disclaimer */}
-          <AnimatePresence>
-            {showDisclaimer && (
-              <motion.div
-                initial={{ height: 0, opacity: 0, scale: 0.9 }}
-                animate={{ height: "auto", opacity: 1, scale: 1 }}
-                exit={{ height: 0, opacity: 0, scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                className="glassmorphic-premium mb-4 overflow-hidden rounded-3xl"
-              >
-                <div className="flex items-center justify-between gap-3 px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      <AlertCircle className="h-5 w-5 text-amber-400" />
-                    </motion.div>
-                    <p className="text-sm font-medium text-white/90 text-shadow-premium">
-                      ⚕️ AI Assistant - Not a replacement for medical professionals. Emergency? Call 108
-                    </p>
-                  </div>
-                  <motion.button
-                    onClick={() => setShowDisclaimer(false)}
-                    className="text-white/70 transition-colors hover:text-white"
-                    whileHover={{ scale: 1.1, rotate: 90 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <X className="h-5 w-5" />
-                  </motion.button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Header Bar with Avatar */}
-          <motion.div
-            className="glassmorphic-premium rounded-[32px] px-6 py-5"
-            whileHover={{ scale: 1.01 }}
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                {/* AI Avatar */}
-                <motion.div
-                  className="relative h-14 w-14"
-                  animate={{ rotate: [0, 5, -5, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <div className="absolute inset-0 animate-pulse-ring rounded-full bg-emerald-500/30" />
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 shadow-lg shadow-emerald-500/50">
-                    <Bot className="h-7 w-7 text-white" />
-                  </div>
-                </motion.div>
-                <div>
-                  <h1 className="text-xl font-bold text-white text-shadow-premium">
-                    AI Sakha</ h1>
-                  <p className="text-sm text-white/70">Your Health Companion</p>
-                </div>
+      {/* Main Chat Container - Fixed Height Flex */}
+      <div className="relative mx-auto max-w-5xl w-full h-full flex flex-col">
+        {/* Minimal Header - Fixed */}
+        <div className="flex-shrink-0 p-4 pb-2">
+          {/* Compact Header Bar */}
+          <div className="glassmorphic-premium rounded-2xl px-4 py-2.5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {/* AI Avatar - Smaller */}
+              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-md">
+                <Bot className="h-4 w-4 text-white" />
               </div>
+              <div>
+                <h1 className="text-sm font-semibold text-white">AI Sakha</h1>
+              </div>
+            </div>
 
-              {/* Language Selector */}
-              <motion.select
-                className="glassmorphic-light rounded-full border-none px-4 py-2 text-sm font-medium text-white outline-none backdrop-blur-xl"
+            {/* Right Side - Language + Disclaimer */}
+            <div className="flex items-center gap-3">
+              {showDisclaimer && (
+                <div className="flex items-center gap-2 text-xs text-white/60">
+                  <AlertCircle className="h-3.5 w-3.5 text-amber-400" />
+                  <span className="hidden md:inline">Not a doctor • Emergency? Call 108</span>
+                  <button
+                    onClick={() => setShowDisclaimer(false)}
+                    className="text-white/50 hover:text-white/80 transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
+
+              {/* Language Selector - Compact */}
+              <select
+                className="glassmorphic-light rounded-lg border-none px-3 py-1.5 text-xs font-medium text-white outline-none backdrop-blur-xl"
                 value={lang}
                 onChange={(e) => setLang(e.target.value as Lang)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 <option value="hinglish" className="bg-gray-900">Hinglish</option>
                 <option value="hi" className="bg-gray-900">हिन्दी</option>
                 <option value="en" className="bg-gray-900">English</option>
-              </motion.select>
+              </select>
             </div>
-          </motion.div>
+          </div>
+        </div>
 
-          {/* Session Memory Card */}
-          <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="mt-4"
-          >
-            <motion.div
-              className="glassmorphic-light cursor-pointer rounded-[28px] p-4"
-              onClick={() => setSessionExpanded(!sessionExpanded)}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-white/70" />
-                    <span className="text-sm font-medium text-white">{getSessionDuration()}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4 text-white/70" />
-                    <span className="text-sm font-medium text-white">{sessionData.messageCount} messages</span>
-                  </div>
-                </div>
-                <motion.div
-                  animate={{ rotate: sessionExpanded ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <ChevronDown className="h-5 w-5 text-white/70" />
-                </motion.div>
-              </div>
-              <AnimatePresence>
-                {sessionExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="mt-4 space-y-2 overflow-hidden border-t border-white/10 pt-4"
-                  >
-                    <p className="text-xs font-semibold text-white/90">Session Summary</p>
-                    <p className="text-xs text-white/70">
-                      Topics discussed: Health concerns, symptom assessment
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-
-        {/* Chat Messages Area */}
-        <div className="mb-6 flex gap-4">
-          {/* Main Chat */}
-          <div className="flex-1">
-            <div className="space-y-4">
+        {/* Chat Messages Area - Scrollable with Fixed Height */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-2 min-h-0" style={{ scrollBehavior: 'smooth' }}>
+          {/* Main Chat - Centered, Max Width */}
+          <div className="max-w-4xl mx-auto w-full">
+            <div className="space-y-3">
               <AnimatePresence mode="popLayout">
                 {messages.map((m, index) => (
                   <motion.div
@@ -748,25 +607,22 @@ export default function ChatPage() {
                     }}
                     className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}
                   >
-                    <div className={`flex max-w-[80%] items-end gap-3 ${m.from === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                      {/* Avatar */}
-                      <motion.div
-                        className={`h-10 w-10 flex-shrink-0 rounded-full shadow-lg ${m.from === "user"
+                    <div className={`flex max-w-[85%] items-start gap-2.5 ${m.from === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                      {/* Avatar - Smaller */}
+                      <div
+                        className={`h-7 w-7 flex-shrink-0 rounded-full ${m.from === "user"
                           ? "bg-gradient-to-br from-blue-400 to-purple-500"
                           : "bg-gradient-to-br from-emerald-400 to-teal-500"
                           }`}
-                        whileHover={{ scale: 1.1 }}
-                        animate={m.from === "sakha" ? { rotate: [0, -5, 5, 0] } : {}}
-                        transition={m.from === "sakha" ? { duration: 4, repeat: Infinity } : {}}
                       >
                         <div className="flex h-full w-full items-center justify-center">
                           {m.from === "user" ? (
-                            <User className="h-5 w-5 text-white" />
+                            <User className="h-4 w-4 text-white" />
                           ) : (
-                            <Bot className="h-5 w-5 text-white" />
+                            <Bot className="h-4 w-4 text-white" />
                           )}
                         </div>
-                      </motion.div>
+                      </div>
 
                       {/* Message Bubble */}
                       <div>
@@ -989,184 +845,206 @@ export default function ChatPage() {
               </motion.div>
             </div>
 
-            <div ref={chatEndRef} />
-          </div>
-
-          {/* Proactive Tips Sidebar - Desktop Only */}
-          <motion.aside
-            initial={{ x: 50, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="hidden w-80 flex-col gap-3 lg:flex"
-          >
-            <div className="glassmorphic-premium rounded-[28px] p-5">
-              <div className="mb-4 flex items-center gap-2">
-                <Lightbulb className="h-5 w-5 text-amber-400" />
-                <h3 className="text-sm font-bold text-white">Health Tips</h3>
-              </div>
-              <div className="space-y-3">
-                {proactiveTips.map((tip, index) => (
-                  <motion.div
-                    key={tip.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.9 + index * 0.1 }}
-                    className="glassmorphic-light floating-card-premium animate-float-ambient rounded-2xl p-4"
-                    style={{ animationDelay: `${index * 0.5}s` }}
-                  >
-                    <div className="mb-2 flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{getCategoryIcon(tip.category)}</span>
-                        <h4 className="text-xs font-semibold text-white">{tip.title}</h4>
-                      </div>
-                      <motion.button
-                        onClick={() => toggleTipBookmark(tip.id)}
-                        whileHover={{ scale: 1.2, rotate: 15 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Bookmark
-                          className={`h-4 w-4 transition-colors ${tip.bookmarked
-                            ? "fill-amber-400 text-amber-400"
-                            : "text-white/40 hover:text-white/70"
-                            }`}
-                        />
-                      </motion.button>
-                    </div>
-                    <p className="text-xs leading-relaxed text-white/70">{tip.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.aside>
-        </div>
-
-        {/* Input Section - Fixed at Bottom */}
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.4, type: "spring", stiffness: 200, damping: 20 }}
-          className="glassmorphic-premium sticky bottom-4 rounded-[32px] p-4"
-        >
-          <AnimatePresence>
-            {listeningText && (
+            {/* Symptom Clusters - Show when chat is empty or just has welcome messages */}
+            {messages.length <= 2 && (
               <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="mb-3 flex items-center gap-3 overflow-hidden rounded-2xl bg-emerald-500/20 px-4 py-3"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="mt-8"
               >
-                <motion.div
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500"
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 0.8, repeat: Infinity }}
-                >
-                  <Mic className="h-4 w-4 text-white" />
-                </motion.div>
-                <div className="flex-1">
-                  <p className="text-xs font-semibold text-white">Listening…</p>
-                  <p className="line-clamp-1 text-xs text-white/70">{listeningText}</p>
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    Quick Symptom Selection
+                  </h3>
+                  <p className="text-sm text-white/60">
+                    Choose a common condition to get started quickly
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {symptomClusters.map((cluster, index) => (
+                    <motion.button
+                      key={cluster.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.6 + index * 0.1 }}
+                      whileHover={{ scale: 1.03, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        const symptomText = `I have ${cluster.symptoms.join(", ")}`;
+                        setInput(symptomText);
+                      }}
+                      className={`glassmorphic-premium rounded-2xl p-4 text-left transition-all hover:shadow-xl hover:shadow-emerald-500/10 bg-gradient-to-br ${cluster.color}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="text-3xl">{cluster.icon}</div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-white text-sm mb-1">
+                            {cluster.title}
+                          </h4>
+                          <p className="text-xs text-white/60 mb-2">
+                            {cluster.description}
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {cluster.symptoms.slice(0, 3).map((symptom, i) => (
+                              <span
+                                key={i}
+                                className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70"
+                              >
+                                {symptom}
+                              </span>
+                            ))}
+                            {cluster.symptoms.length > 3 && (
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70">
+                                +{cluster.symptoms.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.button>
+                  ))}
                 </div>
               </motion.div>
             )}
-          </AnimatePresence>
 
-          <div className="flex items-end gap-3">
-            {/* Main Input */}
-            <div className="flex-1">
-              <textarea
-                rows={2}
-                className="w-full resize-none rounded-3xl border-none bg-white/10 px-6 py-4 text-sm text-white placeholder-white/40 outline-none backdrop-blur-xl transition-all focus:bg-white/15 focus:ring-2 focus:ring-emerald-400/50"
-                placeholder="Type in Hindi, English or Hinglish…"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage(input);
-                  }
-                }}
-              />
-              <div className="mt-2 flex items-center justify-between px-2">
-                {/* Attachment Buttons */}
-                <div className="flex items-center gap-2">
-                  <motion.label
-                    className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <ImageIcon className="h-4 w-4" />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => handleFileUpload(e, "image")}
-                    />
-                  </motion.label>
-                  <motion.button
-                    onClick={startVideoRecording}
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                  >
-                    <Video className="h-4 w-4" />
-                  </motion.button>
-                </div>
+            <div ref={chatEndRef} />
+          </div>
+        </div>
 
-                {/* Voice and Send Buttons */}
-                <div className="flex items-center gap-2">
-                  <motion.button
-                    onClick={handleVoiceToggle}
-                    className={`flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all ${recording
-                      ? "bg-red-500 shadow-red-500/50"
-                      : "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/50"
-                      }`}
-                    whileHover={{ scale: 1.1 }}
-                    whileTap={{ scale: 0.9 }}
-                    animate={
-                      recording
-                        ? {
-                          scale: [1, 1.1, 1],
-                          boxShadow: [
-                            "0 0 0 0 rgba(239, 68, 68, 0.7)",
-                            "0 0 0 20px rgba(239, 68, 68, 0)",
-                          ],
+
+        {/* Input Section - Premium Fixed Bottom */}
+        <div className="flex-shrink-0 px-4 pb-4">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.15, type: "spring", stiffness: 350, damping: 30 }}
+              className="glassmorphic-premium rounded-3xl p-4 shadow-2xl shadow-black/20"
+            >
+              <AnimatePresence>
+                {listeningText && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="mb-3 flex items-center gap-3 overflow-hidden rounded-2xl bg-emerald-500/20 px-4 py-3"
+                  >
+                    <motion.div
+                      className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500"
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 0.8, repeat: Infinity }}
+                    >
+                      <Mic className="h-4 w-4 text-white" />
+                    </motion.div>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold text-white">Listening…</p>
+                      <p className="line-clamp-1 text-xs text-white/70">{listeningText}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="flex items-end gap-3">
+                {/* Main Input */}
+                <div className="flex-1">
+                  <textarea
+                    rows={2}
+                    className="w-full resize-none rounded-3xl border-none bg-white/10 px-6 py-4 text-sm text-white placeholder-white/40 outline-none backdrop-blur-xl transition-all focus:bg-white/15 focus:ring-2 focus:ring-emerald-400/50"
+                    placeholder="Type in Hindi, English or Hinglish…"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage(input);
+                      }
+                    }}
+                  />
+                  <div className="mt-2 flex items-center justify-between px-2">
+                    {/* Attachment Buttons */}
+                    <div className="flex items-center gap-2">
+                      <motion.label
+                        className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <ImageIcon className="h-4 w-4" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleFileUpload(e, "image")}
+                        />
+                      </motion.label>
+                      <motion.button
+                        onClick={startVideoRecording}
+                        className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Video className="h-4 w-4" />
+                      </motion.button>
+                    </div>
+
+                    {/* Voice and Send Buttons */}
+                    <div className="flex items-center gap-2">
+                      <motion.button
+                        onClick={handleVoiceToggle}
+                        className={`flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all ${recording
+                          ? "bg-red-500 shadow-red-500/50"
+                          : "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/50"
+                          }`}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        animate={
+                          recording
+                            ? {
+                              scale: [1, 1.1, 1],
+                              boxShadow: [
+                                "0 0 0 0 rgba(239, 68, 68, 0.7)",
+                                "0 0 0 20px rgba(239, 68, 68, 0)",
+                              ],
+                            }
+                            : {}
                         }
-                        : {}
-                    }
-                    transition={{ duration: 1.2, repeat: recording ? Infinity : 0 }}
-                  >
-                    <Mic className="h-5 w-5 text-white" />
-                  </motion.button>
-                  <motion.button
-                    onClick={() => sendMessage(input)}
-                    className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-lg shadow-emerald-500/50"
-                    whileHover={{ scale: 1.1, rotate: 15 }}
-                    whileTap={{ scale: 0.9 }}
-                    animate={{
-                      boxShadow: [
-                        "0 10px 30px rgba(16, 185, 129, 0.5)",
-                        "0 15px 40px rgba(16, 185, 129, 0.7)",
-                        "0 10px 30px rgba(16, 185, 129, 0.5)",
-                      ],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <Send className="h-5 w-5 text-white" />
-                  </motion.button>
+                        transition={{ duration: 1.2, repeat: recording ? Infinity : 0 }}
+                      >
+                        <Mic className="h-5 w-5 text-white" />
+                      </motion.button>
+                      <motion.button
+                        onClick={() => sendMessage(input)}
+                        className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-lg shadow-emerald-500/50"
+                        whileHover={{ scale: 1.1, rotate: 15 }}
+                        whileTap={{ scale: 0.9 }}
+                        animate={{
+                          boxShadow: [
+                            "0 10px 30px rgba(16, 185, 129, 0.5)",
+                            "0 15px 40px rgba(16, 185, 129, 0.7)",
+                            "0 10px 30px rgba(16, 185, 129, 0.5)",
+                          ],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <Send className="h-5 w-5 text-white" />
+                      </motion.button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <p className="mt-2 px-2 text-center text-[10px] text-white/40">
-            ⚕️ AI is not a doctor. This demo never sends data to a server.
-          </p>
-        </motion.div>
-      </motion.div>
+              <p className="mt-2 px-2 text-center text-[10px] text-white/40">
+                ⚕️ AI is not a doctor. This demo never sends data to a server.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
