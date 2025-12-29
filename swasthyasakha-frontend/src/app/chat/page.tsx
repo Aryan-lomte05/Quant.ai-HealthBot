@@ -449,39 +449,143 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Animated Background with Blurred Gradients */}
+    <div className="relative min-h-screen overflow-hidden" style={{ scrollBehavior: 'smooth' }}>
+      {/* ULTRA-PREMIUM Animated Background with Advanced Effects */}
       <div className="fixed inset-0 -z-10">
-        <div className={`absolute inset-0 ${getBackgroundClass()}`} />
-        <div className="absolute inset-0" style={{ filter: "blur(60px)", opacity: 0.5 }}>
+        {/* Base Animated Gradient Layer */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundSize: '400% 400%',
+            animation: 'gradient-flow 20s ease-in-out infinite',
+            backgroundImage: 'linear-gradient(135deg, #0B5345 0%, #196F3D 10%, #1E8449 20%, #7D3C00 30%, #A04000 40%, #C87000 50%, #985A00 60%, #6B4500 70%, #4A3200 80%, #2C1810 90%, #1A120B 100%)'
+          }}
+        />
+
+        {/* Mesh Gradient Overlay for Depth */}
+        <div
+          className="absolute inset-0 opacity-50"
+          style={{
+            background: 'radial-gradient(circle at 20% 50%, rgba(25, 111, 61, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(160, 64, 0, 0.35) 0%, transparent 50%), radial-gradient(circle at 40% 20%, rgba(30, 132, 73, 0.3) 0%, transparent 50%)',
+            mixBlendMode: 'overlay'
+          }}
+        />
+
+        {/* Grain Texture for Premium Feel */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.15] mix-blend-overlay">
+          <filter id="noise">
+            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noise)" />
+        </svg>
+
+        {/* Animated Light Rays */}
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          style={{
+            background: 'linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%)',
+            backgroundSize: '200% 200%'
+          }}
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 100%']
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'linear'
+          }}
+        />
+
+        {/* Vignette Effect */}
+        <div
+          className="absolute inset-0 opacity-40"
+          style={{
+            background: 'radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.4) 100%)'
+          }}
+        />
+
+        {/* Animated Gradient Blobs with Glow */}
+        <div className="absolute inset-0" style={{ filter: "blur(100px)", opacity: 0.8 }}>
           <motion.div
-            className="absolute top-0 left-1/4 h-96 w-96 rounded-full bg-gradient-to-br from-emerald-300 to-teal-400"
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -50, 0],
-              scale: [1, 1.2, 1],
+            className="absolute top-0 left-1/4 h-[600px] w-[600px] rounded-full"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #1E8449 0%, #196F3D 30%, #B8860B 60%, rgba(11, 83, 69, 0.9) 100%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradient-flow 16s ease-in-out infinite',
+              boxShadow: '0 0 120px 60px rgba(25, 111, 61, 0.25)'
             }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            animate={{
+              x: [0, 120, -40, 0],
+              y: [0, -60, 40, 0],
+              scale: [1, 1.4, 1.1, 1],
+            }}
+            transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500"
-            animate={{
-              x: [0, -80, 0],
-              y: [0, 60, 0],
-              scale: [1, 1.1, 1],
+            className="absolute bottom-0 right-1/4 h-[600px] w-[600px] rounded-full"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #196F3D 0%, #0B5345 30%, #C87000 60%, rgba(6, 95, 70, 0.9) 100%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradient-flow 22s ease-in-out infinite',
+              boxShadow: '0 0 140px 70px rgba(200, 112, 0, 0.3)'
             }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+            animate={{
+              x: [0, -100, 60, 0],
+              y: [0, 80, -30, 0],
+              scale: [1, 1.3, 1.15, 1],
+            }}
+            transition={{ duration: 32, repeat: Infinity, ease: "easeInOut" }}
           />
           <motion.div
-            className="absolute top-1/3 right-1/3 h-72 w-72 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-500"
+            className="absolute top-1/3 right-1/3 h-[500px] w-[500px] rounded-full"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #065F46 0%, #0B5345 25%, #DAA520 55%, rgba(30, 132, 73, 0.9) 100%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradient-flow 14s ease-in-out infinite',
+              boxShadow: '0 0 100px 50px rgba(218, 165, 32, 0.25)'
+            }}
             animate={{
-              x: [0, 50, 0],
-              y: [0, -80, 0],
-              scale: [1, 0.9, 1],
+              x: [0, 70, -50, 0],
+              y: [0, -90, 50, 0],
+              scale: [1, 0.85, 1.2, 1],
+            }}
+            transition={{ duration: 26, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Additional Small Accent Blobs */}
+          <motion.div
+            className="absolute top-1/4 right-1/2 h-64 w-64 rounded-full"
+            style={{
+              backgroundImage: 'radial-gradient(circle, #DAA520 0%, #B8860B 50%, transparent 100%)',
+              boxShadow: '0 0 70px 35px rgba(218, 165, 32, 0.2)'
+            }}
+            animate={{
+              x: [0, -50, 30, 0],
+              y: [0, 40, -20, 0],
+              opacity: [0.5, 0.7, 0.4, 0.5]
             }}
             transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
           />
         </div>
+
+        {/* Shimmer Overlay */}
+        <motion.div
+          className="absolute inset-0 opacity-10"
+          style={{
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%)',
+            backgroundSize: '200% 100%'
+          }}
+          animate={{
+            backgroundPosition: ['-200% 0%', '200% 0%']
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: 'linear'
+          }}
+        />
       </div>
 
       {/* Main Chat Container */}
