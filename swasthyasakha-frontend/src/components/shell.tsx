@@ -22,6 +22,7 @@ import {
   Heart,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { FloatingSOS } from "./emergency/FloatingSOS";
 
 // Grouped Routes Configuration
 const routeGroups = [
@@ -128,8 +129,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         <Link key={route.href} href={route.href}>
                           <div
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${isActive
-                                ? "bg-emerald-50 text-emerald-900 font-medium shadow-sm"
-                                : "text-emerald-600 hover:bg-emerald-50/50 hover:text-emerald-900"
+                              ? "bg-emerald-50 text-emerald-900 font-medium shadow-sm"
+                              : "text-emerald-600 hover:bg-emerald-50/50 hover:text-emerald-900"
                               }`}
                           >
                             <Icon
@@ -243,6 +244,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </main>
       </div>
+      <FloatingSOS />
     </div>
   );
 }
