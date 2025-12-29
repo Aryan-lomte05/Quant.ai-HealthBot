@@ -1,17 +1,33 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   FileText,
   Image as ImageIcon,
   Mic,
   PauseCircle,
   Send,
-  SmilePlus,
   Video,
   Volume2,
   Sparkles,
+  AlertCircle,
+  Phone,
+  ChevronDown,
+  Clock,
+  MessageSquare,
+  Stethoscope,
+  Activity,
+  BookOpen,
+  Play,
+  Pause,
+  X,
+  ExternalLink,
+  Lightbulb,
+  Bookmark,
+  User,
+  Bot,
+  MapPin,
 } from "lucide-react";
 
 type Lang = "hi" | "en" | "hinglish";
@@ -23,6 +39,34 @@ type ChatMessage = {
   lang: Lang;
   tone?: "calm" | "alert";
   clusterId?: string;
+  citations?: Citation[];
+  tipId?: string;
+};
+
+type Citation = {
+  id: string;
+  title: string;
+  source: string;
+  url: string;
+};
+
+type SymptomCluster = {
+  id: string;
+  icon: string;
+  title: string;
+  symptoms: string[];
+  description: string;
+  color: string;
+  severity?: "low" | "medium" | "high";
+  relatedConditions?: string[];
+};
+
+type ProactiveTip = {
+  id: string;
+  category: "diet" | "exercise" | "prevention" | "mental_health";
+  title: string;
+  description: string;
+  bookmarked: boolean;
 };
 
 type UploadPreview = {
@@ -32,6 +76,12 @@ type UploadPreview = {
   url?: string;
   durationSec?: number;
   status: "ready" | "uploading" | "done" | "error";
+};
+
+type SessionData = {
+  startTime: Date;
+  messageCount: number;
+  topics: string[];
 };
 
 const mockResponses: ChatMessage[] = [
@@ -51,6 +101,98 @@ const mockResponses: ChatMessage[] = [
   },
 ];
 
+const mockCitations: Citation[] = [
+  {
+    id: "cite-1",
+    title: "WHO Guidelines on Fever Management",
+    source: "World Health Organization",
+    url: "https://www.who.int",
+  },
+  {
+    id: "cite-2",
+    title: "CDC Symptom Assessment Guide",
+    source: "Centers for Disease Control",
+    url: "https://www.cdc.gov",
+  },
+];
+
+const mockTips: ProactiveTip[] = [
+  {
+    id: "tip-1",
+    category: "prevention",
+    title: "Stay Hydrated",
+    description: "Drink at least 8 glasses of water daily to maintain good health.",
+    bookmarked: false,
+  },
+  {
+    id: "tip-2",
+    category: "diet",
+    title: "Balanced Diet",
+    description: "Include fruits, vegetables, and whole grains in your daily meals.",
+    bookmarked: false,
+  },
+  {
+    id: "tip-3",
+    category: "exercise",
+    title: "Daily Movement",
+    description: "Aim for at least 30 minutes of moderate exercise each day.",
+    bookmarked: false,
+  },
+];
+
+// Symptom Clusters for Quick Selection
+const symptomClusters = [
+  {
+    id: "fever-cold",
+    icon: "🤒",
+    title: "Fever & Cold",
+    symptoms: ["fever", "runny nose", "cough", "sore throat"],
+    description: "Common cold or flu symptoms",
+    color: "from-orange-500/20 to-red-500/20",
+  },
+  {
+    id: "headache",
+    icon: "🤕",
+    title: "Headache",
+    symptoms: ["headache", "dizziness", "nausea"],
+    description: "Head pain and related symptoms",
+    color: "from-purple-500/20 to-pink-500/20",
+  },
+  {
+    id: "stomach",
+    icon: "🤢",
+    title: "Stomach Issues",
+    symptoms: ["stomach pain", "nausea", "vomiting", "diarrhea"],
+    description: "Digestive problems",
+    color: "from-yellow-500/20 to-orange-500/20",
+  },
+  {
+    id: "respiratory",
+    icon: "😷",
+    title: "Breathing Issues",
+    symptoms: ["shortness of breath", "chest tightness", "wheezing"],
+    description: "Respiratory difficulties",
+    color: "from-blue-500/20 to-cyan-500/20",
+  },
+  {
+    id: "body-pain",
+    icon: "💪",
+    title: "Body Pain",
+    symptoms: ["body ache", "joint pain", "muscle pain", "fatigue"],
+    description: "General body discomfort",
+    color: "from-emerald-500/20 to-teal-500/20",
+  },
+  {
+    id: "skin",
+    icon: "🩹",
+    title: "Skin Problems",
+    symptoms: ["rash", "itching", "redness", "swelling"],
+    description: "Skin-related issues",
+    color: "from-pink-500/20 to-rose-500/20",
+  },
+];
+
+
 export default function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>(mockResponses);
   const [input, setInput] = useState("");
@@ -58,43 +200,119 @@ export default function ChatPage() {
   const [recording, setRecording] = useState(false);
   const [listeningText, setListeningText] = useState("");
   const [uploads, setUploads] = useState<UploadPreview[]>([]);
-  const [calmMode, setCalmMode] = useState(false);
+  const [emotionMode, setEmotionMode] = useState<"calm" | "alert" | "distress">("calm");
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speakingMessageId, setSpeakingMessageId] = useState<string | null>(null);
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
+  const [sessionExpanded, setSessionExpanded] = useState(false);
+  const [symptomClusters, setSymptomClusters] = useState<SymptomCluster[]>([]);
+  const [proactiveTips, setProactiveTips] = useState<ProactiveTip[]>(mockTips);
+  const [sessionData, setSessionData] = useState<SessionData>({
+    startTime: new Date(),
+    messageCount: 0,
+    topics: [],
+  });
+  const [expandedCitations, setExpandedCitations] = useState<Set<string>>(new Set());
+  const [typingIndicator, setTypingIndicator] = useState(false);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
 
+  // Motion values for parallax effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
 
+  // Emotion detection
   useEffect(() => {
     const hasDistress = messages.some(
       (m) =>
         m.from === "user" &&
-        /bahut|zyada|dard|saans|chakkar|panic/i.test(m.text)
+        /severe|extreme|unbearable|emergency|help|dying|panic|can't breathe/i.test(m.text)
     );
-    setCalmMode(hasDistress);
+    const hasAlert = messages.some(
+      (m) =>
+        m.from === "user" &&
+        /bahut|zyada|dard|saans|chakkar|worried|concerned/i.test(m.text)
+    );
+
+    if (hasDistress) {
+      setEmotionMode("distress");
+    } else if (hasAlert) {
+      setEmotionMode("alert");
+    } else {
+      setEmotionMode("calm");
+    }
+  }, [messages]);
+
+  // Session tracking
+  useEffect(() => {
+    setSessionData(prev => ({
+      ...prev,
+      messageCount: messages.filter(m => m.from === "user").length,
+    }));
+  }, [messages]);
+
+  // Symptom clustering
+  useEffect(() => {
+    const userMessages = messages.filter(m => m.from === "user");
+    const allText = userMessages.map(m => m.text.toLowerCase()).join(" ");
+
+    const symptoms: string[] = [];
+    const symptomKeywords = [
+      "fever", "bukhar", "headache", "dard", "pain", "cough",
+      "cold", "saans", "breathing", "chakkar", "dizziness", "nausea"
+    ];
+
+    symptomKeywords.forEach(keyword => {
+      if (allText.includes(keyword)) {
+        symptoms.push(keyword);
+      }
+    });
+
+    if (symptoms.length >= 2) {
+      const cluster: SymptomCluster = {
+        id: "cluster-1",
+        symptoms,
+        severity: symptoms.length >= 4 ? "high" : symptoms.length >= 3 ? "medium" : "low",
+        relatedConditions: ["Common Cold", "Flu", "Viral Infection"],
+      };
+      setSymptomClusters([cluster]);
+    }
   }, [messages]);
 
   const sendMessage = (text: string) => {
     if (!text.trim()) return;
+
     const userMsg: ChatMessage = {
       id: `u-${Date.now()}`,
       from: "user",
       text,
       lang,
     };
-    const followUp: ChatMessage = {
-      id: `s-${Date.now()}`,
-      from: "sakha",
-      lang,
-      text: "Samajh gaya. Main aapki baat dhyaan se sun raha hoon. Thodi aur jaankari dijiye—kab se, kitna, aur koi purani beemari?",
-      tone: "calm",
-    };
-    setMessages((prev) => [...prev, userMsg, followUp]);
+
+    setMessages((prev) => [...prev, userMsg]);
+    setTypingIndicator(true);
+
+    setTimeout(() => {
+      const hasCitations = /fever|diabetes|medicine|treatment/i.test(text);
+      const followUp: ChatMessage = {
+        id: `s-${Date.now()}`,
+        from: "sakha",
+        lang,
+        text: "Samajh gaya. Main aapki baat dhyaan se sun raha hoon. Thodi aur jaankari dijiye—kab se, kitna, aur koi purani beemari?",
+        tone: "calm",
+        citations: hasCitations ? mockCitations : undefined,
+      };
+      setMessages((prev) => [...prev, followUp]);
+      setTypingIndicator(false);
+    }, 1500);
+
     setInput("");
   };
 
@@ -143,13 +361,25 @@ export default function ChatPage() {
     recognition.start();
   };
 
-  const handleTextToSpeech = (text: string) => {
+  const handleTextToSpeech = (text: string, messageId: string) => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    if (speakingMessageId === messageId) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      setSpeakingMessageId(null);
+      return;
+    }
+
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = lang === "en" ? "en-IN" : "hi-IN";
-    utter.onend = () => setIsSpeaking(false);
+    utter.onend = () => {
+      setIsSpeaking(false);
+      setSpeakingMessageId(null);
+    };
     setIsSpeaking(true);
+    setSpeakingMessageId(messageId);
     window.speechSynthesis.speak(utter);
   };
 
@@ -223,389 +453,598 @@ export default function ChatPage() {
     }
   };
 
+  const toggleCitation = (messageId: string) => {
+    setExpandedCitations(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(messageId)) {
+        newSet.delete(messageId);
+      } else {
+        newSet.add(messageId);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleTipBookmark = (tipId: string) => {
+    setProactiveTips(prev =>
+      prev.map(tip =>
+        tip.id === tipId ? { ...tip, bookmarked: !tip.bookmarked } : tip
+      )
+    );
+  };
+
+  const getBackgroundClass = () => {
+    switch (emotionMode) {
+      case "distress":
+        return "bg-premium-warm";
+      case "alert":
+        return "bg-premium-warm";
+      default:
+        return "bg-premium-mixed";
+    }
+  };
+
+  const getSessionDuration = () => {
+    const diff = Date.now() - sessionData.startTime.getTime();
+    const minutes = Math.floor(diff / 60000);
+    return minutes < 1 ? "Just started" : `${minutes} min`;
+  };
+
   const quickActions = [
-    "Bukhar kitne din se hai?",
-    "Saans lene mein dikkat hai?",
-    "Kya aapko diabetes ya BP hai?",
+    { icon: Stethoscope, text: "Should I see a doctor?", type: "assessment" },
+    { icon: Phone, text: "Emergency Call 108", type: "emergency" },
+    { icon: MapPin, text: "Find nearby hospital", type: "location" },
   ];
 
+  const getCategoryIcon = (category: ProactiveTip["category"]) => {
+    switch (category) {
+      case "diet": return "🥗";
+      case "exercise": return "🏃";
+      case "prevention": return "🛡️";
+      case "mental_health": return "🧘";
+    }
+  };
+
   return (
-    <motion.div
-      className={`flex flex-1 flex-col overflow-hidden rounded-3xl border ${
-        calmMode
-          ? "border-emerald-300/80 bg-gradient-to-b from-emerald-50 via-white to-emerald-50"
-          : "border-emerald-200/80 bg-gradient-to-b from-white via-emerald-50/30 to-white"
-      } shadow-2xl`}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Header */}
-      <motion.header
-        className="flex items-center justify-between gap-4 border-b border-emerald-200/60 bg-white/80 px-6 py-4 backdrop-blur-sm"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div>
-          <motion.p
-            className="text-xs font-semibold uppercase tracking-wider text-emerald-600"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            Chat with Sakha
-          </motion.p>
-          <p className="text-base font-bold text-emerald-950">
-            Calm, simple health support
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <motion.select
-            className="rounded-full border border-emerald-300/60 bg-emerald-50/80 px-3 py-2 text-xs font-medium text-emerald-900 outline-none transition-all hover:bg-emerald-100"
-            value={lang}
-            onChange={(e) => setLang(e.target.value as Lang)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <option value="hinglish">Hinglish</option>
-            <option value="hi">हिन्दी</option>
-            <option value="en">English</option>
-          </motion.select>
-          <motion.span
-            className="rounded-full bg-emerald-100 px-3 py-1.5 text-xs font-medium text-emerald-800"
-            animate={{
-              boxShadow: [
-                "0 0 0 0 rgba(16, 185, 129, 0.4)",
-                "0 0 0 4px rgba(16, 185, 129, 0)",
-                "0 0 0 0 rgba(16, 185, 129, 0.4)",
-              ],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          >
-            Auto-detect ON
-          </motion.span>
-        </div>
-      </motion.header>
-
-      {/* Messages Area */}
-      <section className="flex-1 space-y-4 overflow-y-auto px-6 py-6">
-        <motion.p
-          className="mx-auto w-fit rounded-full bg-emerald-100 px-4 py-2 text-xs font-medium text-emerald-800"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          ⚠️ This is a demo. In emergency call 108 / 102.
-        </motion.p>
-
-        <div className="space-y-4">
-          <AnimatePresence initial={false}>
-            {messages.map((m, index) => (
-              <motion.div
-                key={m.id}
-                initial={{ opacity: 0, y: 20, x: m.from === "user" ? 20 : -20 }}
-                animate={{ opacity: 1, y: 0, x: 0 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{
-                  duration: 0.3,
-                  delay: index === messages.length - 1 ? 0.1 : 0,
-                }}
-                className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}
-              >
-                <motion.div
-                  className={`max-w-[75%] rounded-2xl px-4 py-3 shadow-lg ${
-                    m.from === "user"
-                      ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white"
-                      : m.tone === "alert"
-                      ? "bg-amber-50 text-amber-900 border-2 border-amber-300"
-                      : "bg-white text-emerald-950 border border-emerald-200/60"
-                  }`}
-                  whileHover={{ scale: 1.02 }}
-                  initial={{ scale: 0.9 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                >
-                  <p className="whitespace-pre-wrap text-sm leading-relaxed">
-                    {m.text}
-                  </p>
-                  <div className="mt-2 flex items-center justify-between text-xs opacity-70">
-                    <span className="font-medium">{m.from === "user" ? "You" : "Sakha"}</span>
-                    <span>{m.lang === "hi" ? "हिन्दी" : m.lang === "en" ? "English" : "Hinglish"}</span>
-                  </div>
-                </motion.div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
-
-        {/* Quick Actions */}
-        <motion.div
-          className="rounded-2xl border border-emerald-200/60 bg-gradient-to-br from-emerald-50/50 to-teal-50/50 p-4 backdrop-blur-sm"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <p className="mb-3 text-xs font-semibold text-emerald-800">Quick follow-ups</p>
-          <div className="flex flex-wrap gap-2">
-            {quickActions.map((qa, index) => (
-              <motion.button
-                key={qa}
-                className="rounded-full bg-white px-4 py-2 text-xs font-medium text-emerald-800 shadow-sm transition-all hover:bg-emerald-100 hover:shadow-md"
-                onClick={() => sendMessage(qa)}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-              >
-                {qa}
-              </motion.button>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Uploads */}
-        <AnimatePresence>
-          {uploads.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="rounded-2xl border border-emerald-200/60 bg-white/80 p-4 backdrop-blur-sm"
-            >
-              <p className="mb-3 text-xs font-semibold text-emerald-800">Attachments</p>
-              <div className="flex gap-3 overflow-x-auto">
-                {uploads.map((u) => (
-                  <motion.div
-                    key={u.id}
-                    className="relative min-w-[160px] rounded-xl border border-emerald-200/60 bg-white p-3 shadow-sm"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <div className="mb-2 flex items-center gap-2 text-emerald-800">
-                      {u.type === "image" && <ImageIcon className="h-4 w-4 text-emerald-500" />}
-                      {u.type === "video" && <Video className="h-4 w-4 text-emerald-500" />}
-                      {u.type === "pdf" && <FileText className="h-4 w-4 text-emerald-500" />}
-                      <span className="truncate text-xs font-medium">{u.name}</span>
-                    </div>
-                    {u.url && u.type === "image" && (
-                      <img
-                        src={u.url}
-                        alt=""
-                        className="mb-2 h-24 w-full rounded-lg object-cover"
-                      />
-                    )}
-                    {u.type === "video" && (
-                      <div className="mb-2 flex h-24 items-center justify-center rounded-lg bg-emerald-100 text-xs text-emerald-700">
-                        Video preview
-                      </div>
-                    )}
-                    <button
-                      onClick={() => removeUpload(u.id)}
-                      className="w-full rounded-lg bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-800 transition-colors hover:bg-emerald-200"
-                    >
-                      Remove
-                    </button>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div ref={chatEndRef} />
-      </section>
-
-      {/* Input Area */}
-      <motion.footer
-        className="space-y-3 border-t border-emerald-200/60 bg-white/80 px-6 py-4 backdrop-blur-sm"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        <AnimatePresence>
-          {countdown !== null && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="flex items-center justify-between rounded-xl bg-emerald-100 px-4 py-3 text-sm font-medium text-emerald-900"
-            >
-              <span>🎥 Recording video… {countdown}s</span>
-              <PauseCircle className="h-5 w-5" />
-            </motion.div>
-          )}
-
-          {listeningText && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="flex items-center gap-3 rounded-xl border border-emerald-300/60 bg-emerald-50 px-4 py-3"
-            >
-              <motion.div
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500 text-white"
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <Mic className="h-4 w-4" />
-              </motion.div>
-              <div className="flex-1">
-                <p className="text-xs font-semibold text-emerald-900">Listening…</p>
-                <p className="line-clamp-1 text-xs text-emerald-700">{listeningText}</p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <div className="flex items-end gap-3">
+    <div className="relative h-screen overflow-hidden flex flex-col">
+      {/* Clean Emerald Background - Matching Home Page */}
+      <div className="fixed inset-0 -z-10 bg-emerald-950">
+        {/* Subtle Animated Gradient Blobs */}
+        <div className="absolute inset-0" style={{ filter: "blur(120px)", opacity: 0.4 }}>
           <motion.div
-            className="flex flex-1 flex-col gap-2 rounded-2xl border border-emerald-200/60 bg-white px-4 py-3 shadow-sm"
-            whileFocus={{ borderColor: "rgba(16, 185, 129, 0.5)" }}
-          >
-            <textarea
-              rows={2}
-              className="w-full resize-none bg-transparent text-sm text-emerald-950 outline-none placeholder:text-emerald-400"
-              placeholder="Type in Hindi, English or Hinglish…"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  sendMessage(input);
-                }
-              }}
-            />
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <motion.label
-                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-emerald-100 text-emerald-700 transition-colors hover:bg-emerald-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <ImageIcon className="h-4 w-4" />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => handleFileUpload(e, "image")}
-                  />
-                </motion.label>
-                <motion.button
-                  onClick={startVideoRecording}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 transition-colors hover:bg-emerald-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Video className="h-4 w-4" />
-                </motion.button>
-                <motion.label
-                  className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-emerald-100 text-emerald-700 transition-colors hover:bg-emerald-200"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <FileText className="h-4 w-4" />
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    className="hidden"
-                    onChange={(e) => handleFileUpload(e, "pdf")}
-                  />
-                </motion.label>
+            className="absolute top-0 left-1/4 h-[500px] w-[500px] rounded-full bg-emerald-600"
+            animate={{
+              x: [0, 100, 0],
+              y: [0, -50, 0],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute bottom-0 right-1/4 h-[500px] w-[500px] rounded-full bg-teal-600"
+            animate={{
+              x: [0, -80, 0],
+              y: [0, 60, 0],
+              scale: [1, 1.15, 1],
+            }}
+            transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.div
+            className="absolute top-1/2 left-1/2 h-[400px] w-[400px] rounded-full bg-emerald-700"
+            animate={{
+              x: [0, -60, 0],
+              y: [0, -40, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+      </div>
+
+      {/* Main Chat Container - Fixed Height Flex */}
+      <div className="relative mx-auto max-w-5xl w-full h-full flex flex-col">
+        {/* Minimal Header - Fixed */}
+        <div className="flex-shrink-0 p-4 pb-2">
+          {/* Compact Header Bar */}
+          <div className="glassmorphic-premium rounded-2xl px-4 py-2.5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              {/* AI Avatar - Smaller */}
+              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-md">
+                <Bot className="h-4 w-4 text-white" />
               </div>
-              <div className="flex items-center gap-2">
-                <motion.button
-                  onClick={handleVoiceToggle}
-                  className={`flex h-10 w-10 items-center justify-center rounded-full text-white ${
-                    recording
-                      ? "bg-red-500 shadow-lg shadow-red-500/50"
-                      : "bg-gradient-to-r from-emerald-500 to-teal-500 shadow-lg shadow-emerald-400/50"
-                  }`}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  animate={
-                    recording
-                      ? {
-                          scale: [1, 1.2, 1],
-                          boxShadow: [
-                            "0 0 0 0 rgba(239, 68, 68, 0.4)",
-                            "0 0 0 10px rgba(239, 68, 68, 0)",
-                            "0 0 0 0 rgba(239, 68, 68, 0.4)",
-                          ],
-                        }
-                      : {}
-                  }
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  <Mic className="h-5 w-5" />
-                </motion.button>
-                <motion.button
-                  onClick={() =>
-                    handleTextToSpeech(
-                      "Yeh demo version hai. Main aapko sirf general jaankari de sakta hoon."
-                    )
-                  }
-                  className={`flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 transition-all ${
-                    isSpeaking ? "ring-2 ring-emerald-400 ring-offset-2" : ""
-                  }`}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  {isSpeaking ? (
-                    <PauseCircle className="h-5 w-5" />
-                  ) : (
-                    <Volume2 className="h-5 w-5" />
-                  )}
-                </motion.button>
-                <motion.button
-                  onClick={() => sendMessage(input)}
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-400/50"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  whileTap={{ scale: 0.9 }}
-                  animate={{
-                    boxShadow: [
-                      "0 10px 30px rgba(16, 185, 129, 0.4)",
-                      "0 15px 40px rgba(16, 185, 129, 0.6)",
-                      "0 10px 30px rgba(16, 185, 129, 0.4)",
-                    ],
-                  }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <Send className="h-5 w-5" />
-                </motion.button>
+              <div>
+                <h1 className="text-sm font-semibold text-white">AI Sakha</h1>
               </div>
             </div>
-          </motion.div>
-          <motion.button
-            className="flex h-12 w-12 items-center justify-center rounded-2xl border border-emerald-200/60 bg-white text-emerald-700 shadow-sm"
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <SmilePlus className="h-5 w-5" />
-          </motion.button>
+
+            {/* Right Side - Language + Disclaimer */}
+            <div className="flex items-center gap-3">
+              {showDisclaimer && (
+                <div className="flex items-center gap-2 text-xs text-white/60">
+                  <AlertCircle className="h-3.5 w-3.5 text-amber-400" />
+                  <span className="hidden md:inline">Not a doctor • Emergency? Call 108</span>
+                  <button
+                    onClick={() => setShowDisclaimer(false)}
+                    className="text-white/50 hover:text-white/80 transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
+
+              {/* Language Selector - Compact */}
+              <select
+                className="glassmorphic-light rounded-lg border-none px-3 py-1.5 text-xs font-medium text-white outline-none backdrop-blur-xl"
+                value={lang}
+                onChange={(e) => setLang(e.target.value as Lang)}
+              >
+                <option value="hinglish" className="bg-gray-900">Hinglish</option>
+                <option value="hi" className="bg-gray-900">हिन्दी</option>
+                <option value="en" className="bg-gray-900">English</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <p className="text-[10px] text-emerald-600/70">
-          ⚕️ AI is not a doctor. This demo never sends data to a server.
-        </p>
-      </motion.footer>
-    </motion.div>
+        {/* Chat Messages Area - Scrollable with Fixed Height */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-2 min-h-0" style={{ scrollBehavior: 'smooth' }}>
+          {/* Main Chat - Centered, Max Width */}
+          <div className="max-w-4xl mx-auto w-full">
+            <div className="space-y-3">
+              <AnimatePresence mode="popLayout">
+                {messages.map((m, index) => (
+                  <motion.div
+                    key={m.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.5, filter: "blur(20px)" }}
+                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 25,
+                      delay: index === messages.length - 1 ? 0 : 0,
+                    }}
+                    className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}
+                  >
+                    <div className={`flex max-w-[85%] items-start gap-2.5 ${m.from === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                      {/* Avatar - Smaller */}
+                      <div
+                        className={`h-7 w-7 flex-shrink-0 rounded-full ${m.from === "user"
+                          ? "bg-gradient-to-br from-blue-400 to-purple-500"
+                          : "bg-gradient-to-br from-emerald-400 to-teal-500"
+                          }`}
+                      >
+                        <div className="flex h-full w-full items-center justify-center">
+                          {m.from === "user" ? (
+                            <User className="h-4 w-4 text-white" />
+                          ) : (
+                            <Bot className="h-4 w-4 text-white" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Message Bubble */}
+                      <div>
+                        <motion.div
+                          className={`glassmorphic-premium rounded-[28px] px-6 py-4 shadow-lg ${m.tone === "alert"
+                            ? "border border-amber-400/40 bg-amber-500/10"
+                            : ""
+                            }`}
+                          whileHover={{ scale: 1.02, y: -2 }}
+                          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                        >
+                          <p className="whitespace-pre-wrap text-sm leading-relaxed text-white/95 text-shadow-premium">
+                            {m.text}
+                          </p>
+                          <div className="mt-2 flex items-center justify-between gap-3">
+                            <span className="text-xs text-white/50">
+                              {m.lang === "hi" ? "हिन्दी" : m.lang === "en" ? "English" : "Hinglish"}
+                            </span>
+                            {m.from === "sakha" && (
+                              <motion.button
+                                onClick={() => handleTextToSpeech(m.text, m.id)}
+                                className={`rounded-full p-1.5 transition-all ${speakingMessageId === m.id
+                                  ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/50"
+                                  : "hover:bg-white/10"
+                                  }`}
+                                whileHover={{ scale: 1.15 }}
+                                whileTap={{ scale: 0.9 }}
+                              >
+                                {speakingMessageId === m.id ? (
+                                  <div className="flex items-center gap-1">
+                                    {[0, 1, 2].map((i) => (
+                                      <motion.div
+                                        key={i}
+                                        className="h-3 w-0.5 rounded-full bg-white"
+                                        animate={{ scaleY: [1, 1.5, 1] }}
+                                        transition={{
+                                          duration: 0.6,
+                                          repeat: Infinity,
+                                          delay: i * 0.1,
+                                        }}
+                                      />
+                                    ))}
+                                  </div>
+                                ) : (
+                                  <Volume2 className="h-3.5 w-3.5 text-white/70" />
+                                )}
+                              </motion.button>
+                            )}
+                          </div>
+                        </motion.div>
+
+                        {/* Citations */}
+                        {m.citations && m.citations.length > 0 && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="mt-2"
+                          >
+                            <motion.button
+                              onClick={() => toggleCitation(m.id)}
+                              className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white/90 transition-colors"
+                              whileHover={{ x: 4 }}
+                            >
+                              <BookOpen className="h-3 w-3" />
+                              {expandedCitations.has(m.id) ? "Hide" : "View"} sources ({m.citations.length})
+                            </motion.button>
+                            <AnimatePresence>
+                              {expandedCitations.has(m.id) && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  className="mt-2 space-y-2 overflow-hidden"
+                                >
+                                  {m.citations.map((cite, idx) => (
+                                    <motion.a
+                                      key={cite.id}
+                                      href={cite.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="glassmorphic-light flex items-start gap-2 rounded-2xl p-3"
+                                      initial={{ x: -20, opacity: 0 }}
+                                      animate={{ x: 0, opacity: 1 }}
+                                      transition={{ delay: idx * 0.1 }}
+                                      whileHover={{ x: 4, scale: 1.02 }}
+                                    >
+                                      <ExternalLink className="h-3 w-3 flex-shrink-0 text-emerald-400" />
+                                      <div>
+                                        <p className="text-xs font-medium text-white">{cite.title}</p>
+                                        <p className="text-xs text-white/60">{cite.source}</p>
+                                      </div>
+                                    </motion.a>
+                                  ))}
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </motion.div>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+
+              {/* Typing Indicator */}
+              <AnimatePresence>
+                {typingIndicator && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="flex justify-start"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+                        <Bot className="h-5 w-5 text-white" />
+                      </div>
+                      <div className="glassmorphic-premium rounded-[28px] px-6 py-4">
+                        <div className="flex gap-1.5">
+                          {[0, 1, 2].map((i) => (
+                            <motion.div
+                              key={i}
+                              className="h-2 w-2 rounded-full bg-emerald-400"
+                              animate={{ y: [0, -8, 0], opacity: [0.5, 1, 0.5] }}
+                              transition={{
+                                duration: 0.8,
+                                repeat: Infinity,
+                                delay: i * 0.15,
+                                ease: "easeInOut",
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Symptom Clusters */}
+              <AnimatePresence>
+                {symptomClusters.map((cluster) => (
+                  <motion.div
+                    key={cluster.id}
+                    initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
+                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="glassmorphic-premium floating-card-premium rounded-[28px] p-6"
+                  >
+                    <div className="mb-4 flex items-center gap-3">
+                      <div className="rounded-full bg-emerald-500/20 p-2">
+                        <Activity className="h-5 w-5 text-emerald-400" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-sm font-semibold text-white">Symptom Cluster Detected</h3>
+                      </div>
+                      <span className={`rounded-full px-3 py-1 text-xs font-medium ${cluster.severity === "high"
+                        ? "bg-red-500/20 text-red-300"
+                        : cluster.severity === "medium"
+                          ? "bg-amber-500/20 text-amber-300"
+                          : "bg-green-500/20 text-green-300"
+                        }`}>
+                        {cluster.severity} severity
+                      </span>
+                    </div>
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      {cluster.symptoms.map((symptom, idx) => (
+                        <motion.span
+                          key={idx}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: idx * 0.05 }}
+                          className="glassmorphic-light rounded-full px-4 py-2 text-xs font-medium text-white"
+                        >
+                          {symptom}
+                        </motion.span>
+                      ))}
+                    </div>
+                    <p className="text-xs text-white/70">
+                      Possibly related to: {cluster.relatedConditions.join(", ")}
+                    </p>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+
+              {/* Quick Actions */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="glassmorphic-premium floating-card-premium rounded-[28px] p-5"
+              >
+                <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-white/70">
+                  Quick Actions
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {quickActions.map((qa, index) => {
+                    const Icon = qa.icon;
+                    return (
+                      <motion.button
+                        key={qa.text}
+                        className={`flex items-center gap-2 rounded-full px-5 py-3 text-xs font-medium shadow-lg transition-all ${qa.type === "emergency"
+                          ? "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/50"
+                          : "glassmorphic-light text-white hover:bg-white/20"
+                          }`}
+                        onClick={() => sendMessage(qa.text)}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.7 + index * 0.1 }}
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <Icon className="h-4 w-4" />
+                        {qa.text}
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Symptom Clusters - Show when chat is empty or just has welcome messages */}
+            {messages.length <= 2 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="mt-8"
+              >
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    Quick Symptom Selection
+                  </h3>
+                  <p className="text-sm text-white/60">
+                    Choose a common condition to get started quickly
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {symptomClusters.map((cluster, index) => (
+                    <motion.button
+                      key={cluster.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.6 + index * 0.1 }}
+                      whileHover={{ scale: 1.03, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        const symptomText = `I have ${cluster.symptoms.join(", ")}`;
+                        setInput(symptomText);
+                      }}
+                      className={`glassmorphic-premium rounded-2xl p-4 text-left transition-all hover:shadow-xl hover:shadow-emerald-500/10 bg-gradient-to-br ${cluster.color}`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="text-3xl">{cluster.icon}</div>
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-white text-sm mb-1">
+                            {cluster.title}
+                          </h4>
+                          <p className="text-xs text-white/60 mb-2">
+                            {cluster.description}
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {cluster.symptoms.slice(0, 3).map((symptom, i) => (
+                              <span
+                                key={i}
+                                className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70"
+                              >
+                                {symptom}
+                              </span>
+                            ))}
+                            {cluster.symptoms.length > 3 && (
+                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70">
+                                +{cluster.symptoms.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            <div ref={chatEndRef} />
+          </div>
+        </div>
+
+
+        {/* Input Section - Premium Fixed Bottom */}
+        <div className="flex-shrink-0 px-4 pb-4">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.15, type: "spring", stiffness: 350, damping: 30 }}
+              className="glassmorphic-premium rounded-3xl p-4 shadow-2xl shadow-black/20"
+            >
+              <AnimatePresence>
+                {listeningText && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="mb-3 flex items-center gap-3 overflow-hidden rounded-2xl bg-emerald-500/20 px-4 py-3"
+                  >
+                    <motion.div
+                      className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500"
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 0.8, repeat: Infinity }}
+                    >
+                      <Mic className="h-4 w-4 text-white" />
+                    </motion.div>
+                    <div className="flex-1">
+                      <p className="text-xs font-semibold text-white">Listening…</p>
+                      <p className="line-clamp-1 text-xs text-white/70">{listeningText}</p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="flex items-end gap-3">
+                {/* Main Input */}
+                <div className="flex-1">
+                  <textarea
+                    rows={2}
+                    className="w-full resize-none rounded-3xl border-none bg-white/10 px-6 py-4 text-sm text-white placeholder-white/40 outline-none backdrop-blur-xl transition-all focus:bg-white/15 focus:ring-2 focus:ring-emerald-400/50"
+                    placeholder="Type in Hindi, English or Hinglish…"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage(input);
+                      }
+                    }}
+                  />
+                  <div className="mt-2 flex items-center justify-between px-2">
+                    {/* Attachment Buttons */}
+                    <div className="flex items-center gap-2">
+                      <motion.label
+                        className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <ImageIcon className="h-4 w-4" />
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => handleFileUpload(e, "image")}
+                        />
+                      </motion.label>
+                      <motion.button
+                        onClick={startVideoRecording}
+                        className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Video className="h-4 w-4" />
+                      </motion.button>
+                    </div>
+
+                    {/* Voice and Send Buttons */}
+                    <div className="flex items-center gap-2">
+                      <motion.button
+                        onClick={handleVoiceToggle}
+                        className={`flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all ${recording
+                          ? "bg-red-500 shadow-red-500/50"
+                          : "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/50"
+                          }`}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        animate={
+                          recording
+                            ? {
+                              scale: [1, 1.1, 1],
+                              boxShadow: [
+                                "0 0 0 0 rgba(239, 68, 68, 0.7)",
+                                "0 0 0 20px rgba(239, 68, 68, 0)",
+                              ],
+                            }
+                            : {}
+                        }
+                        transition={{ duration: 1.2, repeat: recording ? Infinity : 0 }}
+                      >
+                        <Mic className="h-5 w-5 text-white" />
+                      </motion.button>
+                      <motion.button
+                        onClick={() => sendMessage(input)}
+                        className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-lg shadow-emerald-500/50"
+                        whileHover={{ scale: 1.1, rotate: 15 }}
+                        whileTap={{ scale: 0.9 }}
+                        animate={{
+                          boxShadow: [
+                            "0 10px 30px rgba(16, 185, 129, 0.5)",
+                            "0 15px 40px rgba(16, 185, 129, 0.7)",
+                            "0 10px 30px rgba(16, 185, 129, 0.5)",
+                          ],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <Send className="h-5 w-5 text-white" />
+                      </motion.button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-2 px-2 text-center text-[10px] text-white/40">
+                ⚕️ AI is not a doctor. This demo never sends data to a server.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

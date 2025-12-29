@@ -128,8 +128,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                         <Link key={route.href} href={route.href}>
                           <div
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${isActive
-                                ? "bg-emerald-50 text-emerald-900 font-medium shadow-sm"
-                                : "text-emerald-600 hover:bg-emerald-50/50 hover:text-emerald-900"
+                              ? "bg-emerald-50 text-emerald-900 font-medium shadow-sm"
+                              : "text-emerald-600 hover:bg-emerald-50/50 hover:text-emerald-900"
                               }`}
                           >
                             <Icon
@@ -172,12 +172,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/80 backdrop-blur-xl">
+        <header className="sticky top-0 z-30 border-b border-white/10 bg-black/20 backdrop-blur-xl">
           <div className="flex items-center justify-between px-4 py-3 md:px-6">
             <div className="flex items-center gap-4">
               <button
                 onClick={toggleSidebar}
-                className="p-2 -ml-2 rounded-full hover:bg-emerald-50 text-emerald-900 transition-colors focus:ring-2 focus:ring-emerald-200 focus:outline-none"
+                className="p-2 -ml-2 rounded-full hover:bg-white/10 text-white transition-colors focus:ring-2 focus:ring-white/20 focus:outline-none"
                 aria-label="Toggle navigation"
               >
                 <Menu className="h-6 w-6" />
@@ -187,22 +187,22 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-sm">
                   <Mic className="h-4 w-4" />
                 </div>
-                <span className="font-semibold text-emerald-900">SwasthyaSakha</span>
+                <span className="font-semibold text-white">SwasthyaSakha</span>
               </div>
             </div>
 
             <div className="flex items-center gap-2 md:gap-4">
               {/* Language Selector */}
-              <div className="hidden md:flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/50 px-3 py-1.5 text-xs text-emerald-900">
-                <Globe2 className="h-3.5 w-3.5 text-emerald-600" />
+              <div className="hidden md:flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-white">
+                <Globe2 className="h-3.5 w-3.5 text-white/80" />
                 <select
                   aria-label="Select language"
-                  className="bg-transparent font-medium outline-none cursor-pointer"
+                  className="bg-transparent font-medium outline-none cursor-pointer text-white"
                   value={lang}
                   onChange={(e) => setLang(e.target.value)}
                 >
                   {langs.map((l) => (
-                    <option key={l} value={l}>
+                    <option key={l} value={l} className="bg-gray-900">
                       {l}
                     </option>
                   ))}
@@ -222,7 +222,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </Link>
 
               {/* Settings - Mobile Only */}
-              <button className="md:hidden p-2 rounded-full hover:bg-emerald-50 text-emerald-600">
+              <button className="md:hidden p-2 rounded-full hover:bg-white/10 text-white">
                 <Settings className="h-5 w-5" />
               </button>
             </div>
