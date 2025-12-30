@@ -22,6 +22,7 @@ import {
   Heart,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { FloatingSOS } from "./emergency/FloatingSOS";
 
 // Grouped Routes Configuration
 const routeGroups = [
@@ -243,6 +244,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </main>
       </div>
+      <FloatingSOS />
     </div>
   );
 }

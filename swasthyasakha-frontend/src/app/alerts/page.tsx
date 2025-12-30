@@ -1,59 +1,78 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { LocationAlerts } from "@/components/alerts/LocationAlerts";
+import { OutbreakHeatMap } from "@/components/alerts/OutbreakHeatMap";
+import { TrendGraphs } from "@/components/alerts/TrendGraphs";
+import { VaccinationDashboard } from "@/components/alerts/VaccinationDashboard";
+import { VaccineCalendar } from "@/components/alerts/VaccineCalendar";
+import { CoverageStats } from "@/components/alerts/CoverageStats";
+import { AQIDashboard } from "@/components/alerts/AQIDashboard";
+import { HealthAdvisories } from "@/components/alerts/HealthAdvisories";
+import { GreenSpacesMap } from "@/components/alerts/GreenSpacesMap";
 
 export default function AlertsPage() {
   return (
-    <div className="flex flex-1 flex-col gap-4 rounded-3xl border border-emerald-300/80 bg-gradient-to-b from-emerald-50 via-emerald-100 to-emerald-50 p-4 text-xs text-emerald-950 shadow-[0_22px_70px_rgba(16,185,129,0.35)]">
-      <header className="space-y-1">
-        <p className="text-[11px] uppercase tracking-[0.25em] text-emerald-600/90">
-          Alerts & health tracking
-        </p>
-        <h1 className="text-lg font-semibold text-emerald-950">
-          See what&apos;s happening in your area
-        </h1>
-        <p className="text-[11px] text-emerald-800/80">
-          All maps and charts are mocked. They show how a real public health
-          dashboard could look.
-        </p>
-      </header>
+    <div className="min-h-screen bg-slate-50 pb-20 overflow-x-hidden">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-teal-200/20 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-blue-200/20 rounded-full blur-[120px]" />
+      </div>
 
-      <section className="grid gap-3 md:grid-cols-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 relative z-10">
+
+        {/* Header */}
         <motion.div
-          whileHover={{ y: -3 }}
-          className="col-span-2 space-y-2 rounded-2xl border border-emerald-200/90 bg-white/80 p-3 shadow-sm"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
         >
-          <div className="flex items-center justify-between text-[11px]">
-            <p className="text-sm font-semibold text-emerald-950">India outbreak heat map</p>
-            <span className="rounded-full bg-emerald-100 px-2 py-1 text-[10px] text-emerald-800">
-              Demo data
-            </span>
-          </div>
-          <div className="h-40 rounded-xl bg-[radial-gradient(circle_at_top,_rgba(34,197,94,0.4),transparent_60%),radial-gradient(circle_at_center,_rgba(250,204,21,0.3),transparent_60%),radial-gradient(circle_at_bottom,_rgba(248,113,113,0.3),transparent_60%)] border border-emerald-200/80" />
-          <p className="text-[10px] text-emerald-800/80">
-            Colours show sample risk levels. Real data will come from trusted
-            public health partners only.
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
+            Alerts & <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-blue-600">Tracking</span>
+            <span className="text-sm font-bold ml-3 px-2 py-1 bg-slate-200 text-slate-600 rounded-lg align-middle">PURA v2.0</span>
+          </h1>
+          <p className="text-slate-500 font-medium mt-2 max-w-2xl">
+            Real-time public health surveillance, outbreak predictions, and personalized wellness tracking.
           </p>
         </motion.div>
 
-        <motion.div
-          whileHover={{ y: -3 }}
-          className="space-y-2 rounded-2xl border border-emerald-200/90 bg-white/80 p-3 shadow-sm"
-        >
-          <p className="text-sm font-semibold text-emerald-950">Outbreak alert for your city</p>
-          <div className="space-y-1.5 text-[11px]">
-            <p className="rounded-xl bg-emerald-100 px-2.5 py-2 text-emerald-900 border border-emerald-300/80">
-              Sample alert: Dengue cases are rising in your district. Use
-              mosquito nets and remove standing water.
-            </p>
-            <p className="text-[10px] text-emerald-800/80">
-              This is not live data. It only shows the planned experience.
-            </p>
+        {/* Hero Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div className="lg:col-span-2">
+            <OutbreakHeatMap />
           </div>
-        </motion.div>
-      </section>
+          <div className="flex flex-col gap-6">
+            <LocationAlerts />
+            <AQIDashboard />
+          </div>
+        </div>
+
+        {/* Second Row: Trends & Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          <div className="lg:col-span-2 h-[350px]">
+            <TrendGraphs />
+          </div>
+          <div className="h-[350px]">
+            <HealthAdvisories />
+          </div>
+        </div>
+
+        {/* Third Row: Vaccination & Wellness */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="lg:col-span-2">
+            <VaccinationDashboard />
+          </div>
+          <div>
+            <VaccineCalendar />
+          </div>
+          <div className="grid grid-rows-2 gap-6 h-full">
+            <CoverageStats />
+            <GreenSpacesMap />
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 }
-
-
