@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/shell";
+import { SettingsProvider } from "@/context/SettingsContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -32,7 +33,9 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${poppins.variable} font-sans antialiased h-full`}
       >
-        <AppShell>{children}</AppShell>
+        <SettingsProvider>
+          <AppShell>{children}</AppShell>
+        </SettingsProvider>
       </body>
     </html>
   );
