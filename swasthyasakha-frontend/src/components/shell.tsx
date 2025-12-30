@@ -155,7 +155,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white to-transparent">
               <div className="flex items-center justify-between gap-2 p-3 rounded-2xl bg-emerald-50/50 border border-emerald-100">
-                <div className="flex items-center gap-2">
+                <Link href="/profile" className="flex items-center gap-2 flex-1 hover:opacity-80 transition-opacity">
                   <div className="h-8 w-8 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-700 font-bold text-xs">
                     JD
                   </div>
@@ -163,8 +163,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <p className="font-medium text-emerald-900">John Doe</p>
                     <p className="text-emerald-500">Premium Plan</p>
                   </div>
-                </div>
-                <Settings className="h-4 w-4 text-emerald-400" />
+                </Link>
+                <Link href="/settings" className="p-1.5 rounded-lg hover:bg-emerald-100/50 transition-colors">
+                  <Settings className="h-4 w-4 text-emerald-400" />
+                </Link>
               </div>
             </div>
           </motion.aside>
@@ -223,9 +225,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </Link>
 
               {/* Settings - Mobile Only */}
-              <button className="md:hidden p-2 rounded-full hover:bg-white/10 text-white">
-                <Settings className="h-5 w-5" />
-              </button>
+              <Link href="/settings">
+                <button className="md:hidden p-2 rounded-full hover:bg-white/10 text-white">
+                  <Settings className="h-5 w-5" />
+                </button>
+              </Link>
             </div>
           </div>
         </header>
