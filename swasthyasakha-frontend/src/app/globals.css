@@ -133,6 +133,22 @@
   h6 {
     font-family: var(--font-display);
   }
+
+  /* Scroll Performance Optimizations */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* GPU Acceleration for transforms */
+  [class*="motion"] {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
 }
 
 /* Premium Advanced Animations */
