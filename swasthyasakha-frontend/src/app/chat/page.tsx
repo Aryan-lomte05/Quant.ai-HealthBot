@@ -30,6 +30,10 @@ import {
   MapPin,
 } from "lucide-react";
 
+import Avatar from "./Avatar";
+import FemaleDoctorAvatar from "./FemaleDoctorAvatar";
+import AvatarSelector from "./AvatarSelector";
+
 type Lang = "hi" | "en" | "hinglish";
 
 type ChatMessage = {
@@ -214,6 +218,10 @@ export default function ChatPage() {
   });
   const [expandedCitations, setExpandedCitations] = useState<Set<string>>(new Set());
   const [typingIndicator, setTypingIndicator] = useState(false);
+
+  // Avatar State
+  const [selectedAvatar, setSelectedAvatar] = useState("male");
+  const avatarState = isSpeaking ? 'speaking' : recording ? 'thinking' : 'idle';
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -506,37 +514,48 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="relative h-screen overflow-hidden flex flex-col">
+    <div className="fixed inset-0 flex flex-col overflow-hidden">
       {/* Clean Emerald Background - Matching Home Page */}
-      <div className="fixed inset-0 -z-10 bg-emerald-950">
-        {/* Subtle Animated Gradient Blobs */}
-        <div className="absolute inset-0" style={{ filter: "blur(120px)", opacity: 0.4 }}>
+      <div className="fixed inset-0 -z-10 bg-gradient-to-br from-emerald-900 via-teal-900 to-emerald-950">
+        {/* White overlay for subtle lightening - Centered */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(circle at center, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 100%)'
+          }}
+        />
+        {/* Subtle Animated Gradient Blobs - Optimized */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            filter: "blur(100px)",
+            opacity: 0.35,
+            willChange: 'transform'
+          }}
+        >
           <motion.div
             className="absolute top-0 left-1/4 h-[500px] w-[500px] rounded-full bg-emerald-600"
             animate={{
-              x: [0, 100, 0],
-              y: [0, -50, 0],
-              scale: [1, 1.2, 1],
+              x: [0, 80, 0],
+              y: [0, -40, 0],
             }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
           />
           <motion.div
             className="absolute bottom-0 right-1/4 h-[500px] w-[500px] rounded-full bg-teal-600"
             animate={{
-              x: [0, -80, 0],
-              y: [0, 60, 0],
-              scale: [1, 1.15, 1],
+              x: [0, -60, 0],
+              y: [0, 50, 0],
             }}
-            transition={{ duration: 30, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
           />
           <motion.div
             className="absolute top-1/2 left-1/2 h-[400px] w-[400px] rounded-full bg-emerald-700"
             animate={{
-              x: [0, -60, 0],
-              y: [0, -40, 0],
-              scale: [1, 1.1, 1],
+              x: [0, -50, 0],
+              y: [0, -30, 0],
             }}
-            transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 32, repeat: Infinity, ease: "linear" }}
           />
         </div>
       </div>
@@ -586,8 +605,139 @@ export default function ChatPage() {
           </div>
         </div>
 
+        {/* Floating Avatar Companion - Right Corner */}
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, x: 100, y: -20 }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={{ opacity: 0, x: 100, scale: 0.8 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 25,
+              delay: 0.3
+            }}
+            className="fixed top-24 right-8 z-30 hidden xl:block"
+          >
+            {/* Glassmorphic Avatar Container with Glow */}
+            <div className="relative">
+              {/* Ambient Glow Effect */}
+              <motion.div
+                animate={{
+                  opacity: [0.3, 0.6, 0.3],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="absolute -inset-4 bg-gradient-to-br from-emerald-400/30 via-teal-400/30 to-cyan-400/30 rounded-[40px] blur-2xl"
+              />
+
+              {/* Main Avatar Card */}
+              <motion.div
+                animate={{
+                  y: [0, -8, 0],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="relative backdrop-blur-2xl bg-gradient-to-br from-white/10 to-white/5 rounded-3xl border border-white/20 shadow-2xl overflow-hidden"
+                style={{
+                  backdropFilter: "blur(40px) saturate(180%)",
+                }}
+              >
+                {/* Shimmer Effect */}
+                <motion.div
+                  animate={{
+                    x: ["-100%", "200%"],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear",
+                    repeatDelay: 2
+                  }}
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                />
+
+                {/* Avatar Selector & Status */}
+                <div className="relative z-10 flex flex-col items-center gap-2 p-3 pb-1">
+                  <AvatarSelector value={selectedAvatar} onChange={setSelectedAvatar} />
+
+                  {/* Minimal Status Indicator */}
+                  <motion.div
+                    animate={{
+                      opacity: [0.6, 1, 0.6],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                    }}
+                    className="px-2 py-0.5 rounded-full bg-emerald-500/10 backdrop-blur-sm border border-emerald-400/20"
+                  >
+                    <span className="text-[10px] font-medium text-emerald-300 flex items-center gap-1">
+                      <motion.span
+                        animate={{
+                          scale: [1, 1.3, 1],
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                        }}
+                        className="w-1 h-1 rounded-full bg-emerald-400"
+                      />
+                      Ready
+                    </span>
+                  </motion.div>
+                </div>
+
+                {/* 3D Avatar Canvas */}
+                <motion.div
+                  animate={
+                    avatarState === "speaking"
+                      ? { scale: [1, 1.02, 1] }
+                      : avatarState === "thinking"
+                        ? { rotateZ: [-1, 1, -1] }
+                        : { y: [0, -4, 0] }
+                  }
+                  transition={{
+                    duration: avatarState === "speaking" ? 1.5 : avatarState === "thinking" ? 2 : 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="relative w-[280px] h-[320px]"
+                >
+                  {/* Bottom Gradient Fade */}
+                  <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/20 to-transparent pointer-events-none z-10" />
+
+                  {selectedAvatar === "male" ? (
+                    <Avatar state={avatarState} />
+                  ) : (
+                    <FemaleDoctorAvatar state={avatarState} />
+                  )}
+                </motion.div>
+
+                {/* Decorative Corner Elements */}
+                <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-emerald-400/30 rounded-tl-xl" />
+                <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-teal-400/30 rounded-br-xl" />
+              </motion.div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
         {/* Chat Messages Area - Scrollable with Fixed Height */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden px-2 min-h-0" style={{ scrollBehavior: 'smooth' }}>
+        <div
+          className="flex-1 overflow-y-auto overflow-x-hidden px-2 min-h-0"
+          style={{
+            scrollBehavior: 'smooth',
+            willChange: 'scroll-position',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
           {/* Main Chat - Centered, Max Width */}
           <div className="max-w-4xl mx-auto w-full">
             <div className="space-y-3">
@@ -595,16 +745,16 @@ export default function ChatPage() {
                 {messages.map((m, index) => (
                   <motion.div
                     key={m.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.5, filter: "blur(20px)" }}
-                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, scale: 0.8 }}
+                    layout={false}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
                     transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 25,
-                      delay: index === messages.length - 1 ? 0 : 0,
+                      type: "tween",
+                      duration: 0.3,
+                      ease: "easeOut"
                     }}
+                    style={{ willChange: 'transform, opacity' }}
                     className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}
                   >
                     <div className={`flex max-w-[85%] items-start gap-2.5 ${m.from === "user" ? "flex-row-reverse" : "flex-row"}`}>

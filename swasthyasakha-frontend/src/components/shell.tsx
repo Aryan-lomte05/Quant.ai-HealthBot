@@ -75,7 +75,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
-    <div className="flex min-h-screen bg-emerald-50/30 text-emerald-950 font-sans selection:bg-emerald-200/50">
+    <div className="flex min-h-screen relative overflow-hidden text-emerald-950 font-sans selection:bg-emerald-200/50">
+      {/* Premium Background with Gradient and Decorative Blobs */}
+      <div className="fixed inset-0 -z-10">
+        {/* Base Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-emerald-50 via-teal-50/80 to-cyan-50" />
+
+        {/* Decorative Gradient Orbs */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-emerald-200/30 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-teal-200/30 to-transparent rounded-full blur-3xl" />
+
+        {/* Subtle Pattern Overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1px 1px, rgb(5 150 105) 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }}
+        />
+      </div>
+
       {/* Sidebar Overlay */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -83,129 +102,195 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
       </AnimatePresence>
 
-      {/* Sidebar Drawer */}
+      {/* Premium Sidebar Drawer */}
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.aside
             initial={{ x: "-100%" }}
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed inset-y-0 left-0 z-50 w-72 h-full overflow-y-auto border-r border-emerald-100 bg-white/95 backdrop-blur-xl shadow-2xl"
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+              mass: 0.8
+            }}
+            className="fixed inset-y-0 left-0 z-50 w-80 h-full overflow-hidden"
           >
-            <div className="flex items-center justify-between p-4 border-b border-emerald-50">
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-md">
-                  <Mic className="h-4 w-4" />
-                </div>
-                <span className="font-bold text-lg text-emerald-900 tracking-tight">SwasthyaSakha</span>
-              </div>
-              <button
-                onClick={() => setIsSidebarOpen(false)}
-                className="p-2 rounded-full hover:bg-emerald-50 text-emerald-600 transition-colors"
+            {/* Glassmorphic Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-emerald-50/90 to-teal-50/95 backdrop-blur-2xl" />
+
+            {/* Decorative Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 via-transparent to-teal-500/5" />
+
+            {/* Content Container */}
+            <div className="relative h-full flex flex-col shadow-2xl shadow-emerald-900/20 border-r border-emerald-200/50">
+              {/* Header */}
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="flex items-center justify-between p-6 border-b border-emerald-100/50 bg-gradient-to-br from-white/50 to-emerald-50/30"
               >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <nav className="p-4 space-y-6">
-              {routeGroups.map((group) => (
-                <div key={group.title}>
-                  <h3 className="px-3 mb-2 text-xs font-bold uppercase tracking-wider text-emerald-400">
-                    {group.title}
-                  </h3>
-                  <div className="space-y-1">
-                    {group.items.map((route) => {
-                      const isActive = pathname === route.href;
-                      const Icon = route.icon;
-
-                      return (
-                        <Link key={route.href} href={route.href}>
-                          <div
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group ${isActive
-                              ? "bg-emerald-50 text-emerald-900 font-medium shadow-sm"
-                              : "text-emerald-600 hover:bg-emerald-50/50 hover:text-emerald-900"
-                              }`}
-                          >
-                            <Icon
-                              className={`h-5 w-5 transition-colors ${isActive ? "text-emerald-600" : "text-emerald-400 group-hover:text-emerald-600"
-                                }`}
-                            />
-                            <span>{route.label}</span>
-                            {isActive && (
-                              <motion.div
-                                layoutId="activeSidebarIndicator"
-                                className="ml-auto w-1.5 h-1.5 rounded-full bg-emerald-500"
-                              />
-                            )}
-                          </div>
-                        </Link>
-                      );
-                    })}
+                <div className="flex items-center gap-3">
+                  <motion.div
+                    whileHover={{ rotate: 360, scale: 1.1 }}
+                    transition={{ duration: 0.6 }}
+                    className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/40"
+                  >
+                    <Mic className="h-5 w-5" />
+                  </motion.div>
+                  <div>
+                    <span className="font-bold text-xl bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent">SwasthyaSakha</span>
+                    <p className="text-xs text-emerald-600/70">Your Health Companion</p>
                   </div>
                 </div>
-              ))}
-            </nav>
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="p-2.5 rounded-xl hover:bg-emerald-100 text-emerald-600 transition-all"
+                >
+                  <X className="h-5 w-5" />
+                </motion.button>
+              </motion.div>
 
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white via-white to-transparent">
-              <div className="flex items-center justify-between gap-2 p-3 rounded-2xl bg-emerald-50/50 border border-emerald-100">
-                <Link href="/profile" className="flex items-center gap-2 flex-1 hover:opacity-80 transition-opacity">
-                  <div className="h-8 w-8 rounded-full bg-emerald-200 flex items-center justify-center text-emerald-700 font-bold text-xs">
-                    JD
-                  </div>
-                  <div className="text-xs">
-                    <p className="font-medium text-emerald-900">John Doe</p>
-                    <p className="text-emerald-500">Premium Plan</p>
-                  </div>
-                </Link>
-                <Link href="/settings" className="p-1.5 rounded-lg hover:bg-emerald-100/50 transition-colors">
-                  <Settings className="h-4 w-4 text-emerald-400" />
-                </Link>
-              </div>
+              {/* Navigation */}
+              <nav className="flex-1 overflow-y-auto p-6 space-y-8 scrollbar-thin scrollbar-thumb-emerald-200 scrollbar-track-transparent">
+                {routeGroups.map((group, groupIndex) => (
+                  <motion.div
+                    key={group.title}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + groupIndex * 0.1 }}
+                  >
+                    <h3 className="px-4 mb-3 text-xs font-bold uppercase tracking-wider text-emerald-500/80 flex items-center gap-2">
+                      <div className="h-px flex-1 bg-gradient-to-r from-emerald-300/50 to-transparent" />
+                      {group.title}
+                      <div className="h-px flex-1 bg-gradient-to-l from-emerald-300/50 to-transparent" />
+                    </h3>
+                    <div className="space-y-1.5">
+                      {group.items.map((route, itemIndex) => {
+                        const isActive = pathname === route.href;
+                        const Icon = route.icon;
+
+                        return (
+                          <Link key={route.href} href={route.href}>
+                            <motion.div
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: 0.15 + groupIndex * 0.1 + itemIndex * 0.05 }}
+                              whileHover={{ x: 4 }}
+                              whileTap={{ scale: 0.98 }}
+                              className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 ${isActive
+                                  ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/40"
+                                  : "text-emerald-700 hover:bg-emerald-50/80"
+                                }`}
+                            >
+                              <motion.div
+                                whileHover={{ rotate: 360 }}
+                                transition={{ duration: 0.5 }}
+                              >
+                                <Icon
+                                  className={`h-5 w-5 transition-colors ${isActive ? "text-white" : "text-emerald-500 group-hover:text-emerald-600"
+                                    }`}
+                                />
+                              </motion.div>
+                              <span className={`font-semibold text-sm ${isActive ? "text-white" : ""}`}>
+                                {route.label}
+                              </span>
+                              {isActive && (
+                                <motion.div
+                                  layoutId="activeSidebarIndicator"
+                                  className="ml-auto w-2 h-2 rounded-full bg-white shadow-lg"
+                                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                />
+                              )}
+                            </motion.div>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                ))}
+              </nav>
+
+              {/* Footer Profile Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="p-6 bg-gradient-to-t from-white/80 via-white/60 to-transparent backdrop-blur-sm"
+              >
+                <div className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50/80 border border-emerald-200/50 shadow-sm">
+                  <Link href="/profile" className="flex items-center gap-3 flex-1 group">
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      className="h-11 w-11 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-emerald-500/30"
+                    >
+                      JD
+                    </motion.div>
+                    <div className="flex-1">
+                      <p className="font-semibold text-sm text-emerald-900 group-hover:text-emerald-700 transition-colors">John Doe</p>
+                      <p className="text-xs text-emerald-600/70">Premium Member</p>
+                    </div>
+                  </Link>
+                  <Link href="/settings">
+                    <motion.button
+                      whileHover={{ scale: 1.1, rotate: 90 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-2.5 rounded-xl hover:bg-emerald-100 transition-all"
+                    >
+                      <Settings className="h-4 w-4 text-emerald-600" />
+                    </motion.button>
+                  </Link>
+                </div>
+              </motion.div>
             </div>
           </motion.aside>
         )}
       </AnimatePresence>
 
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="sticky top-0 z-30 border-b border-white/10 bg-black/20 backdrop-blur-xl">
+        {/* Premium Header */}
+        <header className="sticky top-0 z-30 border-b border-emerald-200/50 bg-white/80 backdrop-blur-xl shadow-sm">
           <div className="flex items-center justify-between px-4 py-3 md:px-6">
             <div className="flex items-center gap-4">
               <button
                 onClick={toggleSidebar}
-                className="p-2 -ml-2 rounded-full hover:bg-white/10 text-white transition-colors focus:ring-2 focus:ring-white/20 focus:outline-none"
+                className="p-2 -ml-2 rounded-xl hover:bg-emerald-100 text-emerald-700 transition-colors focus:ring-2 focus:ring-emerald-300 focus:outline-none"
                 aria-label="Toggle navigation"
               >
                 <Menu className="h-6 w-6" />
               </button>
 
-              <div className="flex items-center gap-3 md:hidden">
-                <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 text-white shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/30">
                   <Mic className="h-4 w-4" />
                 </div>
-                <span className="font-semibold text-white">SwasthyaSakha</span>
+                <span className="font-bold text-lg bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent hidden sm:block">SwasthyaSakha</span>
               </div>
             </div>
 
             <div className="flex items-center gap-2 md:gap-4">
               {/* Language Selector */}
-              <div className="hidden md:flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs text-white">
-                <Globe2 className="h-3.5 w-3.5 text-white/80" />
+              <div className="hidden md:flex items-center gap-2 rounded-full border border-emerald-200 bg-white/60 backdrop-blur-sm px-3 py-1.5 text-xs text-emerald-700 shadow-sm">
+                <Globe2 className="h-3.5 w-3.5 text-emerald-600" />
                 <select
                   aria-label="Select language"
-                  className="bg-transparent font-medium outline-none cursor-pointer text-white"
+                  className="bg-transparent font-medium outline-none cursor-pointer text-emerald-700"
                   value={lang}
                   onChange={(e) => setLang(e.target.value)}
                 >
                   {langs.map((l) => (
-                    <option key={l} value={l} className="bg-gray-900">
+                    <option key={l} value={l} className="bg-white">
                       {l}
                     </option>
                   ))}
@@ -215,18 +300,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               {/* Ask Sakha CTA */}
               <Link href="/chat">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.05, y: -1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-medium rounded-full shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-shadow"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-semibold rounded-full shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  <span>Ask Sakha</span>
+                  <span className="hidden sm:inline">Ask Sakha</span>
                 </motion.button>
               </Link>
 
               {/* Settings - Mobile Only */}
               <Link href="/settings">
-                <button className="md:hidden p-2 rounded-full hover:bg-white/10 text-white">
+                <button className="md:hidden p-2 rounded-xl hover:bg-emerald-100 text-emerald-700 transition-colors">
                   <Settings className="h-5 w-5" />
                 </button>
               </Link>

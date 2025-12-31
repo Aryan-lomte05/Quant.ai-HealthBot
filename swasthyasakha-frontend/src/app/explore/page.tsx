@@ -26,13 +26,14 @@ import {
 } from "lucide-react";
 
 // Scroll Reveal Component
-function ScrollRevealSection({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function ScrollRevealSection({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.3 });
 
   return (
     <motion.div
       ref={ref}
+      id={id}
       initial={{ opacity: 0, y: 100 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 100 }}
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -529,8 +530,8 @@ export default function ExplorePage() {
                       setShowResults(false);
                     }}
                     className={`px-6 py-3 rounded-full font-medium transition-all ${selectedSymptoms.includes(symptom)
-                        ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/50'
-                        : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
+                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/50'
+                      : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
                       }`}
                   >
                     {symptom}
