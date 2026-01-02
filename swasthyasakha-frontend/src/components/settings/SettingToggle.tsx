@@ -1,12 +1,13 @@
 
 import { motion } from "framer-motion";
+import type { LucideIcon } from "lucide-react";
 
 interface SettingToggleProps {
     label: string;
     description?: string;
     isOn: boolean;
     onToggle: () => void;
-    icon?: React.ElementType;
+    icon?: LucideIcon;
 }
 
 export function SettingToggle({ label, description, isOn, onToggle, icon: Icon }: SettingToggleProps) {
