@@ -994,7 +994,7 @@ function ChatPageContent() {
                       ))}
                     </div>
                     <p className="text-xs text-white/70">
-                      Possibly related to: {cluster.relatedConditions.join(", ")}
+                      Possibly related to: {cluster.relatedConditions?.join(", ") || "N/A"}
                     </p>
                   </motion.div>
                 ))}
