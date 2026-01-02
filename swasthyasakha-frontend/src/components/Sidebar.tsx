@@ -14,10 +14,12 @@ import {
     Gamepad2,
     Settings,
     Handshake,
-    X
+    X,
+    LogOut
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { clearAuth } from "@/lib/auth";
 
 const navigationSections = [
     {
@@ -49,6 +51,12 @@ const navigationSections = [
 
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
     const pathname = usePathname();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        clearAuth();
+        router.push("/login");
+    };
 
     return (
         <div className="h-screen bg-white border-r border-emerald-100 flex flex-col" style={{ width: "280px" }}>
@@ -146,6 +154,17 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                             <span className="text-[15px] font-medium group-hover:text-gray-900">Partners</span>
                         </motion.div>
                     </Link>
+
+                    {/* Logout Button */}
+                    <button onClick={handleLogout}>
+                        <motion.div
+                            whileHover={{ x: 2 }}
+                            className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-gray-600 hover:bg-red-50 transition-all"
+                        >
+                            <LogOut className="w-5 h-5 text-red-500 group-hover:text-red-600 transition-colors" />
+                            <span className="text-[15px] font-medium group-hover:text-red-600">Logout</span>
+                        </motion.div>
+                    </button>
                 </div>
             </nav>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Globe2,
@@ -20,9 +20,11 @@ import {
   Gamepad2,
   LineChart,
   Heart,
+  LogOut,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FloatingSOS } from "./emergency/FloatingSOS";
+import { clearAuth } from "@/lib/auth";
 
 // Grouped Routes Configuration
 const routeGroups = [
@@ -64,8 +66,14 @@ const langs = ["English", "हिन्दी", "தமிழ்", "বাংল
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [lang, setLang] = useState("English");
+
+  const handleLogout = () => {
+    clearAuth();
+    router.push("/login");
+  };
 
   // Close sidebar on route change
   useEffect(() => {
@@ -190,8 +198,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                               whileHover={{ x: 4 }}
                               whileTap={{ scale: 0.98 }}
                               className={`group flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 ${isActive
-                                  ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/40"
-                                  : "text-emerald-700 hover:bg-emerald-50/80"
+                                ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/40"
+                                : "text-emerald-700 hover:bg-emerald-50/80"
                                 }`}
                             >
                               <motion.div
@@ -220,6 +228,29 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     </div>
                   </motion.div>
                 ))}
+
+                {/* Logout Button */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <button onClick={handleLogout} className="w-full">
+                    <motion.div
+                      whileHover={{ x: 4 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="group flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 text-red-600 hover:bg-red-50"
+                    >
+                      <motion.div
+                        whileHover={{ rotate: 360 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <LogOut className="h-5 w-5 text-red-500 group-hover:text-red-600 transition-colors" />
+                      </motion.div>
+                      <span className="font-semibold text-sm">Logout</span>
+                    </motion.div>
+                  </button>
+                </motion.div>
               </nav>
 
               {/* Footer Profile Section */}

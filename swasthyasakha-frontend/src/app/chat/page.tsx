@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { AuthGuard } from "@/components/auth/AuthGuard";
+import { getUserPhone, parseResponse, clearAuth } from "@/lib/auth";
+import { api } from '@/lib/api';
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
   FileText,
@@ -28,6 +32,7 @@ import {
   User,
   Bot,
   MapPin,
+  LogOut,
 } from "lucide-react";
 
 import Avatar from "./Avatar";
@@ -197,7 +202,9 @@ const symptomClusters = [
 ];
 
 
-export default function ChatPage() {
+function ChatPageContent() {
+  const router = useRouter();
+  const userPhone = getUserPhone();
   const [messages, setMessages] = useState<ChatMessage[]>(mockResponses);
   const [input, setInput] = useState("");
   const [lang, setLang] = useState<Lang>("hinglish");
@@ -294,8 +301,15 @@ export default function ChatPage() {
     }
   }, [messages]);
 
-  const sendMessage = (text: string) => {
+  const sendMessage = async (text: string) => {
     if (!text.trim()) return;
+
+    if (!userPhone) {
+      alert('Session expired. Please login again.');
+      clearAuth();
+      router.push('/login');
+      return;
+    }
 
     const userMsg: ChatMessage = {
       id: `u-${Date.now()}`,
@@ -306,22 +320,26 @@ export default function ChatPage() {
 
     setMessages((prev) => [...prev, userMsg]);
     setTypingIndicator(true);
+    setInput("");
 
-    setTimeout(() => {
-      const hasCitations = /fever|diabetes|medicine|treatment/i.test(text);
+    try {
+      const response = await api.sendChatMessage(userPhone, text);
+      const cleanedResponse = parseResponse(response.response);
+
       const followUp: ChatMessage = {
         id: `s-${Date.now()}`,
         from: "sakha",
         lang,
-        text: "Samajh gaya. Main aapki baat dhyaan se sun raha hoon. Thodi aur jaankari dijiye—kab se, kitna, aur koi purani beemari?",
+        text: cleanedResponse,
         tone: "calm",
-        citations: hasCitations ? mockCitations : undefined,
       };
       setMessages((prev) => [...prev, followUp]);
+    } catch (error: any) {
+      console.error('Chat error:', error);
+      // Optional: Add visible error message to chat
+    } finally {
       setTypingIndicator(false);
-    }, 1500);
-
-    setInput("");
+    }
   };
 
   const handleVoiceToggle = async () => {
@@ -513,6 +531,11 @@ export default function ChatPage() {
     }
   };
 
+  const handleLogout = () => {
+    clearAuth();
+    router.push("/login");
+  };
+
   return (
     <div className="fixed inset-0 flex flex-col overflow-hidden">
       {/* Clean Emerald Background - Matching Home Page */}
@@ -578,8 +601,16 @@ export default function ChatPage() {
 
             {/* Right Side - Language + Disclaimer */}
             <div className="flex items-center gap-3">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-500/20 hover:text-red-100"
+                title="Sign out"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
               {showDisclaimer && (
-                <div className="flex items-center gap-2 text-xs text-white/60">
+                <div className="hidden md:flex items-center gap-2 text-xs text-white/60">
                   <AlertCircle className="h-3.5 w-3.5 text-amber-400" />
                   <span className="hidden md:inline">Not a doctor • Emergency? Call 108</span>
                   <button
@@ -664,7 +695,7 @@ export default function ChatPage() {
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
                 />
 
-                {/* Avatar Selector & Status */}
+                {/* Avatar Selector & Status & Logout */}
                 <div className="relative z-10 flex flex-col items-center gap-2 p-3 pb-1">
                   <AvatarSelector value={selectedAvatar} onChange={setSelectedAvatar} />
 
@@ -693,6 +724,15 @@ export default function ChatPage() {
                       Ready
                     </span>
                   </motion.div>
+
+                  {/* Sidebar Logout Option */}
+                  <button
+                    onClick={handleLogout}
+                    className="mt-2 flex items-center gap-1.5 text-[10px] font-medium text-white/40 hover:text-red-300 transition-colors"
+                  >
+                    <LogOut className="w-3 h-3" />
+                    Logout
+                  </button>
                 </div>
 
                 {/* 3D Avatar Canvas */}
@@ -727,19 +767,20 @@ export default function ChatPage() {
               </motion.div>
             </div>
           </motion.div>
-        </AnimatePresence>
+        </AnimatePresence >
 
         {/* Chat Messages Area - Scrollable with Fixed Height */}
-        <div
+        < div
           className="flex-1 overflow-y-auto overflow-x-hidden px-2 min-h-0"
           style={{
             scrollBehavior: 'smooth',
             willChange: 'scroll-position',
             WebkitOverflowScrolling: 'touch',
-          }}
+          }
+          }
         >
           {/* Main Chat - Centered, Max Width */}
-          <div className="max-w-4xl mx-auto w-full">
+          < div className="max-w-4xl mx-auto w-full" >
             <div className="space-y-3">
               <AnimatePresence mode="popLayout">
                 {messages.map((m, index) => (
@@ -996,76 +1037,78 @@ export default function ChatPage() {
             </div>
 
             {/* Symptom Clusters - Show when chat is empty or just has welcome messages */}
-            {messages.length <= 2 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.6 }}
-                className="mt-8"
-              >
-                <div className="text-center mb-6">
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    Quick Symptom Selection
-                  </h3>
-                  <p className="text-sm text-white/60">
-                    Choose a common condition to get started quickly
-                  </p>
-                </div>
+            {
+              messages.length <= 2 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5, duration: 0.6 }}
+                  className="mt-8"
+                >
+                  <div className="text-center mb-6">
+                    <h3 className="text-lg font-semibold text-white mb-2">
+                      Quick Symptom Selection
+                    </h3>
+                    <p className="text-sm text-white/60">
+                      Choose a common condition to get started quickly
+                    </p>
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {symptomClusters.map((cluster, index) => (
-                    <motion.button
-                      key={cluster.id}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.6 + index * 0.1 }}
-                      whileHover={{ scale: 1.03, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => {
-                        const symptomText = `I have ${cluster.symptoms.join(", ")}`;
-                        setInput(symptomText);
-                      }}
-                      className={`glassmorphic-premium rounded-2xl p-4 text-left transition-all hover:shadow-xl hover:shadow-emerald-500/10 bg-gradient-to-br ${cluster.color}`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="text-3xl">{cluster.icon}</div>
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-white text-sm mb-1">
-                            {cluster.title}
-                          </h4>
-                          <p className="text-xs text-white/60 mb-2">
-                            {cluster.description}
-                          </p>
-                          <div className="flex flex-wrap gap-1">
-                            {cluster.symptoms.slice(0, 3).map((symptom, i) => (
-                              <span
-                                key={i}
-                                className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70"
-                              >
-                                {symptom}
-                              </span>
-                            ))}
-                            {cluster.symptoms.length > 3 && (
-                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70">
-                                +{cluster.symptoms.length - 3}
-                              </span>
-                            )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {symptomClusters.map((cluster, index) => (
+                      <motion.button
+                        key={cluster.id}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.6 + index * 0.1 }}
+                        whileHover={{ scale: 1.03, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          const symptomText = `I have ${cluster.symptoms.join(", ")}`;
+                          setInput(symptomText);
+                        }}
+                        className={`glassmorphic-premium rounded-2xl p-4 text-left transition-all hover:shadow-xl hover:shadow-emerald-500/10 bg-gradient-to-br ${cluster.color}`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="text-3xl">{cluster.icon}</div>
+                          <div className="flex-1">
+                            <h4 className="font-semibold text-white text-sm mb-1">
+                              {cluster.title}
+                            </h4>
+                            <p className="text-xs text-white/60 mb-2">
+                              {cluster.description}
+                            </p>
+                            <div className="flex flex-wrap gap-1">
+                              {cluster.symptoms.slice(0, 3).map((symptom, i) => (
+                                <span
+                                  key={i}
+                                  className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70"
+                                >
+                                  {symptom}
+                                </span>
+                              ))}
+                              {cluster.symptoms.length > 3 && (
+                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70">
+                                  +{cluster.symptoms.length - 3}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </motion.button>
-                  ))}
-                </div>
-              </motion.div>
-            )}
+                      </motion.button>
+                    ))}
+                  </div>
+                </motion.div>
+              )
+            }
 
             <div ref={chatEndRef} />
-          </div>
-        </div>
+          </div >
+        </div >
 
 
         {/* Input Section - Premium Fixed Bottom */}
-        <div className="flex-shrink-0 px-4 pb-4">
+        < div className="flex-shrink-0 px-4 pb-4" >
           <div className="max-w-4xl mx-auto">
             <motion.div
               initial={{ y: 30, opacity: 0 }}
@@ -1189,12 +1232,20 @@ export default function ChatPage() {
               </div>
 
               <p className="mt-2 px-2 text-center text-[10px] text-white/40">
-                ⚕️ AI is not a doctor. This demo never sends data to a server.
+                ⚕️ AI is not a doctor.
               </p>
             </motion.div>
           </div>
-        </div>
-      </div>
-    </div>
+        </div >
+      </div >
+    </div >
+  );
+}
+
+export default function ChatPage() {
+  return (
+    <AuthGuard>
+      <ChatPageContent />
+    </AuthGuard>
   );
 }
