@@ -226,9 +226,9 @@ function ChatPageContent() {
   const [expandedCitations, setExpandedCitations] = useState<Set<string>>(new Set());
   const [typingIndicator, setTypingIndicator] = useState(false);
 
-  // Avatar State
+  // Avatar State - synced with chat flow
   const [selectedAvatar, setSelectedAvatar] = useState("male");
-  const avatarState = isSpeaking ? 'speaking' : recording ? 'thinking' : 'idle';
+  const avatarState = isSpeaking ? 'speaking' : typingIndicator ? 'thinking' : 'idle';
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -326,6 +326,9 @@ function ChatPageContent() {
     setTypingIndicator(true);
     setInput("");
 
+    // Avatar transitions to thinking state while waiting for response
+    // This will automatically happen through the avatarState calculation
+
     try {
       const response = await api.sendChatMessage(userPhone, text);
       const cleanedResponse = parseResponse(response.response);
@@ -338,6 +341,30 @@ function ChatPageContent() {
         tone: "calm",
       };
       setMessages((prev) => [...prev, followUp]);
+
+      // Avatar will show 'speaking' animation now
+      // Start text-to-speech to sync with speaking animation
+      setIsSpeaking(true);
+      setSpeakingMessageId(followUp.id);
+
+
+      // Automatically speak the response
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        const utter = new SpeechSynthesisUtterance(cleanedResponse);
+        utter.lang = lang === "en" ? "en-IN" : "hi-IN";
+        utter.pitch = selectedAvatar === "female" ? 1.2 : 0.9;
+        utter.onend = () => {
+          setIsSpeaking(false);
+          setSpeakingMessageId(null);
+        };
+        window.speechSynthesis.speak(utter);
+      } else {
+        // If TTS not available, show speaking state for 3 seconds
+        setTimeout(() => {
+          setIsSpeaking(false);
+          setSpeakingMessageId(null);
+        }, 3000);
+      }
     } catch (error: any) {
       console.error('Chat error:', error);
       // Optional: Add visible error message to chat
@@ -404,6 +431,7 @@ function ChatPageContent() {
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = lang === "en" ? "en-IN" : "hi-IN";
+    utter.pitch = selectedAvatar === "female" ? 1.2 : 0.9;
     utter.onend = () => {
       setIsSpeaking(false);
       setSpeakingMessageId(null);
@@ -587,48 +615,37 @@ function ChatPageContent() {
         </div>
       </div>
 
-      {/* Main Chat Container - Fixed Height Flex */}
-      <div className="relative mx-auto max-w-5xl w-full h-full flex flex-col">
-        {/* Minimal Header - Fixed */}
-        <div className="flex-shrink-0 p-4 pb-2">
-          {/* Compact Header Bar */}
-          <div className="glassmorphic-premium rounded-2xl px-4 py-2.5 flex items-center justify-between">
+      {/* Main Chat Container - Flex Column for Mobile, Split Row for Desktop */}
+      <div className="relative mx-auto max-w-[1600px] w-full h-full flex flex-col overflow-hidden">
+
+        {/* Header - Always Visible */}
+        <div className="flex-shrink-0 p-3 sm:p-4">
+          <div className="glassmorphic-premium mx-auto max-w-5xl lg:max-w-none rounded-2xl px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              {/* AI Avatar - Smaller */}
-              <div className="h-8 w-8 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-md">
-                <Bot className="h-4 w-4 text-white" />
+              <div className="h-9 w-9 flex items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-md">
+                <Bot className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-sm font-semibold text-white">AI Sakha</h1>
+                <h1 className="text-sm sm:text-base font-semibold text-white">AI Sakha</h1>
+                <p className="text-[10px] sm:text-xs text-emerald-100 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                  Online
+                </p>
               </div>
             </div>
 
-            {/* Right Side - Language + Disclaimer */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Controls */}
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 rounded-xl bg-white/10 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-500/20 hover:text-red-100"
-                title="Sign out"
+                className="hidden sm:flex items-center gap-1.5 rounded-xl bg-white/10 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-500/20 hover:text-red-100"
               >
                 <LogOut className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Logout</span>
+                <span>Logout</span>
               </button>
-              {showDisclaimer && (
-                <div className="hidden md:flex items-center gap-2 text-xs text-white/60">
-                  <AlertCircle className="h-3.5 w-3.5 text-amber-400" />
-                  <span className="hidden md:inline">Not a doctor • Emergency? Call 108</span>
-                  <button
-                    onClick={() => setShowDisclaimer(false)}
-                    className="text-white/50 hover:text-white/80 transition-colors"
-                  >
-                    <X className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              )}
 
-              {/* Language Selector - Compact */}
               <select
-                className="glassmorphic-light rounded-lg border-none px-3 py-1.5 text-xs font-medium text-white outline-none backdrop-blur-xl"
+                className="glassmorphic-light rounded-xl border-none px-3 py-1.5 text-xs font-medium text-white outline-none backdrop-blur-xl"
                 value={lang}
                 onChange={(e) => setLang(e.target.value as Lang)}
               >
@@ -640,609 +657,568 @@ function ChatPageContent() {
           </div>
         </div>
 
-        {/* Floating Avatar Companion - Right Corner */}
-        <AnimatePresence>
-          <motion.div
-            initial={{ opacity: 0, x: 100, y: -20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={{ opacity: 0, x: 100, scale: 0.8 }}
-            transition={{
-              type: "spring",
-              stiffness: 200,
-              damping: 25,
-              delay: 0.3
-            }}
-            className="fixed top-24 right-8 z-30 hidden xl:block"
-          >
-            {/* Glassmorphic Avatar Container with Glow */}
-            <div className="relative">
-              {/* Ambient Glow Effect */}
-              <motion.div
-                animate={{
-                  opacity: [0.3, 0.6, 0.3],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="absolute -inset-4 bg-gradient-to-br from-emerald-400/30 via-teal-400/30 to-cyan-400/30 rounded-[40px] blur-2xl"
-              />
+        {/* Content Split - Chat (Left) & Avatar (Right) */}
+        <div className="flex-1 min-h-0 flex flex-col lg:flex-row gap-4 lg:gap-6 px-3 sm:px-4 pb-4 overflow-hidden">
 
-              {/* Main Avatar Card */}
-              <motion.div
-                animate={{
-                  y: [0, -8, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="relative backdrop-blur-2xl bg-gradient-to-br from-white/10 to-white/5 rounded-3xl border border-white/20 shadow-2xl overflow-hidden"
-                style={{
-                  backdropFilter: "blur(40px) saturate(180%)",
-                }}
+          {/* Responsive Avatar Column (Top on Mobile, Right on Desktop) */}
+          <div className="lg:order-last flex w-full lg:w-[320px] xl:w-[380px] flex-col gap-4 shrink-0 items-center lg:items-stretch">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="glassmorphic-premium flex-none lg:flex-1 w-[140px] h-[140px] sm:w-[180px] sm:h-[180px] lg:w-full rounded-[40px] lg:rounded-[2.5rem] overflow-hidden flex flex-col relative border border-white/10 shadow-2xl lg:h-[calc(100vh-100px)] lg:sticky lg:top-4"
+            >
+              {/* Mobile Avatar Switcher */}
+              <button
+                onClick={() => setSelectedAvatar(prev => prev === "male" ? "female" : "male")}
+                className="absolute top-3 left-3 z-30 lg:hidden flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white/90 hover:bg-white/20 transition-all active:scale-95 shadow-lg group"
               >
-                {/* Shimmer Effect */}
-                <motion.div
-                  animate={{
-                    x: ["-100%", "200%"],
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "linear",
-                    repeatDelay: 2
-                  }}
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                />
+                <User className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-300 group-hover:text-emerald-200" />
+                <span className="text-[9px] sm:text-[10px] font-medium uppercase tracking-wide">
+                  {selectedAvatar === "male" ? "Male" : "Female"}
+                </span>
+              </button>
+              {/* Background Ambient Layers */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
+              <div className="absolute -top-20 -right-20 w-40 h-40 lg:w-60 lg:h-60 bg-emerald-500/20 rounded-full blur-[60px] lg:blur-[80px]" />
+              <div className="absolute -bottom-20 -left-20 w-40 h-40 lg:w-60 lg:h-60 bg-teal-500/20 rounded-full blur-[60px] lg:blur-[80px]" />
 
-                {/* Avatar Selector & Status & Logout */}
-                <div className="relative z-10 flex flex-col items-center gap-2 p-3 pb-1">
-                  <AvatarSelector value={selectedAvatar} onChange={setSelectedAvatar} />
-
-                  {/* Minimal Status Indicator */}
-                  <motion.div
-                    animate={{
-                      opacity: [0.6, 1, 0.6],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                    }}
-                    className="px-2 py-0.5 rounded-full bg-emerald-500/10 backdrop-blur-sm border border-emerald-400/20"
-                  >
-                    <span className="text-[10px] font-medium text-emerald-300 flex items-center gap-1">
-                      <motion.span
-                        animate={{
-                          scale: [1, 1.3, 1],
-                        }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                        }}
-                        className="w-1 h-1 rounded-full bg-emerald-400"
-                      />
-                      Ready
-                    </span>
-                  </motion.div>
-
-                  {/* Sidebar Logout Option */}
-                  <button
-                    onClick={handleLogout}
-                    className="mt-2 flex items-center gap-1.5 text-[10px] font-medium text-white/40 hover:text-red-300 transition-colors"
-                  >
-                    <LogOut className="w-3 h-3" />
-                    Logout
-                  </button>
+              {/* Header Controls (Responsive Layout) */}
+              <div className="relative z-10 w-full hidden lg:flex p-6 items-start justify-between">
+                <AvatarSelector value={selectedAvatar} onChange={setSelectedAvatar} />
+                <div className="px-2.5 py-1 lg:px-3 lg:py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+                  <span className="text-[9px] lg:text-[10px] uppercase tracking-wider font-bold text-emerald-300 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+                    Live
+                  </span>
                 </div>
+              </div>
 
-                {/* 3D Avatar Canvas */}
-                <motion.div
-                  animate={
-                    avatarState === "speaking"
-                      ? { scale: [1, 1.02, 1] }
-                      : avatarState === "thinking"
-                        ? { rotateZ: [-1, 1, -1] }
-                        : { y: [0, -4, 0] }
-                  }
-                  transition={{
-                    duration: avatarState === "speaking" ? 1.5 : avatarState === "thinking" ? 2 : 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="relative w-[280px] h-[320px]"
-                >
-                  {/* Bottom Gradient Fade */}
-                  <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/20 to-transparent pointer-events-none z-10" />
-
+              {/* 3D Avatar Scene (Responsive Sizing) */}
+              <div className="relative flex-1 w-full flex items-center justify-center mt-0 lg:-mt-10 overflow-visible">
+                <div className="relative w-full h-full lg:w-[300px] lg:h-[400px]">
                   {selectedAvatar === "male" ? (
                     <Avatar state={avatarState} />
                   ) : (
                     <FemaleDoctorAvatar state={avatarState} />
                   )}
-                </motion.div>
-
-                {/* Decorative Corner Elements */}
-                <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-emerald-400/30 rounded-tl-xl" />
-                <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-teal-400/30 rounded-br-xl" />
-              </motion.div>
-            </div>
-          </motion.div>
-        </AnimatePresence >
-
-        {/* Chat Messages Area - Scrollable with Fixed Height */}
-        < div
-          className="flex-1 overflow-y-auto overflow-x-hidden px-2 min-h-0"
-          style={{
-            scrollBehavior: 'smooth',
-            willChange: 'scroll-position',
-            WebkitOverflowScrolling: 'touch',
-          }
-          }
-        >
-          {/* Main Chat - Centered, Max Width */}
-          < div className="max-w-4xl mx-auto w-full" >
-            <div className="space-y-3">
-              <AnimatePresence mode="popLayout">
-                {messages.map((m, index) => (
-                  <motion.div
-                    key={m.id}
-                    layout={false}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{
-                      type: "tween",
-                      duration: 0.3,
-                      ease: "easeOut"
-                    }}
-                    style={{ willChange: 'transform, opacity' }}
-                    className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}
-                  >
-                    <div className={`flex max-w-[85%] items-start gap-2.5 ${m.from === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                      {/* Avatar - Smaller */}
-                      <div
-                        className={`h-7 w-7 flex-shrink-0 rounded-full ${m.from === "user"
-                          ? "bg-gradient-to-br from-blue-400 to-purple-500"
-                          : "bg-gradient-to-br from-emerald-400 to-teal-500"
-                          }`}
-                      >
-                        <div className="flex h-full w-full items-center justify-center">
-                          {m.from === "user" ? (
-                            <User className="h-4 w-4 text-white" />
-                          ) : (
-                            <Bot className="h-4 w-4 text-white" />
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Message Bubble */}
-                      <div>
-                        <motion.div
-                          className={`glassmorphic-premium rounded-[28px] px-6 py-4 shadow-lg ${m.tone === "alert"
-                            ? "border border-amber-400/40 bg-amber-500/10"
-                            : ""
-                            }`}
-                          whileHover={{ scale: 1.02, y: -2 }}
-                          transition={{ type: "spring", stiffness: 400, damping: 20 }}
-                        >
-                          <p className="whitespace-pre-wrap text-sm leading-relaxed text-white/95 text-shadow-premium">
-                            {m.text}
-                          </p>
-                          <div className="mt-2 flex items-center justify-between gap-3">
-                            <span className="text-xs text-white/50">
-                              {m.lang === "hi" ? "हिन्दी" : m.lang === "en" ? "English" : "Hinglish"}
-                            </span>
-                            {m.from === "sakha" && (
-                              <motion.button
-                                onClick={() => handleTextToSpeech(m.text, m.id)}
-                                className={`rounded-full p-1.5 transition-all ${speakingMessageId === m.id
-                                  ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/50"
-                                  : "hover:bg-white/10"
-                                  }`}
-                                whileHover={{ scale: 1.15 }}
-                                whileTap={{ scale: 0.9 }}
-                              >
-                                {speakingMessageId === m.id ? (
-                                  <div className="flex items-center gap-1">
-                                    {[0, 1, 2].map((i) => (
-                                      <motion.div
-                                        key={i}
-                                        className="h-3 w-0.5 rounded-full bg-white"
-                                        animate={{ scaleY: [1, 1.5, 1] }}
-                                        transition={{
-                                          duration: 0.6,
-                                          repeat: Infinity,
-                                          delay: i * 0.1,
-                                        }}
-                                      />
-                                    ))}
-                                  </div>
-                                ) : (
-                                  <Volume2 className="h-3.5 w-3.5 text-white/70" />
-                                )}
-                              </motion.button>
-                            )}
-                          </div>
-                        </motion.div>
-
-                        {/* Citations */}
-                        {m.citations && m.citations.length > 0 && (
-                          <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="mt-2"
-                          >
-                            <motion.button
-                              onClick={() => toggleCitation(m.id)}
-                              className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white/90 transition-colors"
-                              whileHover={{ x: 4 }}
-                            >
-                              <BookOpen className="h-3 w-3" />
-                              {expandedCitations.has(m.id) ? "Hide" : "View"} sources ({m.citations.length})
-                            </motion.button>
-                            <AnimatePresence>
-                              {expandedCitations.has(m.id) && (
-                                <motion.div
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: "auto", opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  className="mt-2 space-y-2 overflow-hidden"
-                                >
-                                  {m.citations.map((cite, idx) => (
-                                    <motion.a
-                                      key={cite.id}
-                                      href={cite.url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="glassmorphic-light flex items-start gap-2 rounded-2xl p-3"
-                                      initial={{ x: -20, opacity: 0 }}
-                                      animate={{ x: 0, opacity: 1 }}
-                                      transition={{ delay: idx * 0.1 }}
-                                      whileHover={{ x: 4, scale: 1.02 }}
-                                    >
-                                      <ExternalLink className="h-3 w-3 flex-shrink-0 text-emerald-400" />
-                                      <div>
-                                        <p className="text-xs font-medium text-white">{cite.title}</p>
-                                        <p className="text-xs text-white/60">{cite.source}</p>
-                                      </div>
-                                    </motion.a>
-                                  ))}
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </motion.div>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {/* Typing Indicator */}
-              <AnimatePresence>
-                {typingIndicator && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    className="flex justify-start"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
-                        <Bot className="h-5 w-5 text-white" />
-                      </div>
-                      <div className="glassmorphic-premium rounded-[28px] px-6 py-4">
-                        <div className="flex gap-1.5">
-                          {[0, 1, 2].map((i) => (
-                            <motion.div
-                              key={i}
-                              className="h-2 w-2 rounded-full bg-emerald-400"
-                              animate={{ y: [0, -8, 0], opacity: [0.5, 1, 0.5] }}
-                              transition={{
-                                duration: 0.8,
-                                repeat: Infinity,
-                                delay: i * 0.15,
-                                ease: "easeInOut",
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Symptom Clusters */}
-              <AnimatePresence>
-                {symptomClusters.map((cluster) => (
-                  <motion.div
-                    key={cluster.id}
-                    initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
-                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    className="glassmorphic-premium floating-card-premium rounded-[28px] p-6"
-                  >
-                    <div className="mb-4 flex items-center gap-3">
-                      <div className="rounded-full bg-emerald-500/20 p-2">
-                        <Activity className="h-5 w-5 text-emerald-400" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-sm font-semibold text-white">Symptom Cluster Detected</h3>
-                      </div>
-                      <span className={`rounded-full px-3 py-1 text-xs font-medium ${cluster.severity === "high"
-                        ? "bg-red-500/20 text-red-300"
-                        : cluster.severity === "medium"
-                          ? "bg-amber-500/20 text-amber-300"
-                          : "bg-green-500/20 text-green-300"
-                        }`}>
-                        {cluster.severity} severity
-                      </span>
-                    </div>
-                    <div className="mb-4 flex flex-wrap gap-2">
-                      {cluster.symptoms.map((symptom, idx) => (
-                        <motion.span
-                          key={idx}
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: idx * 0.05 }}
-                          className="glassmorphic-light rounded-full px-4 py-2 text-xs font-medium text-white"
-                        >
-                          {symptom}
-                        </motion.span>
-                      ))}
-                    </div>
-                    <p className="text-xs text-white/70">
-                      Possibly related to: {cluster.relatedConditions?.join(", ") || "N/A"}
-                    </p>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-
-              {/* Quick Actions */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="glassmorphic-premium floating-card-premium rounded-[28px] p-5"
-              >
-                <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-white/70">
-                  Quick Actions
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  {quickActions.map((qa, index) => {
-                    const Icon = qa.icon;
-                    return (
-                      <motion.button
-                        key={qa.text}
-                        className={`flex items-center gap-2 rounded-full px-5 py-3 text-xs font-medium shadow-lg transition-all ${qa.type === "emergency"
-                          ? "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/50"
-                          : "glassmorphic-light text-white hover:bg-white/20"
-                          }`}
-                        onClick={() => sendMessage(qa.text)}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.7 + index * 0.1 }}
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Icon className="h-4 w-4" />
-                        {qa.text}
-                      </motion.button>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Symptom Clusters - Show when chat is empty or just has welcome messages */}
-            {
-              messages.length <= 2 && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5, duration: 0.6 }}
-                  className="mt-8"
-                >
-                  <div className="text-center mb-6">
-                    <h3 className="text-lg font-semibold text-white mb-2">
-                      Quick Symptom Selection
-                    </h3>
-                    <p className="text-sm text-white/60">
-                      Choose a common condition to get started quickly
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {symptomClusters.map((cluster, index) => (
-                      <motion.button
-                        key={cluster.id}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.6 + index * 0.1 }}
-                        whileHover={{ scale: 1.03, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => {
-                          const symptomText = `I have ${cluster.symptoms.join(", ")}`;
-                          setInput(symptomText);
-                        }}
-                        className={`glassmorphic-premium rounded-2xl p-4 text-left transition-all hover:shadow-xl hover:shadow-emerald-500/10 bg-gradient-to-br ${cluster.color}`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="text-3xl">{cluster.icon}</div>
-                          <div className="flex-1">
-                            <h4 className="font-semibold text-white text-sm mb-1">
-                              {cluster.title}
-                            </h4>
-                            <p className="text-xs text-white/60 mb-2">
-                              {cluster.description}
-                            </p>
-                            <div className="flex flex-wrap gap-1">
-                              {cluster.symptoms.slice(0, 3).map((symptom, i) => (
-                                <span
-                                  key={i}
-                                  className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70"
-                                >
-                                  {symptom}
-                                </span>
-                              ))}
-                              {cluster.symptoms.length > 3 && (
-                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70">
-                                  +{cluster.symptoms.length - 3}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </motion.button>
-                    ))}
-                  </div>
-                </motion.div>
-              )
-            }
-
-            <div ref={chatEndRef} />
-          </div >
-        </div >
-
-
-        {/* Input Section - Premium Fixed Bottom */}
-        < div className="flex-shrink-0 px-4 pb-4" >
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.15, type: "spring", stiffness: 350, damping: 30 }}
-              className="glassmorphic-premium rounded-3xl p-4 shadow-2xl shadow-black/20"
-            >
-              <AnimatePresence>
-                {listeningText && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="mb-3 flex items-center gap-3 overflow-hidden rounded-2xl bg-emerald-500/20 px-4 py-3"
-                  >
-                    <motion.div
-                      className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-500"
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 0.8, repeat: Infinity }}
-                    >
-                      <Mic className="h-4 w-4 text-white" />
-                    </motion.div>
-                    <div className="flex-1">
-                      <p className="text-xs font-semibold text-white">Listening…</p>
-                      <p className="line-clamp-1 text-xs text-white/70">{listeningText}</p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div className="flex items-end gap-3">
-                {/* Main Input */}
-                <div className="flex-1">
-                  <textarea
-                    rows={2}
-                    className="w-full resize-none rounded-3xl border-none bg-white/10 px-6 py-4 text-sm text-white placeholder-white/40 outline-none backdrop-blur-xl transition-all focus:bg-white/15 focus:ring-2 focus:ring-emerald-400/50"
-                    placeholder="Type in Hindi, English or Hinglish…"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        sendMessage(input);
-                      }
-                    }}
-                  />
-                  <div className="mt-2 flex items-center justify-between px-2">
-                    {/* Attachment Buttons */}
-                    <div className="flex items-center gap-2">
-                      <motion.label
-                        className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <ImageIcon className="h-4 w-4" />
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => handleFileUpload(e, "image")}
-                        />
-                      </motion.label>
-                      <motion.button
-                        onClick={startVideoRecording}
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                      >
-                        <Video className="h-4 w-4" />
-                      </motion.button>
-                    </div>
-
-                    {/* Voice and Send Buttons */}
-                    <div className="flex items-center gap-2">
-                      <motion.button
-                        onClick={handleVoiceToggle}
-                        className={`flex h-12 w-12 items-center justify-center rounded-full shadow-lg transition-all ${recording
-                          ? "bg-red-500 shadow-red-500/50"
-                          : "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/50"
-                          }`}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        animate={
-                          recording
-                            ? {
-                              scale: [1, 1.1, 1],
-                              boxShadow: [
-                                "0 0 0 0 rgba(239, 68, 68, 0.7)",
-                                "0 0 0 20px rgba(239, 68, 68, 0)",
-                              ],
-                            }
-                            : {}
-                        }
-                        transition={{ duration: 1.2, repeat: recording ? Infinity : 0 }}
-                      >
-                        <Mic className="h-5 w-5 text-white" />
-                      </motion.button>
-                      <motion.button
-                        onClick={() => sendMessage(input)}
-                        className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-lg shadow-emerald-500/50"
-                        whileHover={{ scale: 1.1, rotate: 15 }}
-                        whileTap={{ scale: 0.9 }}
-                        animate={{
-                          boxShadow: [
-                            "0 10px 30px rgba(16, 185, 129, 0.5)",
-                            "0 15px 40px rgba(16, 185, 129, 0.7)",
-                            "0 10px 30px rgba(16, 185, 129, 0.5)",
-                          ],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
-                      >
-                        <Send className="h-5 w-5 text-white" />
-                      </motion.button>
-                    </div>
-                  </div>
                 </div>
               </div>
 
-              <p className="mt-2 px-2 text-center text-[10px] text-white/40">
-                ⚕️ AI is not a doctor.
-              </p>
+              {/* Bottom Status Card (Compacted on Mobile) */}
+              <div className="relative z-10 w-full hidden lg:block p-6 mb-0">
+                <div className="glassmorphic-light rounded-xl lg:rounded-2xl p-2.5 lg:p-4 border border-white/5 bg-black/20 backdrop-blur-md flex items-center justify-between lg:block">
+                  <div className="flex items-center gap-2 lg:mb-3">
+                    <div className={`w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full ${avatarState === "speaking" ? "bg-emerald-400 animate-pulse" : "bg-white/30"}`} />
+                    <span className="text-[10px] lg:text-xs text-white/80 font-medium">
+                      {avatarState === "speaking" ? "Speaking..." :
+                        avatarState === "thinking" ? "Thinking..." : "Ready"}
+                    </span>
+                  </div>
+
+                  {/* Dynamic Waveform (Responsive) */}
+                  <div className="flex items-center justify-center gap-0.5 lg:gap-1 h-4 lg:h-6">
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                      <motion.div
+                        key={i}
+                        className="w-0.5 lg:w-1 bg-gradient-to-t from-emerald-500 to-teal-400 rounded-full"
+                        animate={{
+                          height: avatarState === "speaking"
+                            ? [4, Math.random() * 15 + 4, 4]
+                            : [3, 5, 3]
+                        }}
+                        transition={{
+                          duration: 0.4,
+                          repeat: Infinity,
+                          delay: i * 0.05,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
             </motion.div>
           </div>
-        </div >
-      </div >
-    </div >
+
+          {/* Left Column: Chat Messages & Input */}
+          <div className="flex-1 flex flex-col min-w-0 min-h-0 glassmorphic-premium rounded-3xl overflow-hidden relative">
+            {/* Messages are rendered here later */}
+            {/* Placeholder to keep structure valid during partial replacement */}
+
+
+            {/* Chat Messages Area - Scrollable with Fixed Height */}
+            <div
+              className="flex-1 overflow-y-auto overflow-x-hidden px-2 min-h-0"
+              style={{
+                scrollBehavior: 'smooth',
+                willChange: 'scroll-position',
+                WebkitOverflowScrolling: 'touch',
+              }
+              }
+            >
+              {/* Main Chat - Centered, Max Width */}
+              < div className="max-w-4xl mx-auto w-full" >
+                <div className="space-y-3">
+                  <AnimatePresence mode="popLayout">
+                    {messages.map((m, index) => (
+                      <motion.div
+                        key={m.id}
+                        layout={false}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{
+                          type: "tween",
+                          duration: 0.3,
+                          ease: "easeOut"
+                        }}
+                        style={{ willChange: 'transform, opacity' }}
+                        className={`flex ${m.from === "user" ? "justify-end" : "justify-start"}`}
+                      >
+                        <div className={`flex max-w-[80%] sm:max-w-[85%] md:max-w-[80%] lg:max-w-[75%] items-start gap-2 sm:gap-2.5 ${m.from === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                          {/* Avatar - Responsive */}
+                          <div
+                            className={`h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 rounded-full ${m.from === "user"
+                              ? "bg-gradient-to-br from-blue-400 to-purple-500"
+                              : "bg-gradient-to-br from-emerald-400 to-teal-500"
+                              }`}
+                          >
+                            <div className="flex h-full w-full items-center justify-center">
+                              {m.from === "user" ? (
+                                <User className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                              ) : (
+                                <Bot className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Message Bubble */}
+                          <div>
+                            <motion.div
+                              className={`glassmorphic-premium rounded-[20px] sm:rounded-[24px] md:rounded-[28px] px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 shadow-lg ${m.tone === "alert"
+                                ? "border border-amber-400/40 bg-amber-500/10"
+                                : ""
+                                }`}
+                              whileHover={{ scale: 1.02, y: -2 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                            >
+                              <p className="whitespace-pre-wrap text-xs sm:text-sm leading-relaxed text-white/95 text-shadow-premium">
+                                {m.text}
+                              </p>
+                              <div className="mt-1.5 sm:mt-2 flex items-center justify-between gap-2 sm:gap-3">
+                                <span className="text-[10px] sm:text-xs text-white/50">
+                                  {m.lang === "hi" ? "हिन्दी" : m.lang === "en" ? "English" : "Hinglish"}
+                                </span>
+                                {m.from === "sakha" && (
+                                  <motion.button
+                                    onClick={() => handleTextToSpeech(m.text, m.id)}
+                                    className={`rounded-full p-1 sm:p-1.5 transition-all ${speakingMessageId === m.id
+                                      ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/50"
+                                      : "hover:bg-white/10"
+                                      }`}
+                                    whileHover={{ scale: 1.15 }}
+                                    whileTap={{ scale: 0.9 }}
+                                  >
+                                    {speakingMessageId === m.id ? (
+                                      <div className="flex items-center gap-0.5 sm:gap-1">
+                                        {[0, 1, 2].map((i) => (
+                                          <motion.div
+                                            key={i}
+                                            className="h-2.5 w-0.5 sm:h-3 sm:w-0.5 rounded-full bg-white"
+                                            animate={{ scaleY: [1, 1.5, 1] }}
+                                            transition={{
+                                              duration: 0.6,
+                                              repeat: Infinity,
+                                              delay: i * 0.1,
+                                            }}
+                                          />
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      <Volume2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white/70" />
+                                    )}
+                                  </motion.button>
+                                )}
+                              </div>
+                            </motion.div>
+
+                            {/* Citations */}
+                            {m.citations && m.citations.length > 0 && (
+                              <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="mt-2"
+                              >
+                                <motion.button
+                                  onClick={() => toggleCitation(m.id)}
+                                  className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white/90 transition-colors"
+                                  whileHover={{ x: 4 }}
+                                >
+                                  <BookOpen className="h-3 w-3" />
+                                  {expandedCitations.has(m.id) ? "Hide" : "View"} sources ({m.citations.length})
+                                </motion.button>
+                                <AnimatePresence>
+                                  {expandedCitations.has(m.id) && (
+                                    <motion.div
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: "auto", opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      className="mt-2 space-y-2 overflow-hidden"
+                                    >
+                                      {m.citations.map((cite, idx) => (
+                                        <motion.a
+                                          key={cite.id}
+                                          href={cite.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="glassmorphic-light flex items-start gap-2 rounded-2xl p-3"
+                                          initial={{ x: -20, opacity: 0 }}
+                                          animate={{ x: 0, opacity: 1 }}
+                                          transition={{ delay: idx * 0.1 }}
+                                          whileHover={{ x: 4, scale: 1.02 }}
+                                        >
+                                          <ExternalLink className="h-3 w-3 flex-shrink-0 text-emerald-400" />
+                                          <div>
+                                            <p className="text-xs font-medium text-white">{cite.title}</p>
+                                            <p className="text-xs text-white/60">{cite.source}</p>
+                                          </div>
+                                        </motion.a>
+                                      ))}
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </motion.div>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+
+                  {/* Typing Indicator */}
+                  <AnimatePresence>
+                    {typingIndicator && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className="flex justify-start"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center">
+                            <Bot className="h-5 w-5 text-white" />
+                          </div>
+                          <div className="glassmorphic-premium rounded-[28px] px-6 py-4">
+                            <div className="flex gap-1.5">
+                              {[0, 1, 2].map((i) => (
+                                <motion.div
+                                  key={i}
+                                  className="h-2 w-2 rounded-full bg-emerald-400"
+                                  animate={{ y: [0, -8, 0], opacity: [0.5, 1, 0.5] }}
+                                  transition={{
+                                    duration: 0.8,
+                                    repeat: Infinity,
+                                    delay: i * 0.15,
+                                    ease: "easeInOut",
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Symptom Clusters */}
+                  <AnimatePresence>
+                    {symptomClusters.map((cluster) => (
+                      <motion.div
+                        key={cluster.id}
+                        initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
+                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="glassmorphic-premium floating-card-premium rounded-[28px] p-6"
+                      >
+                        <div className="mb-4 flex items-center gap-3">
+                          <div className="rounded-full bg-emerald-500/20 p-2">
+                            <Activity className="h-5 w-5 text-emerald-400" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-sm font-semibold text-white">Symptom Cluster Detected</h3>
+                          </div>
+                          <span className={`rounded-full px-3 py-1 text-xs font-medium ${cluster.severity === "high"
+                            ? "bg-red-500/20 text-red-300"
+                            : cluster.severity === "medium"
+                              ? "bg-amber-500/20 text-amber-300"
+                              : "bg-green-500/20 text-green-300"
+                            }`}>
+                            {cluster.severity} severity
+                          </span>
+                        </div>
+                        <div className="mb-4 flex flex-wrap gap-2">
+                          {cluster.symptoms.map((symptom, idx) => (
+                            <motion.span
+                              key={idx}
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ delay: idx * 0.05 }}
+                              className="glassmorphic-light rounded-full px-4 py-2 text-xs font-medium text-white"
+                            >
+                              {symptom}
+                            </motion.span>
+                          ))}
+                        </div>
+                        <p className="text-xs text-white/70">
+                          Possibly related to: {cluster.relatedConditions?.join(", ") || "N/A"}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+
+                  {/* Quick Actions */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="glassmorphic-premium floating-card-premium rounded-[28px] p-5"
+                  >
+                    <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-white/70">
+                      Quick Actions
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      {quickActions.map((qa, index) => {
+                        const Icon = qa.icon;
+                        return (
+                          <motion.button
+                            key={qa.text}
+                            className={`flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[9px] sm:gap-2 sm:px-5 sm:py-3 sm:text-xs font-medium shadow-lg transition-all ${qa.type === "emergency"
+                              ? "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/50"
+                              : "glassmorphic-light text-white hover:bg-white/20"
+                              }`}
+                            onClick={() => sendMessage(qa.text)}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.7 + index * 0.1 }}
+                            whileHover={{ scale: 1.05, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <Icon className="h-2.5 w-2.5 sm:h-4 sm:w-4" />
+                            {qa.text}
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                </div>
+
+                {/* Symptom Clusters - Show when chat is empty or just has welcome messages */}
+                {
+                  messages.length <= 2 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5, duration: 0.6 }}
+                      className="mt-6 sm:mt-8"
+                    >
+                      <div className="text-center mb-4 sm:mb-5 md:mb-6">
+                        <h3 className="text-base sm:text-lg font-semibold text-white mb-1.5 sm:mb-2">
+                          Quick Symptom Selection
+                        </h3>
+                        <p className="text-xs sm:text-sm text-white/60">
+                          Choose a common condition to get started quickly
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+                        {symptomClusters.map((cluster, index) => (
+                          <motion.button
+                            key={cluster.id}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.6 + index * 0.1 }}
+                            whileHover={{ scale: 1.03, y: -2 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => {
+                              const symptomText = `I have ${cluster.symptoms.join(", ")}`;
+                              setInput(symptomText);
+                            }}
+                            className={`glassmorphic-premium rounded-2xl p-4 text-left transition-all hover:shadow-xl hover:shadow-emerald-500/10 bg-gradient-to-br ${cluster.color}`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="text-3xl">{cluster.icon}</div>
+                              <div className="flex-1">
+                                <h4 className="font-semibold text-white text-sm mb-1">
+                                  {cluster.title}
+                                </h4>
+                                <p className="text-xs text-white/60 mb-2">
+                                  {cluster.description}
+                                </p>
+                                <div className="flex flex-wrap gap-1">
+                                  {cluster.symptoms.slice(0, 3).map((symptom, i) => (
+                                    <span
+                                      key={i}
+                                      className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70"
+                                    >
+                                      {symptom}
+                                    </span>
+                                  ))}
+                                  {cluster.symptoms.length > 3 && (
+                                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/70">
+                                      +{cluster.symptoms.length - 3}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </motion.button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )
+                }
+
+                <div ref={chatEndRef} />
+              </div >
+            </div >
+
+
+            {/* Input Section - Premium Fixed Bottom */}
+            {/* Input Area - Fixed */}
+            <div className="flex-shrink-0">
+              <motion.div
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="glassmorphic-premium border-t border-white/10 p-3 sm:p-4 md:p-5"
+              >
+                <AnimatePresence>
+                  {listeningText && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3 overflow-hidden rounded-xl sm:rounded-2xl bg-emerald-500/20 px-3 sm:px-4 py-2 sm:py-3"
+                    >
+                      <motion.div
+                        className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-emerald-500"
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ duration: 0.8, repeat: Infinity }}
+                      >
+                        <Mic className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
+                      </motion.div>
+                      <div className="flex-1">
+                        <p className="text-[10px] sm:text-xs font-semibold text-white">Listening…</p>
+                        <p className="line-clamp-1 text-[10px] sm:text-xs text-white/70">{listeningText}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="flex items-end gap-2 sm:gap-3">
+                  {/* Main Input */}
+                  <div className="flex-1">
+                    <textarea
+                      rows={2}
+                      className="w-full resize-none rounded-2xl sm:rounded-3xl border-none bg-white/10 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 text-xs sm:text-sm text-white placeholder-white/40 outline-none backdrop-blur-xl transition-all focus:bg-white/15 focus:ring-2 focus:ring-emerald-400/50"
+                      placeholder="Type in Hindi, English or Hinglish…"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          sendMessage(input);
+                        }
+                      }}
+                    />
+                    <div className="mt-1.5 sm:mt-2 flex items-center justify-between px-1 sm:px-2">
+                      {/* Attachment Buttons */}
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <motion.label
+                          className="flex h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <ImageIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleFileUpload(e, "image")}
+                          />
+                        </motion.label>
+                        <motion.button
+                          onClick={startVideoRecording}
+                          className="flex h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 items-center justify-center rounded-full bg-white/10 text-white/70 transition-all hover:bg-white/20 hover:text-white"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Video className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                        </motion.button>
+                      </div>
+
+                      {/* Voice and Send Buttons */}
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                        <motion.button
+                          onClick={handleVoiceToggle}
+                          className={`flex h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 items-center justify-center rounded-full shadow-lg transition-all ${recording
+                            ? "bg-red-500 shadow-red-500/50"
+                            : "bg-gradient-to-br from-emerald-400 to-teal-500 shadow-emerald-500/50"
+                            }`}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          animate={
+                            recording
+                              ? {
+                                scale: [1, 1.1, 1],
+                                boxShadow: [
+                                  "0 0 0 0 rgba(239, 68, 68, 0.7)",
+                                  "0 0 0 20px rgba(239, 68, 68, 0)",
+                                ],
+                              }
+                              : {}
+                          }
+                          transition={{ duration: 1.2, repeat: recording ? Infinity : 0 }}
+                        >
+                          <Mic className="h-4 w-4 sm:h-4.5 sm:w-4.5 md:h-5 md:w-5 text-white" />
+                        </motion.button>
+                        <motion.button
+                          onClick={() => sendMessage(input)}
+                          className="flex h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-lg shadow-emerald-500/50"
+                          whileHover={{ scale: 1.1, rotate: 15 }}
+                          whileTap={{ scale: 0.9 }}
+                          animate={{
+                            boxShadow: [
+                              "0 10px 30px rgba(16, 185, 129, 0.5)",
+                              "0 15px 40px rgba(16, 185, 129, 0.7)",
+                              "0 10px 30px rgba(16, 185, 129, 0.5)",
+                            ],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <Send className="h-4 w-4 sm:h-4.5 sm:w-4.5 md:h-5 md:w-5 text-white" />
+                        </motion.button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="mt-1.5 sm:mt-2 px-1 sm:px-2 text-center text-[9px] sm:text-[10px] text-white/40">
+                  ⚕️ AI is not a doctor.
+                </p>
+              </motion.div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
   );
 }
 

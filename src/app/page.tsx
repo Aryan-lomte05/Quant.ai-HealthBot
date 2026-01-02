@@ -79,21 +79,21 @@ function OrbitalCards() {
   const float = useTransform(time, [0, 2000], [0, -10], { clamp: false });
 
   return (
-    <div className="relative w-full h-[600px] flex items-center justify-center pointer-events-none overflow-visible">
+    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] flex items-center justify-center pointer-events-none overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center opacity-30">
-        <div className="w-[300px] h-[300px] bg-gradient-to-r from-emerald-200 to-teal-200 rounded-full blur-3xl opacity-50 animate-pulse" />
+        <div className="w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] md:w-[300px] md:h-[300px] bg-gradient-to-r from-emerald-200 to-teal-200 rounded-full blur-3xl opacity-50 animate-pulse" />
       </div>
 
       <motion.div
-        className="relative z-10 w-4 h-80 bg-gradient-to-b from-emerald-800/80 to-teal-600/20 rounded-full backdrop-blur-sm"
+        className="relative z-10 w-3 sm:w-4 h-40 sm:h-60 md:h-80 bg-gradient-to-b from-emerald-800/80 to-teal-600/20 rounded-full backdrop-blur-sm"
         initial={{ height: 0 }}
-        animate={{ height: 320 }}
+        animate={{ height: 'auto' }}
         transition={{ duration: 1.5, ease: "circOut" }}
       >
         {[1, 2, 3, 4, 5].map((i) => (
           <motion.div
             key={i}
-            className="absolute left-1/2 -translate-x-1/2 w-6 h-6 rounded-full bg-white border-4 border-emerald-100 shadow-lg"
+            className="absolute left-1/2 -translate-x-1/2 w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 rounded-full bg-white border-2 sm:border-3 md:border-4 border-emerald-100 shadow-lg"
             style={{ top: `${i * 18}%` }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -105,78 +105,78 @@ function OrbitalCards() {
       <motion.div className="absolute inset-0 flex items-center justify-center" style={{ rotate }}>
         {/* Card 1 - Vitals */}
         <motion.div
-          className="absolute top-16 left-16 bg-white p-3 rounded-2xl shadow-xl shadow-emerald-900/10 border border-white/50 backdrop-blur-md"
+          className="absolute top-8 sm:top-12 md:top-16 left-8 sm:left-12 md:left-16 bg-white p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-xl md:rounded-2xl shadow-xl shadow-emerald-900/10 border border-white/50 backdrop-blur-md"
           style={{ rotate: useTransform(rotate, (r) => -r) }}
         >
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
-              <Activity className="h-4 w-4" />
+          <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+            <div className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+              <Activity className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4" />
             </div>
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Vitals</p>
-              <p className="text-xs font-bold text-gray-800">Normal</p>
+              <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Vitals</p>
+              <p className="text-[10px] sm:text-[11px] md:text-xs font-bold text-gray-800">Normal</p>
             </div>
           </div>
         </motion.div>
 
         {/* Card 2 - Chat */}
         <motion.div
-          className="absolute bottom-24 right-16 bg-white p-3 rounded-2xl shadow-xl shadow-emerald-900/10 border border-white/50 backdrop-blur-md"
+          className="absolute bottom-16 sm:bottom-20 md:bottom-24 right-8 sm:right-12 md:right-16 bg-white p-2 sm:p-2.5 md:p-3 rounded-xl sm:rounded-xl md:rounded-2xl shadow-xl shadow-emerald-900/10 border border-white/50 backdrop-blur-md"
           style={{ rotate: useTransform(rotate, (r) => -r) }}
         >
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-              <MessageCircleHeart className="h-4 w-4" />
+          <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+            <div className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+              <MessageCircleHeart className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4" />
             </div>
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Ai Chat</p>
-              <p className="text-xs font-bold text-gray-800">Active</p>
+              <p className="text-[8px] sm:text-[9px] md:text-[10px] font-bold text-gray-400 uppercase tracking-wider">Ai Chat</p>
+              <p className="text-[10px] sm:text-[11px] md:text-xs font-bold text-gray-800">Active</p>
             </div>
           </div>
         </motion.div>
 
-        {/* Card 3 - Wellness (Brought closer) */}
+        {/* Card 3 - Wellness (Brought closer) - Hidden on very small screens */}
         <motion.div
-          className="absolute top-1/2 right-4 bg-white py-2 px-3 rounded-full shadow-lg border border-emerald-50"
+          className="hidden sm:block absolute top-1/2 right-2 sm:right-3 md:right-4 bg-white py-1.5 px-2 sm:py-2 sm:px-2.5 md:py-2 md:px-3 rounded-full shadow-lg border border-emerald-50"
           style={{ rotate: useTransform(rotate, (r) => -r) }}
         >
-          <span className="text-[10px] font-bold text-emerald-700 flex items-center gap-1">
-            <Sparkles className="h-3 w-3" /> Wellness
+          <span className="text-[8px] sm:text-[9px] md:text-[10px] font-bold text-emerald-700 flex items-center gap-1">
+            <Sparkles className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3" /> Wellness
           </span>
         </motion.div>
 
-        {/* Card 4 - Expertise (Brought closer) */}
+        {/* Card 4 - Expertise (Brought closer) - Hidden on very small screens */}
         <motion.div
-          className="absolute top-1/3 left-4 bg-white py-2 px-3 rounded-full shadow-lg border border-emerald-50"
+          className="hidden sm:block absolute top-1/3 left-2 sm:left-3 md:left-4 bg-white py-1.5 px-2 sm:py-2 sm:px-2.5 md:py-2 md:px-3 rounded-full shadow-lg border border-emerald-50"
           style={{ rotate: useTransform(rotate, (r) => -r) }}
         >
-          <span className="text-[10px] font-bold text-teal-700 flex items-center gap-1">
-            <Shield className="h-3 w-3" /> Expertise
+          <span className="text-[8px] sm:text-[9px] md:text-[10px] font-bold text-teal-700 flex items-center gap-1">
+            <Shield className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3" /> Expertise
           </span>
         </motion.div>
       </motion.div>
 
       <motion.div
-        className="absolute -bottom-12 right-12 w-56 bg-white/90 backdrop-blur-xl rounded-3xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white z-20"
+        className="absolute -bottom-8 sm:-bottom-10 md:-bottom-12 right-4 sm:right-8 md:right-12 w-40 sm:w-48 md:w-56 bg-white/90 backdrop-blur-xl rounded-2xl sm:rounded-2xl md:rounded-3xl p-3 sm:p-3.5 md:p-4 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white z-20"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8, duration: 0.8 }}
         whileHover={{ scale: 1.02 }}
       >
-        <div className="flex justify-between items-start mb-4">
+        <div className="flex justify-between items-start mb-3 sm:mb-3.5 md:mb-4">
           <div>
-            <p className="text-xs font-bold text-gray-400">Heart Rate</p>
+            <p className="text-[10px] sm:text-[11px] md:text-xs font-bold text-gray-400">Heart Rate</p>
             <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-bold text-gray-900">83</span>
-              <span className="text-xs text-gray-500 font-medium">bpm</span>
+              <span className="text-xl sm:text-2xl md:text-2xl font-bold text-gray-900">83</span>
+              <span className="text-[10px] sm:text-[11px] md:text-xs text-gray-500 font-medium">bpm</span>
             </div>
           </div>
-          <div className="h-8 w-8 rounded-full bg-red-50 flex items-center justify-center animate-pulse">
-            <HeartPulse className="h-4 w-4 text-red-500" />
+          <div className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 rounded-full bg-red-50 flex items-center justify-center animate-pulse">
+            <HeartPulse className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 text-red-500" />
           </div>
         </div>
         {/* Mock Chart */}
-        <div className="h-16 w-full flex items-end gap-1">
+        <div className="h-12 sm:h-14 md:h-16 w-full flex items-end gap-0.5 sm:gap-1">
           {[40, 60, 45, 70, 50, 80, 65, 55].map((h, i) => (
             <motion.div
               key={i}
@@ -187,9 +187,9 @@ function OrbitalCards() {
             />
           ))}
         </div>
-        <div className="flex items-center gap-2 mt-3">
-          <div className="h-2 w-2 rounded-full bg-yellow-400" />
-          <p className="text-[10px] text-gray-500 font-medium">Resting: 72bpm</p>
+        <div className="flex items-center gap-1.5 sm:gap-2 mt-2 sm:mt-2.5 md:mt-3">
+          <div className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-yellow-400" />
+          <p className="text-[8px] sm:text-[9px] md:text-[10px] text-gray-500 font-medium">Resting: 72bpm</p>
         </div>
       </motion.div>
     </div>
@@ -219,10 +219,10 @@ export default function Home() {
 
         {/* SECTION 1: HERO - Sticky Parallax & Scale */}
         <motion.section
-          className="sticky top-0 z-0 w-full min-h-screen flex flex-col p-4 md:p-6"
+          className="sticky top-0 z-0 w-full min-h-screen flex flex-col p-2 sm:p-4 md:p-6"
         >
           <motion.div
-            className="flex-1 w-full bg-white rounded-[3rem] shadow-2xl overflow-hidden relative border border-gray-100 flex flex-col lg:flex-row"
+            className="flex-1 w-full bg-white rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] shadow-2xl overflow-hidden relative border border-gray-100 flex flex-col lg:flex-row"
             style={{
               scale: useTransform(scrollYProgress, [0, 0.4], [1, 0.9]),
               opacity: useTransform(scrollYProgress, [0.3, 0.5], [1, 0]),
@@ -230,14 +230,14 @@ export default function Home() {
             }}
           >
             {/* Top Branding */}
-            <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20">
-              <h2 className="text-xl font-bold tracking-tight text-gray-900 flex items-center gap-1">
-                MEDI<span className="text-yellow-400 text-2xl leading-none">.</span>
+            <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-8 md:left-8 lg:top-12 lg:left-12 z-20">
+              <h2 className="text-base sm:text-lg md:text-xl font-bold tracking-tight text-gray-900 flex items-center gap-1">
+                MEDI<span className="text-yellow-400 text-lg sm:text-xl md:text-2xl leading-none">.</span>
               </h2>
             </div>
 
-            {/* Social Actions */}
-            <div className="absolute top-8 right-8 z-20 flex flex-col gap-3">
+            {/* Social Actions - Hidden on mobile */}
+            <div className="hidden md:flex absolute top-8 right-8 z-20 flex-col gap-3">
               {['IG', 'FB', 'X'].map((social) => (
                 <button key={social} className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-600 hover:bg-emerald-50 hover:text-emerald-600 transition-colors">
                   {social === 'IG' ? '📷' : social === 'FB' ? 'f' : '𝕏'}
@@ -246,28 +246,28 @@ export default function Home() {
             </div>
 
             {/* Left Section - Typography */}
-            <div className="p-8 md:p-20 flex flex-col justify-center relative z-10 flex-1">
-              <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-8">
-                <motion.h1 variants={itemVariants} className="text-6xl md:text-7xl lg:text-9xl font-medium tracking-tighter leading-[0.9] text-gray-900">
+            <div className="p-6 sm:p-8 md:p-12 lg:p-16 xl:p-20 flex flex-col justify-center relative z-10 flex-1">
+              <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-4 sm:space-y-6 md:space-y-8">
+                <motion.h1 variants={itemVariants} className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl 2xl:text-9xl font-medium tracking-tighter leading-[0.9] text-gray-900">
                   Expert care for <br />
                   <span className="italic font-serif font-light text-emerald-800">your health</span> <br />
                   and wellness<span className="text-yellow-400">.</span>
                 </motion.h1>
-                <motion.p variants={itemVariants} className="max-w-md text-gray-500 text-lg leading-relaxed ml-2 font-medium">
+                <motion.p variants={itemVariants} className="max-w-md text-gray-500 text-sm sm:text-base md:text-lg leading-relaxed ml-1 sm:ml-2 font-medium">
                   AI medical experts providing compassionate, professional support to keep you safe.
                 </motion.p>
-                <motion.div variants={itemVariants} className="pt-4 ml-2">
+                <motion.div variants={itemVariants} className="pt-2 sm:pt-4 ml-1 sm:ml-2">
                   <Link href="/chat">
                     <motion.button
                       whileHover={{ scale: 1.05, boxShadow: "0 20px 40px -12px rgba(16, 185, 129, 0.4)" }}
                       whileTap={{ scale: 0.95 }}
-                      className="bg-gray-950 text-white px-10 py-5 rounded-full text-base font-medium hover:bg-emerald-950 transition-colors"
+                      className="bg-gray-950 text-white px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 rounded-full text-sm sm:text-base font-medium hover:bg-emerald-950 transition-colors w-full sm:w-auto"
                     >
                       Book an appointment
                     </motion.button>
                   </Link>
                 </motion.div>
-                <motion.div variants={itemVariants} className="pt-12 flex flex-wrap gap-3">
+                <motion.div variants={itemVariants} className="pt-6 sm:pt-8 md:pt-12 flex flex-wrap gap-2 sm:gap-3">
                   {[
                     { label: "Vaccinations", icon: Syringe },
                     { label: "High-quality", icon: Sparkles },
@@ -278,9 +278,9 @@ export default function Home() {
                     <motion.div
                       key={i}
                       whileHover={{ y: -2, backgroundColor: "#ECFDF5", borderColor: "#A7F3D0" }}
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gray-200 bg-white text-xs font-bold text-gray-600 cursor-default transition-colors"
+                      className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-gray-200 bg-white text-[10px] sm:text-xs font-bold text-gray-600 cursor-default transition-colors"
                     >
-                      <feature.icon className="h-3 w-3" />
+                      <feature.icon className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
                       {feature.label}
                     </motion.div>
                   ))}
@@ -289,7 +289,7 @@ export default function Home() {
             </div>
 
             {/* Right Section - Visuals */}
-            <div className="relative bg-gradient-to-b from-emerald-50/50 to-white overflow-hidden flex-1 min-h-[400px] lg:min-h-0 rounded-[3rem] lg:rounded-none lg:rounded-bl-[5rem]">
+            <div className="relative bg-gradient-to-b from-emerald-50/50 to-white overflow-hidden flex-1 min-h-[300px] sm:min-h-[400px] lg:min-h-0 rounded-b-[2rem] sm:rounded-b-[2.5rem] md:rounded-b-[3rem] lg:rounded-none lg:rounded-bl-[5rem]">
               <OrbitalCards />
             </div>
           </motion.div>
@@ -299,56 +299,56 @@ export default function Home() {
         <div className="relative z-10 min-h-screen bg-transparent pointer-events-none h-[1px]" /> {/* Spacer for sticky hero */}
 
         <motion.section
-          className="w-full relative z-20 bg-white rounded-t-[4rem] -mt-[10vh] pb-24 shadow-[0_-50px_100px_rgba(0,0,0,0.1)] overflow-hidden"
+          className="w-full relative z-20 bg-white rounded-t-[2.5rem] sm:rounded-t-[3rem] md:rounded-t-[4rem] -mt-[10vh] pb-12 sm:pb-16 md:pb-20 lg:pb-24 shadow-[0_-50px_100px_rgba(0,0,0,0.1)] overflow-hidden"
         >
           {/* Animated Background Mesh */}
           <div className="absolute inset-0 z-0 opacity-40">
-            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-emerald-200 to-teal-100 rounded-full blur-[100px] mix-blend-multiply opacity-50 animate-pulse" />
-            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-orange-100 to-yellow-100 rounded-full blur-[80px] mix-blend-multiply opacity-50" />
+            <div className="absolute top-0 right-0 w-[600px] sm:w-[700px] md:w-[800px] h-[600px] sm:h-[700px] md:h-[800px] bg-gradient-to-br from-emerald-200 to-teal-100 rounded-full blur-[100px] mix-blend-multiply opacity-50 animate-pulse" />
+            <div className="absolute bottom-0 left-0 w-[400px] sm:w-[500px] md:w-[600px] h-[400px] sm:h-[500px] md:h-[600px] bg-gradient-to-tr from-orange-100 to-yellow-100 rounded-full blur-[80px] mix-blend-multiply opacity-50" />
           </div>
 
-          <div className="max-w-7xl mx-auto pt-32 px-4 relative z-10">
+          <div className="max-w-7xl mx-auto pt-16 sm:pt-20 md:pt-24 lg:pt-32 px-4 sm:px-6 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-24 space-y-4"
+              className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24 space-y-3 sm:space-y-4"
             >
-              <span className="inline-block py-1 px-3 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs uppercase tracking-widest">
+              <span className="inline-block py-1 px-3 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] sm:text-xs uppercase tracking-widest">
                 Holistic Ecosystem
               </span>
-              <h2 className="text-5xl md:text-7xl font-medium text-emerald-950 tracking-tight">
-                Healthcare <span className="font-serif italic text-emerald-600">reimagined</span> <br /> for everyone.
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium text-emerald-950 tracking-tight px-4">
+                Healthcare <span className="font-serif italic text-emerald-600">reimagined</span> <br />for everyone.
               </h2>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto md:h-[600px]">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 h-auto md:h-[600px]">
               {/* Card 1: Large Left - Glassmorphic */}
               <motion.div
-                className="md:col-span-2 md:row-span-2 bg-white/60 backdrop-blur-xl rounded-[2.5rem] border border-white/60 shadow-xl shadow-emerald-900/5 p-10 flex flex-col justify-between relative overflow-hidden group"
+                className="md:col-span-2 md:row-span-2 bg-white/60 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.25rem] md:rounded-[2.5rem] border border-white/60 shadow-xl shadow-emerald-900/5 p-6 sm:p-8 md:p-10 flex flex-col justify-between relative overflow-hidden group"
                 whileHover={{ y: -5, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.1)" }}
               >
-                <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald-200/40 to-teal-200/40 rounded-full blur-3xl -mr-20 -mt-20 transition-transform duration-700 group-hover:scale-110" />
+                <div className="absolute top-0 right-0 w-64 sm:w-80 md:w-96 h-64 sm:h-80 md:h-96 bg-gradient-to-br from-emerald-200/40 to-teal-200/40 rounded-full blur-3xl -mr-20 -mt-20 transition-transform duration-700 group-hover:scale-110" />
 
                 <div className="relative z-10">
-                  <div className="h-14 w-14 rounded-2xl bg-emerald-500 text-white flex items-center justify-center mb-8 shadow-lg shadow-emerald-500/30">
-                    <Brain className="h-7 w-7" />
+                  <div className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-xl sm:rounded-2xl bg-emerald-500 text-white flex items-center justify-center mb-6 sm:mb-7 md:mb-8 shadow-lg shadow-emerald-500/30">
+                    <Brain className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
                   </div>
-                  <h3 className="text-4xl font-medium text-emerald-950 mb-4">AI Diagnostics</h3>
-                  <p className="text-gray-600 text-lg leading-relaxed max-w-md">
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-medium text-emerald-950 mb-3 sm:mb-4">AI Diagnostics</h3>
+                  <p className="text-gray-600 text-sm sm:text-base md:text-lg leading-relaxed max-w-md">
                     Advanced symptom analysis in 12+ Indian languages. It listens, understands, and guides you instantly.
                   </p>
                 </div>
 
-                <div className="relative z-10 mt-12">
-                  <div className="bg-white/80 backdrop-blur-md rounded-2xl p-5 border border-emerald-100 shadow-sm flex items-center gap-4">
-                    <div className="h-10 w-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center font-bold">⚡</div>
+                <div className="relative z-10 mt-8 sm:mt-10 md:mt-12">
+                  <div className="bg-white/80 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-4.5 md:p-5 border border-emerald-100 shadow-sm flex items-center gap-3 sm:gap-3.5 md:gap-4">
+                    <div className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center font-bold text-sm sm:text-base">⚡</div>
                     <div className="flex-1">
-                      <div className="flex justify-between text-xs font-bold text-gray-500 mb-1">
+                      <div className="flex justify-between text-[10px] sm:text-xs font-bold text-gray-500 mb-1">
                         <span>Analysis Confidence</span>
                         <span>98.5%</span>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-1.5 sm:h-2 bg-gray-100 rounded-full overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           whileInView={{ width: "98.5%" }}
@@ -363,28 +363,28 @@ export default function Home() {
 
               {/* Card 2: Top Right - Blue Glass */}
               <motion.div
-                className="bg-blue-50/60 backdrop-blur-xl rounded-[2.5rem] border border-blue-100/60 shadow-lg shadow-blue-900/5 p-8 relative overflow-hidden group"
+                className="bg-blue-50/60 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.25rem] md:rounded-[2.5rem] border border-blue-100/60 shadow-lg shadow-blue-900/5 p-6 sm:p-7 md:p-8 relative overflow-hidden group"
                 whileHover={{ y: -5 }}
               >
-                <div className="absolute -right-4 -top-4 w-32 h-32 bg-blue-200/50 rounded-full blur-2xl group-hover:bg-blue-300/50 transition-colors" />
-                <div className="h-12 w-12 rounded-2xl bg-blue-500 text-white flex items-center justify-center mb-6 shadow-lg shadow-blue-500/30">
-                  <Globe2 className="h-6 w-6" />
+                <div className="absolute -right-4 -top-4 w-24 sm:w-28 md:w-32 h-24 sm:h-28 md:h-32 bg-blue-200/50 rounded-full blur-2xl group-hover:bg-blue-300/50 transition-colors" />
+                <div className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-xl sm:rounded-2xl bg-blue-500 text-white flex items-center justify-center mb-4 sm:mb-5 md:mb-6 shadow-lg shadow-blue-500/30">
+                  <Globe2 className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
                 </div>
-                <h3 className="text-2xl font-medium text-blue-950 mb-2">Multilingual</h3>
-                <p className="text-blue-900/60 font-medium">Hindi, Tamil, Bengali & more.</p>
+                <h3 className="text-xl sm:text-2xl font-medium text-blue-950 mb-2">Multilingual</h3>
+                <p className="text-blue-900/60 font-medium text-sm sm:text-base">Hindi, Tamil, Bengali & more.</p>
               </motion.div>
 
               {/* Card 3: Bottom Right - Indigo Glass */}
               <motion.div
-                className="bg-indigo-50/60 backdrop-blur-xl rounded-[2.5rem] border border-indigo-100/60 shadow-lg shadow-indigo-900/5 p-8 relative overflow-hidden group"
+                className="bg-indigo-50/60 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.25rem] md:rounded-[2.5rem] border border-indigo-100/60 shadow-lg shadow-indigo-900/5 p-6 sm:p-7 md:p-8 relative overflow-hidden group"
                 whileHover={{ y: -5 }}
               >
-                <div className="absolute -right-4 -bottom-4 w-32 h-32 bg-indigo-200/50 rounded-full blur-2xl group-hover:bg-indigo-300/50 transition-colors" />
-                <div className="h-12 w-12 rounded-2xl bg-indigo-500 text-white flex items-center justify-center mb-6 shadow-lg shadow-indigo-500/30">
-                  <Lock className="h-6 w-6" />
+                <div className="absolute -right-4 -bottom-4 w-24 sm:w-28 md:w-32 h-24 sm:h-28 md:h-32 bg-indigo-200/50 rounded-full blur-2xl group-hover:bg-indigo-300/50 transition-colors" />
+                <div className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-xl sm:rounded-2xl bg-indigo-500 text-white flex items-center justify-center mb-4 sm:mb-5 md:mb-6 shadow-lg shadow-indigo-500/30">
+                  <Lock className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
                 </div>
-                <h3 className="text-2xl font-medium text-indigo-950 mb-2">Secure Data</h3>
-                <p className="text-indigo-900/60 font-medium">Encrypted & private records.</p>
+                <h3 className="text-xl sm:text-2xl font-medium text-indigo-950 mb-2">Secure Data</h3>
+                <p className="text-indigo-900/60 font-medium text-sm sm:text-base">Encrypted & private records.</p>
               </motion.div>
             </div>
           </div>
@@ -392,30 +392,30 @@ export default function Home() {
 
 
         {/* SECTION 3: HOW IT WORKS - Dynamic Timeline */}
-        <section className="w-full bg-emerald-950 py-32 rounded-[3rem] -mt-12 z-30 relative text-white overflow-hidden">
+        <section className="w-full bg-emerald-950 py-16 sm:py-20 md:py-24 lg:py-32 rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] -mt-8 sm:mt-10 md:-mt-12 z-30 relative text-white overflow-hidden">
 
           {/* Background Gradients */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">
-            <div className="absolute top-1/4 -left-64 w-[800px] h-[800px] bg-emerald-500 rounded-full blur-[150px]" />
-            <div className="absolute bottom-1/4 -right-64 w-[800px] h-[800px] bg-teal-500 rounded-full blur-[150px]" />
+            <div className="absolute top-1/4 -left-32 sm:-left-48 md:-left-64 w-[600px] sm:w-[700px] md:w-[800px] h-[600px] sm:h-[700px] md:h-[800px] bg-emerald-500 rounded-full blur-[150px]" />
+            <div className="absolute bottom-1/4 -right-32 sm:-right-48 md:-right-64 w-[600px] sm:w-[700px] md:w-[800px] h-[600px] sm:h-[700px] md:h-[800px] bg-teal-500 rounded-full blur-[150px]" />
           </div>
 
-          <div className="max-w-7xl mx-auto px-6 relative z-10">
-            <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-12 sm:mb-16 md:mb-20 lg:mb-24 gap-6 sm:gap-8">
               <div>
-                <span className="text-emerald-400 font-bold tracking-widest uppercase text-xs mb-2 block">The Process</span>
-                <h2 className="text-5xl md:text-6xl font-medium tracking-tight">Simple steps to <br /> better health.</h2>
+                <span className="text-emerald-400 font-bold tracking-widest uppercase text-[10px] sm:text-xs mb-2 block">The Process</span>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight">Simple steps to <br />better health.</h2>
               </div>
               <Link href="/chat">
-                <button className="group flex items-center gap-3 text-white border border-white/20 px-8 py-4 rounded-full hover:bg-white hover:text-emerald-950 transition-all font-medium">
+                <button className="group flex items-center gap-2 sm:gap-3 text-white border border-white/20 px-6 sm:px-7 md:px-8 py-3 sm:py-3.5 md:py-4 rounded-full hover:bg-white hover:text-emerald-950 transition-all font-medium text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start">
                   Start your journey
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-              {/* Connecting Line (Dashed) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7 md:gap-8 relative">
+              {/* Connecting Line (Dashed) - Hidden on mobile */}
               <div className="hidden md:block absolute top-[88px] left-[16%] right-[16%] h-[2px] border-t-2 border-dashed border-emerald-800/50 z-0" />
 
               {[
@@ -431,17 +431,17 @@ export default function Home() {
                   transition={{ delay: i * 0.2 }}
                   className="relative z-10 group"
                 >
-                  <div className="w-44 h-44 rounded-full bg-emerald-900/50 border border-emerald-800 backdrop-blur-sm flex items-center justify-center mx-auto mb-8 group-hover:bg-emerald-800/80 group-hover:scale-110 transition-all duration-500">
-                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white shadow-2xl shadow-emerald-500/20">
-                      <item.icon className="h-10 w-10" />
+                  <div className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40 lg:w-44 lg:h-44 rounded-full bg-emerald-900/50 border border-emerald-800 backdrop-blur-sm flex items-center justify-center mx-auto mb-6 sm:mb-7 md:mb-8 group-hover:bg-emerald-800/80 group-hover:scale-110 transition-all duration-500">
+                    <div className="w-24 h-24 sm:w-26 sm:h-26 md:w-28 md:h-28 lg:w-32 lg:h-32 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white shadow-2xl shadow-emerald-500/20">
+                      <item.icon className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10" />
                     </div>
-                    <div className="absolute -top-2 -right-2 w-10 h-10 bg-white rounded-full flex items-center justify-center text-emerald-950 font-bold text-sm shadow-lg">
+                    <div className="absolute -top-1.5 sm:-top-2 -right-1.5 sm:-right-2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center text-emerald-950 font-bold text-xs sm:text-sm shadow-lg">
                       {item.step}
                     </div>
                   </div>
                   <div className="text-center">
-                    <h3 className="text-2xl font-bold text-emerald-50 mb-3">{item.title}</h3>
-                    <p className="text-emerald-400/80 leading-relaxed max-w-xs mx-auto">{item.desc}</p>
+                    <h3 className="text-xl sm:text-2xl font-bold text-emerald-50 mb-2 sm:mb-3">{item.title}</h3>
+                    <p className="text-emerald-400/80 leading-relaxed max-w-xs mx-auto text-sm sm:text-base">{item.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -449,40 +449,41 @@ export default function Home() {
           </div>
         </section>
 
+
         {/* SECTION 4: COMMUNITY - Minimal & Clean */}
-        <section className="w-full bg-white py-24 z-20 -mt-12 rounded-t-[3rem] relative">
-          <div className="max-w-7xl mx-auto px-4 md:px-6">
+        <section className="w-full bg-white py-12 sm:py-16 md:py-20 lg:py-24 z-20 -mt-8 sm:-mt-10 md:-mt-12 rounded-t-[2rem] sm:rounded-t-[2.5rem] md:rounded-t-[3rem] relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              className="text-center max-w-2xl mx-auto mb-16"
+              className="text-center max-w-2xl mx-auto mb-10 sm:mb-12 md:mb-14 lg:mb-16"
             >
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold uppercase tracking-wider mb-4">
-                <Users className="h-3 w-3" /> Community
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-3 sm:mb-4">
+                <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> Community
               </div>
-              <h2 className="text-4xl font-medium text-gray-900 tracking-tight">Trusted by 10,000+ families.</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-gray-900 tracking-tight">Trusted by 10,000+ families.</h2>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
               {[1, 2, 3].map((i) => (
                 <motion.div
                   key={i}
                   whileHover={{ y: -10 }}
-                  className="bg-gray-50 p-8 rounded-[2rem] hover:shadow-xl hover:shadow-gray-200/50 transition-all border border-gray-100"
+                  className="bg-gray-50 p-6 sm:p-7 md:p-8 rounded-[1.75rem] sm:rounded-[2rem] hover:shadow-xl hover:shadow-gray-200/50 transition-all border border-gray-100"
                 >
-                  <div className="flex gap-1 text-orange-400 mb-6">
-                    {"★★★★★".split("").map((s, idx) => <span key={idx} className="text-lg">{s}</span>)}
+                  <div className="flex gap-0.5 sm:gap-1 text-orange-400 mb-4 sm:mb-5 md:mb-6">
+                    {"★★★★★".split("").map((s, idx) => <span key={idx} className="text-base sm:text-lg">{s}</span>)}
                   </div>
-                  <p className="text-gray-600 font-medium text-lg mb-8 leading-relaxed">
+                  <p className="text-gray-600 font-medium text-sm sm:text-base md:text-lg mb-6 sm:mb-7 md:mb-8 leading-relaxed">
                     "This app helped me understand my grandmother's diabetes report instantly. The Hindi translation was perfect."
                   </p>
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600 text-sm sm:text-base">
                       {i === 1 ? 'RV' : i === 2 ? 'PS' : 'AP'}
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900">{i === 1 ? 'Rahul Verma' : i === 2 ? 'Priya Singh' : 'Amit Patel'}</p>
-                      <p className="text-xs text-gray-500 font-bold uppercase">Patient Son</p>
+                      <p className="font-bold text-gray-900 text-sm sm:text-base">{i === 1 ? 'Rahul Verma' : i === 2 ? 'Priya Singh' : 'Amit Patel'}</p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 font-bold uppercase">Patient Son</p>
                     </div>
                   </div>
                 </motion.div>
