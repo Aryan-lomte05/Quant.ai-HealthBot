@@ -293,6 +293,10 @@ function ChatPageContent() {
     if (symptoms.length >= 2) {
       const cluster: SymptomCluster = {
         id: "cluster-1",
+        icon: "🩺",
+        title: "Symptom Cluster",
+        description: "Detected symptoms from conversation",
+        color: "from-emerald-500/20 to-teal-500/20",
         symptoms,
         severity: symptoms.length >= 4 ? "high" : symptoms.length >= 3 ? "medium" : "low",
         relatedConditions: ["Common Cold", "Flu", "Viral Infection"],
@@ -994,7 +998,7 @@ function ChatPageContent() {
                       ))}
                     </div>
                     <p className="text-xs text-white/70">
-                      Possibly related to: {cluster.relatedConditions.join(", ")}
+                      Possibly related to: {cluster.relatedConditions?.join(", ") || "N/A"}
                     </p>
                   </motion.div>
                 ))}

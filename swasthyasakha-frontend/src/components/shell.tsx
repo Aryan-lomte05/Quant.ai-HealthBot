@@ -229,25 +229,52 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </motion.div>
                 ))}
 
-                {/* Logout Button */}
+                {/* Visual Separator */}
+                <div className="px-4 my-4">
+                  <div className="h-px bg-gradient-to-r from-transparent via-red-200/40 to-transparent" />
+                </div>
+
+                {/* Enhanced Logout Button */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 }}
+                  className="px-2"
                 >
                   <button onClick={handleLogout} className="w-full">
                     <motion.div
-                      whileHover={{ x: 4 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="group flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 text-red-600 hover:bg-red-50"
+                      whileHover={{ x: 4, scale: 1.02 }}
+                      whileTap={{ scale: 0.96 }}
+                      className="group relative flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 overflow-hidden"
                     >
+                      {/* Gradient Background on Hover */}
                       <motion.div
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.5 }}
+                        className="absolute inset-0 bg-gradient-to-r from-red-50 to-rose-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        whileHover={{ scale: 1.05 }}
+                      />
+
+                      {/* Border */}
+                      <div className="absolute inset-0 rounded-2xl border-2 border-red-200/0 group-hover:border-red-300/50 transition-all duration-300" />
+
+                      <motion.div
+                        className="relative z-10"
+                        whileHover={{ rotate: 180, scale: 1.1 }}
+                        transition={{ duration: 0.4, type: "spring" }}
                       >
                         <LogOut className="h-5 w-5 text-red-500 group-hover:text-red-600 transition-colors" />
                       </motion.div>
-                      <span className="font-semibold text-sm">Logout</span>
+                      <span className="relative z-10 font-bold text-sm text-red-600 group-hover:text-red-700 transition-colors">Logout</span>
+
+                      {/* Animated Arrow on Hover */}
+                      <motion.div
+                        className="relative z-10 ml-auto opacity-0 group-hover:opacity-100 transition-opacity"
+                        initial={{ x: -10 }}
+                        whileHover={{ x: 0 }}
+                      >
+                        <svg className="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </motion.div>
                     </motion.div>
                   </button>
                 </motion.div>
