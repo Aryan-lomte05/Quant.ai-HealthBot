@@ -1049,40 +1049,6 @@ function ChatPageContent() {
                     ))}
                   </AnimatePresence>
 
-                  {/* Quick Actions */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    className="glassmorphic-premium floating-card-premium rounded-[28px] p-5"
-                  >
-                    <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-white/70">
-                      Quick Actions
-                    </p>
-                    <div className="flex flex-wrap gap-3">
-                      {quickActions.map((qa, index) => {
-                        const Icon = qa.icon;
-                        return (
-                          <motion.button
-                            key={qa.text}
-                            className={`flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[9px] sm:gap-2 sm:px-5 sm:py-3 sm:text-xs font-medium shadow-lg transition-all ${qa.type === "emergency"
-                              ? "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-red-500/50"
-                              : "glassmorphic-light text-white hover:bg-white/20"
-                              }`}
-                            onClick={() => sendMessage(qa.text)}
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.7 + index * 0.1 }}
-                            whileHover={{ scale: 1.05, y: -2 }}
-                            whileTap={{ scale: 0.95 }}
-                          >
-                            <Icon className="h-2.5 w-2.5 sm:h-4 sm:w-4" />
-                            {qa.text}
-                          </motion.button>
-                        );
-                      })}
-                    </div>
-                  </motion.div>
                 </div>
 
                 {/* Symptom Clusters - Show when chat is empty or just has welcome messages */}
