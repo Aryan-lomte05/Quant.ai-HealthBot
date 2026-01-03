@@ -1,12 +1,18 @@
 "use client";
 
-import { Phone, MessageCircle } from "lucide-react";
+import { Phone } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function MentalHealthSupport() {
     return (
-        <div className="space-y-6">
-            <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-2xl p-6 border border-teal-100">
-                <div className="flex items-center gap-3 mb-4">
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            className="h-full"
+        >
+            <div className="bg-gradient-to-br from-teal-50 to-emerald-50 rounded-2xl p-6 border border-teal-100 h-full">
+                <div className="flex items-center gap-3 mb-5">
                     <div className="p-2 bg-white rounded-full shadow-sm text-teal-600">
                         <HeartHandshakeIcon className="h-6 w-6" />
                     </div>
@@ -14,68 +20,40 @@ export function MentalHealthSupport() {
                 </div>
 
                 <div className="space-y-3">
-                    <div className="p-4 bg-white rounded-xl shadow-sm border border-teal-100 flex items-center justify-between">
+                    <motion.div
+                        whileHover={{ scale: 1.02, x: 4 }}
+                        className="p-4 bg-white rounded-xl shadow-sm border border-teal-100 flex items-center justify-between transition-shadow hover:shadow-md"
+                    >
                         <div>
                             <p className="font-bold text-gray-900">Kiran Helpline</p>
                             <p className="text-xs text-gray-500">24/7 Mental Health Support</p>
                         </div>
                         <a
                             href="tel:18005990019"
-                            className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg font-bold text-sm hover:bg-teal-700 transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg font-bold text-sm hover:bg-teal-700 transition-colors shadow-md hover:shadow-lg"
                         >
                             <Phone className="h-4 w-4" /> Call
                         </a>
-                    </div>
+                    </motion.div>
 
-                    <div className="p-4 bg-white rounded-xl shadow-sm border border-teal-100 flex items-center justify-between">
+                    <motion.div
+                        whileHover={{ scale: 1.02, x: 4 }}
+                        className="p-4 bg-white rounded-xl shadow-sm border border-teal-100 flex items-center justify-between transition-shadow hover:shadow-md"
+                    >
                         <div>
                             <p className="font-bold text-gray-900">AASRA</p>
                             <p className="text-xs text-gray-500">Suicide Prevention</p>
                         </div>
                         <a
                             href="tel:919820466726"
-                            className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg font-bold text-sm hover:bg-teal-700 transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg font-bold text-sm hover:bg-teal-700 transition-colors shadow-md hover:shadow-lg"
                         >
                             <Phone className="h-4 w-4" /> Call
                         </a>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
-
-            <div className="border border-gray-200 rounded-2xl p-6 bg-white">
-                <div className="mb-4">
-                    <h3 className="font-bold text-gray-800 flex items-center gap-2">
-                        <MessageCircle className="h-5 w-5 text-indigo-500" />
-                        Anonymous Counselor Chat
-                    </h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                        Connect with a listener immediately. Privacy guaranteed.
-                    </p>
-                </div>
-
-                <div className="h-48 bg-gray-50 rounded-xl border border-dotted border-gray-300 flex flex-col items-center justify-center text-center p-6 space-y-3">
-                    <div className="h-12 w-12 bg-gray-200 rounded-full flex items-center justify-center text-gray-400">
-                        <MessageCircle className="h-6 w-6" />
-                    </div>
-                    <p className="text-gray-400 text-sm">
-                        Chat service is currently loading... <br />
-                        (This is a placeholder for future WebSocket integration)
-                    </p>
-                </div>
-
-                <div className="mt-4 flex gap-2">
-                    <input
-                        type="text"
-                        placeholder="Type a message..."
-                        className="flex-1 px-4 py-2 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-100"
-                        disabled
-                    />
-                    <button disabled className="px-4 py-2 bg-indigo-500 text-white rounded-xl font-medium opacity-50 cursor-not-allowed">
-                        Send
-                    </button>
-                </div>
-            </div>
-        </div>
+        </motion.div>
     );
 }
 

@@ -130,8 +130,8 @@ function FloatingParticles() {
           key={i}
           className="absolute w-1 h-1 bg-emerald-400/30 rounded-full"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
+            y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
           }}
           animate={{
             y: [null, Math.random() * -200 - 100],
@@ -352,9 +352,9 @@ export default function Home() {
             </div>
 
             {/* Left Section - Typography */}
-            <div className="p-6 sm:p-8 md:p-12 lg:p-16 xl:p-20 flex flex-col relative z-10 flex-1 pt-24 sm:pt-32 md:pt-40 pb-10">
+            <div className="p-6 sm:p-8 md:p-12 lg:p-16 xl:p-20 flex flex-col relative z-10 flex-1 pt-32 sm:pt-36 md:pt-40 lg:pt-44">
               <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-4 sm:space-y-6 md:space-y-8">
-                <motion.h1 variants={itemVariants} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-medium tracking-tighter leading-[0.95] text-gray-900">
+                <motion.h1 variants={itemVariants} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-medium tracking-tighter leading-[0.9] text-gray-900">
                   Expert care for <br />
                   <span className="italic font-serif font-light text-emerald-800">your health</span> <br />
                   and wellness<span className="text-yellow-400">.</span>
@@ -362,7 +362,7 @@ export default function Home() {
                 <motion.p variants={itemVariants} className="max-w-md text-gray-500 text-sm sm:text-base md:text-lg leading-relaxed ml-1 sm:ml-2 font-medium">
                   AI medical experts providing compassionate, professional support to keep you safe.
                 </motion.p>
-                <motion.div variants={itemVariants} className="pt-4 sm:pt-6 ml-1 sm:ml-2">
+                <motion.div variants={itemVariants} className="pt-2 sm:pt-4 ml-1 sm:ml-2">
                   <Link href="/chat">
                     <MagneticButton>
                       <motion.button

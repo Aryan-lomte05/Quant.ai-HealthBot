@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Lock, Phone, ArrowRight, Loader2, AlertCircle, LogIn } from 'lucide-react';
 import { api } from '@/lib/api';
-import { setUserPhone, setUserName } from '@/lib/auth';
+import { setUserPhone } from '@/lib/auth';
 import Link from 'next/link';
 
 export default function LoginPage() {
@@ -53,9 +53,6 @@ export default function LoginPage() {
             if (result.success && result.user?.phone) {
                 // Store session
                 setUserPhone(result.user.phone);
-                if (result.user.name) {
-                    setUserName(result.user.name);
-                }
 
                 // Sync with external backend (Fire and forget)
                 api.syncUser(result.user);

@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertOctagon, CloudRain, Sun, Thermometer } from "lucide-react";
+import { AlertOctagon, CloudRain, Sun } from "lucide-react";
 
 export function DisasterAlerts() {
     // Static placeholder data
@@ -26,29 +26,29 @@ export function DisasterAlerts() {
     ];
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 p-5">
             <div className="flex items-center gap-2">
                 <AlertOctagon className="h-5 w-5 text-red-600" />
-                <h2 className="text-xl font-bold text-gray-800">Active Alerts</h2>
+                <h2 className="text-lg font-bold text-gray-800">Active Alerts</h2>
             </div>
 
             <div className="grid gap-3">
                 {alerts.map((alert) => (
                     <div
                         key={alert.id}
-                        className={`p-4 rounded-xl border ${alert.color} flex items-start gap-4`}
+                        className={`p-4 rounded-xl border ${alert.color} flex items-start gap-3`}
                     >
-                        <div className={`p-2 bg-white/50 rounded-lg ${alert.iconColor}`}>
-                            <alert.icon className="h-6 w-6" />
+                        <div className={`p-2 bg-white/50 rounded-lg ${alert.iconColor} flex-shrink-0`}>
+                            <alert.icon className="h-5 w-5" />
                         </div>
-                        <div>
-                            <div className="flex items-center gap-2 mb-1">
-                                <span className="font-bold">{alert.type}</span>
-                                <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-white/50 border border-current opacity-80`}>
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                                <span className="font-bold text-sm">{alert.type}</span>
+                                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-white/50 border border-current opacity-80">
                                     {alert.severity}
                                 </span>
                             </div>
-                            <p className="text-sm opacity-90 leading-relaxed">
+                            <p className="text-xs opacity-90 leading-relaxed">
                                 {alert.message}
                             </p>
                         </div>

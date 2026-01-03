@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Phone, AlertTriangle, Ambulance, Check, X } from "lucide-react";
+import { Phone, Ambulance, Check, X, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function PanicButton() {
@@ -27,62 +27,109 @@ export function PanicButton() {
     };
 
     return (
-        <div className="w-full h-full flex flex-col justify-center">
+        <div className="w-full h-full flex flex-col justify-center p-6">
             {!showOptions ? (
-                <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={handlePanicClick}
-                    className="w-full h-full min-h-[160px] bg-red-600 rounded-3xl shadow-xl shadow-red-500/30 flex flex-col items-center justify-center gap-3 text-white border-4 border-red-500 relative overflow-hidden group transition-all"
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-6"
                 >
-                    <div className="absolute inset-0 bg-gradient-to-t from-red-900/50 to-transparent" />
-                    <div className="relative z-10 flex flex-col items-center gap-1">
-                        <div className="p-3 bg-white/10 rounded-full animate-pulse">
-                            <AlertTriangle className="h-8 w-8" />
+                    {/* Clean Emergency Button */}
+                    <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={handlePanicClick}
+                        className="w-full relative overflow-hidden rounded-3xl bg-gradient-to-br from-red-600 to-red-700 shadow-2xl shadow-red-600/40 transition-shadow hover:shadow-red-600/60"
+                    >
+                        {/* Subtle gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+
+                        {/* Content */}
+                        <div className="relative p-16 flex flex-col items-center gap-6">
+                            {/* Icon */}
+                            <div className="p-6 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/30 shadow-xl">
+                                <AlertTriangle className="h-14 w-14 text-white" strokeWidth={2} />
+                            </div>
+
+                            {/* Text */}
+                            <div className="text-center space-y-2">
+                                <h3 className="text-4xl font-black text-white uppercase tracking-wide">
+                                    Emergency SOS
+                                </h3>
+                                <p className="text-red-100 text-base font-medium">
+                                    Tap to activate emergency services
+                                </p>
+                            </div>
+
+                            {/* Status indicator */}
+                            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-sm border border-white/25">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                                </span>
+                                <span className="text-xs font-bold text-white uppercase tracking-wider">Available 24/7</span>
+                            </div>
                         </div>
-                        <span className="text-xl font-black tracking-wider">EMERGENCY SOS</span>
-                        <span className="text-red-200 text-xs font-medium">Tap for Help</span>
-                    </div>
-                </motion.button>
+                    </motion.button>
+                </motion.div>
             ) : (
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="grid gap-4"
+                    className="space-y-5"
                 >
-                    <div className="flex gap-4">
-                        <button
-                            onClick={() => handleCallInitiate("108", "Ambulance")}
-                            className="flex-1 p-6 bg-red-100 rounded-2xl border-2 border-red-200 flex flex-col items-center gap-3 hover:bg-red-200 transition-colors"
-                        >
-                            <Ambulance className="h-10 w-10 text-red-600" />
-                            <div className="text-center">
-                                <span className="block text-2xl font-bold text-red-900">108</span>
-                                <span className="text-sm font-medium text-red-700">Ambulance</span>
-                            </div>
-                        </button>
-
-                        <button
-                            onClick={() => handleCallInitiate("102", "Medical Emergency")}
-                            className="flex-1 p-6 bg-orange-100 rounded-2xl border-2 border-orange-200 flex flex-col items-center gap-3 hover:bg-orange-200 transition-colors"
-                        >
-                            <Phone className="h-10 w-10 text-orange-600" />
-                            <div className="text-center">
-                                <span className="block text-2xl font-bold text-orange-900">102</span>
-                                <span className="text-sm font-medium text-orange-700">Medical</span>
-                            </div>
-                        </button>
+                    {/* Header */}
+                    <div className="mb-6">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2">Emergency Services</h3>
+                        <p className="text-sm text-gray-500">Select the service you need</p>
                     </div>
 
+                    {/* Emergency options */}
+                    <div className="space-y-3">
+                        <motion.button
+                            whileHover={{ scale: 1.02, x: 4 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => handleCallInitiate("108", "Ambulance")}
+                            className="w-full p-6 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl flex items-center gap-5 shadow-lg shadow-red-600/30 hover:shadow-xl hover:shadow-red-600/40 transition-all border border-red-500"
+                        >
+                            <div className="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
+                                <Ambulance className="h-7 w-7 text-white" strokeWidth={2} />
+                            </div>
+                            <div className="flex-1 text-left">
+                                <span className="block text-3xl font-black text-white">108</span>
+                                <span className="text-sm font-semibold text-red-100">Ambulance Service</span>
+                            </div>
+                            <Phone className="h-5 w-5 text-white/80" />
+                        </motion.button>
+
+                        <motion.button
+                            whileHover={{ scale: 1.02, x: 4 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => handleCallInitiate("102", "Medical Emergency")}
+                            className="w-full p-6 bg-gradient-to-r from-orange-600 to-orange-700 rounded-2xl flex items-center gap-5 shadow-lg shadow-orange-600/30 hover:shadow-xl hover:shadow-orange-600/40 transition-all border border-orange-500"
+                        >
+                            <div className="p-3 rounded-xl bg-white/20 backdrop-blur-sm">
+                                <Phone className="h-7 w-7 text-white" strokeWidth={2} />
+                            </div>
+                            <div className="flex-1 text-left">
+                                <span className="block text-3xl font-black text-white">102</span>
+                                <span className="text-sm font-semibold text-orange-100">Medical Emergency</span>
+                            </div>
+                            <Phone className="h-5 w-5 text-white/80" />
+                        </motion.button>
+                    </div>
+
+                    {/* Cancel button */}
                     <button
                         onClick={() => setShowOptions(false)}
-                        className="w-full py-3 bg-gray-100 rounded-xl text-gray-600 font-medium hover:bg-gray-200"
+                        className="w-full py-3.5 mt-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-gray-700 font-semibold transition-colors"
                     >
                         Cancel
                     </button>
                 </motion.div>
             )}
 
+            {/* Confirmation Modal */}
             <AnimatePresence>
                 {confirmCall && (
                     <motion.div
@@ -90,30 +137,46 @@ export function PanicButton() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                        onClick={() => setConfirmCall(null)}
                     >
                         <motion.div
-                            initial={{ scale: 0.9 }}
-                            animate={{ scale: 1 }}
-                            exit={{ scale: 0.9 }}
-                            className="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl"
+                            initial={{ scale: 0.95, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.95, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl"
                         >
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Call {confirmCall.label}?</h3>
-                            <p className="text-gray-600 mb-6">
-                                Are you sure you want to call <span className="font-bold text-black">{confirmCall.number}</span>?
+                            {/* Icon */}
+                            <div className="flex justify-center mb-6">
+                                <div className="p-5 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-500/30">
+                                    <Phone className="h-8 w-8 text-white" strokeWidth={2} />
+                                </div>
+                            </div>
+
+                            {/* Text */}
+                            <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">
+                                Call {confirmCall.label}?
+                            </h3>
+                            <p className="text-gray-600 mb-8 text-center">
+                                You're about to call{" "}
+                                <span className="font-bold text-emerald-600">{confirmCall.number}</span>
                             </p>
 
+                            {/* Actions */}
                             <div className="flex gap-3">
                                 <button
                                     onClick={() => setConfirmCall(null)}
-                                    className="flex-1 py-3 px-4 rounded-xl bg-gray-100 text-gray-700 font-bold flex items-center justify-center gap-2 hover:bg-gray-200"
+                                    className="flex-1 py-3.5 px-4 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold flex items-center justify-center gap-2 transition-colors"
                                 >
-                                    <X className="h-5 w-5" /> Cancel
+                                    <X className="h-5 w-5" />
+                                    Cancel
                                 </button>
                                 <button
                                     onClick={proceedWithCall}
-                                    className="flex-1 py-3 px-4 rounded-xl bg-green-500 text-white font-bold flex items-center justify-center gap-2 hover:bg-green-600 shadow-lg shadow-green-500/30"
+                                    className="flex-1 py-3.5 px-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-semibold flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/30 transition-all"
                                 >
-                                    <Check className="h-5 w-5" /> Call Now
+                                    <Check className="h-5 w-5" />
+                                    Call Now
                                 </button>
                             </div>
                         </motion.div>
