@@ -1,4 +1,21 @@
 import { NextResponse } from "next/server";
+import path from "path";
+import fs from "fs/promises";
+
+// Force dynamic to ensures we always read one the latest data on request
+export const dynamic = 'force-dynamic';
+
+// Helper to read data fresh from disk
+async function getConditions() {
+  try {
+    const filePath = path.join(process.cwd(), "src", "data", "conditions.json");
+    const data = await fs.readFile(filePath, "utf-8");
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Failed to load conditions.json:", error);
+    return [];
+  }
+}
 
 /* -----------------------------
    FALLBACK: DISEASE CARDS
@@ -95,76 +112,61 @@ const FALLBACK_CONDITIONS_AZ = [
 const ICONS = ["🩺", "❤️", "🫁", "🧠", "🦴", "😔", "🔬", "🦠"];
 const CATEGORIES = ["General Health", "Chronic", "Infection", "Genetic", "Lifestyle"];
 
-function getRandomItem(arr: string[]): string {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
 /* -----------------------------
    HANDLER
 -------------------------------- */
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type"); // diseases | conditions | null
+  const query = searchParams.get("query")?.toLowerCase().trim() || "";
 
-  let nhsConditionsList: any[] = [];
-  let nhsDiseasesCards: any[] = [];
+  // Load fresh data
+  const scrapedConditions = await getConditions();
+  const hasLocalData = scrapedConditions && scrapedConditions.length > 0;
 
-  /* ---- Try NHS A–Z (optional) ---- */
-  if (process.env.NHS_API_KEY) {
-    try {
-      console.log("[API] Attempting to fetch from NHS API...");
-      // Official NHS Sandbox Endpoint: https://sandbox.api.service.nhs.uk/nhs-website-content/conditions-a-to-z
-      const res = await fetch(
-        "https://sandbox.api.service.nhs.uk/nhs-website-content/conditions-a-to-z",
-        {
-          headers: {
-            accept: "application/json",
-            apikey: process.env.NHS_API_KEY,
-            "User-Agent": "QuantAI-HealthBot/1.0",
-          },
-          // Cache for a short time to improve performance/reduce rate limits
-          next: { revalidate: 3600 }
-        }
-      );
+  console.log(`[API/Diseases] Query: "${query}", Local Data: ${hasLocalData}, Items: ${scrapedConditions.length}`);
 
-      if (!res.ok) {
-        console.warn(`[API] NHS API Failed: Status ${res.status} ${res.statusText}`);
-        // Log body only if useful for debugging (careful with PII/size)
-        const errorText = await res.text().catch(() => "No body");
-        console.warn(`[API] Error Body: ${errorText.substring(0, 200)}`);
-      } else {
-        const raw = await res.json();
-        console.log(`[API] Success. Received ${raw.hasPart?.length || 0} items.`);
+  let conditionsList = [];
+  let diseasesCards = [];
 
-        // 1. Raw list for A-Z
-        nhsConditionsList =
-          raw.hasPart?.map((item: any) => ({
-            name: item.name,
-            description: item.description ?? "",
-            url: item.url ?? "",
-          })) ?? [];
-
-        // 2. Map to Disease Cards (Take first 9 for the grid)
-        nhsDiseasesCards = nhsConditionsList.slice(0, 9).map((item, index) => ({
-          id: `nhs-${index}`,
-          name: item.name,
-          icon: ICONS[index % ICONS.length], // consistent icon assignment
-          category: CATEGORIES[index % CATEGORIES.length], // consistent category
-          prevalence: "Varies", // API doesn't provide this
-          description: item.description || "No description available from NHS.",
-          // Provide generic lists so UI doesn't break or look empty
-          symptoms: ["See NHS website for detailed symptoms", "Variable symptoms"],
-          treatments: ["Consult a GP", "See NHS website for treatments"],
-          specialists: ["General Practitioner", "Specialist"],
-          riskFactors: ["See NHS website for risk factors"]
-        }));
-      }
-    } catch (e) {
-      console.error("[API] NHS Network/Parse Error:", e);
-      // silently fall back
+  if (hasLocalData) {
+    // 0. Filter Source Data (Keyword Search)
+    let filtered = scrapedConditions;
+    if (query) {
+      const keywords = query.split(/\s+/).filter(Boolean);
+      filtered = scrapedConditions.filter((item: any) => {
+        const text = `${item.name} ${item.description || ""}`.toLowerCase();
+        return keywords.every((keyword: string) => text.includes(keyword));
+      });
     }
+
+    // 1. Prepare Conditions List (limit to 50 for search performance)
+    conditionsList = filtered.slice(0, 50).map((item: any) => ({
+      name: item.name,
+      description: item.description,
+      url: item.url
+    }));
+
+    // 2. Prepare Disease Cards
+    // If searching, show up to 20 results as cards
+    // If not searching, show featured 9 items
+    const limit = query ? 20 : 9;
+    diseasesCards = filtered.slice(0, limit).map((item: any, i: number) => ({
+      id: item.id,
+      name: item.name,
+      icon: ICONS[i % ICONS.length],
+      category: CATEGORIES[i % CATEGORIES.length],
+      prevalence: "Varies",
+      description: item.description,
+      symptoms: item.symptoms && item.symptoms.length > 0 ? item.symptoms : ["See details"],
+      treatments: item.treatments && item.treatments.length > 0 ? item.treatments : ["Consult a GP"],
+      specialists: ["General Practitioner", "Specialist"],
+      riskFactors: ["See details on NHS website"]
+    }));
   } else {
-    console.warn("[API] NHS_API_KEY is missing in env. Skipping external fetch.");
+    // Fallback
+    conditionsList = FALLBACK_CONDITIONS_AZ.flatMap(g => g.conditions.map(c => ({ name: c, description: "Fallback data", url: "#" })));
+    diseasesCards = FALLBACK_DISEASES;
   }
 
   /* ---- RESPONSES ---- */
@@ -172,30 +174,23 @@ export async function GET(req: Request) {
   // Only conditions A–Z
   if (type === "conditions") {
     return NextResponse.json({
-      source: nhsConditionsList.length ? "nhs" : "fallback",
-      conditions: nhsConditionsList.length
-        ? nhsConditionsList
-        : FALLBACK_CONDITIONS_AZ,
+      source: hasLocalData ? "local-scraper" : "fallback",
+      conditions: conditionsList
     });
   }
 
   // Only disease cards
   if (type === "diseases") {
-    // If API loaded successfully, use mapped API data. Otherwise fallback.
-    const useApiData = nhsDiseasesCards.length > 0;
-
     return NextResponse.json({
-      source: useApiData ? "nhs" : "fallback",
-      diseases: useApiData ? nhsDiseasesCards : FALLBACK_DISEASES,
+      source: hasLocalData ? "local-scraper" : "fallback",
+      diseases: diseasesCards
     });
   }
 
   // Default → BOTH
   return NextResponse.json({
-    source: nhsConditionsList.length ? "mixed" : "fallback",
-    diseases: nhsDiseasesCards.length > 0 ? nhsDiseasesCards : FALLBACK_DISEASES,
-    conditions: nhsConditionsList.length
-      ? nhsConditionsList
-      : FALLBACK_CONDITIONS_AZ,
+    source: hasLocalData ? "local-scraper" : "fallback",
+    diseases: diseasesCards,
+    conditions: conditionsList
   });
 }

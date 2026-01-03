@@ -1,0 +1,331 @@
+[
+  {
+    "name": "Antacids",
+    "url": "https://www.nhs.uk/medicines/antacids/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Antibiotics",
+    "url": "https://www.nhs.uk/medicines/antibiotics/",
+    "issues": [
+      "Generic Dosage"
+    ]
+  },
+  {
+    "name": "Antifungal medicines",
+    "url": "https://www.nhs.uk/medicines/antifungal-medicines/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Antihistamines",
+    "url": "https://www.nhs.uk/medicines/antihistamines/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Anticoagulant medicines",
+    "url": "https://www.nhs.uk/medicines/anticoagulants/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Antidepressants",
+    "url": "https://www.nhs.uk/medicines/antidepressants/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Beta blockers",
+    "url": "https://www.nhs.uk/medicines/beta-blockers/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Calpol, see Paracetamol for children (Calpol)",
+    "url": "https://www.nhs.uk/medicines/paracetamol-for-children/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Cannabis oil (medical cannabis), see Medical cannabis (and cannabis oils)",
+    "url": "https://www.nhs.uk/medicines/medical-cannabis/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Contraceptive injections (medroxyprogesterone)",
+    "url": "https://www.nhs.uk/medicines/contraceptive-injections-medroxyprogesterone/",
+    "issues": [
+      "Generic Dosage"
+    ]
+  },
+  {
+    "name": "Corticosteroids, see Steroids",
+    "url": "https://www.nhs.uk/medicines/steroids/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Decongestants",
+    "url": "https://www.nhs.uk/medicines/decongestants/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Doxycycline",
+    "url": "https://www.nhs.uk/medicines/doxycycline/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Hydrocortisone",
+    "url": "https://www.nhs.uk/medicines/hydrocortisone/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Herceptin, see Trastuzumab (Herceptin)",
+    "url": "https://www.nhs.uk/medicines/trastuzumab-herceptin/",
+    "issues": [
+      "Generic Dosage"
+    ]
+  },
+  {
+    "name": "Hormone replacement therapy (HRT)",
+    "url": "https://www.nhs.uk/medicines/hormone-replacement-therapy-hrt/",
+    "issues": [
+      "Generic Dosage"
+    ]
+  },
+  {
+    "name": "Hydrocortisone injections",
+    "url": "https://www.nhs.uk/medicines/hydrocortisone-injections/",
+    "issues": [
+      "Generic Dosage"
+    ]
+  },
+  {
+    "name": "Hydrocortisone rectal foam",
+    "url": "https://www.nhs.uk/medicines/hydrocortisone-rectal-foam/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Hydroxocobalamin",
+    "url": "https://www.nhs.uk/medicines/hydroxocobalamin/",
+    "issues": [
+      "Generic Dosage"
+    ]
+  },
+  {
+    "name": "Hydrocortisone for skin",
+    "url": "https://www.nhs.uk/medicines/hydrocortisone-for-skin/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Ibuprofen for adults (Nurofen)",
+    "url": "https://www.nhs.uk/medicines/ibuprofen-for-adults/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Insulin",
+    "url": "https://www.nhs.uk/medicines/insulin/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Laxatives",
+    "url": "https://www.nhs.uk/medicines/laxatives/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Lansoprazole",
+    "url": "https://www.nhs.uk/medicines/lansoprazole/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Levothyroxine",
+    "url": "https://www.nhs.uk/medicines/levothyroxine/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Medroxyprogesterone injections, see Contraceptive injections (medroxyprogesterone)",
+    "url": "https://www.nhs.uk/medicines/contraceptive-injections-medroxyprogesterone/",
+    "issues": [
+      "Generic Dosage"
+    ]
+  },
+  {
+    "name": "Medicines information",
+    "url": "https://www.nhs.uk/tests-and-treatments/medicines-information/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Medical cannabis (and cannabis oils)",
+    "url": "https://www.nhs.uk/medicines/medical-cannabis/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "NSAIDs",
+    "url": "https://www.nhs.uk/medicines/nsaids/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Nurofen, see Ibuprofen for adults (Nurofen)",
+    "url": "https://www.nhs.uk/medicines/ibuprofen-for-adults/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Omeprazole",
+    "url": "https://www.nhs.uk/medicines/omeprazole/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Paracetamol for children (Calpol)",
+    "url": "https://www.nhs.uk/medicines/paracetamol-for-children/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Pregabalin",
+    "url": "https://www.nhs.uk/medicines/pregabalin/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Ranitidine",
+    "url": "https://www.nhs.uk/medicines/ranitidine/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Propranolol",
+    "url": "https://www.nhs.uk/medicines/propranolol/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Sertraline",
+    "url": "https://www.nhs.uk/medicines/sertraline/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  },
+  {
+    "name": "Statins",
+    "url": "https://www.nhs.uk/medicines/statins/",
+    "issues": [
+      "Generic Dosage"
+    ]
+  },
+  {
+    "name": "Steroids",
+    "url": "https://www.nhs.uk/medicines/steroids/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects"
+    ]
+  },
+  {
+    "name": "Trastuzumab (Herceptin)",
+    "url": "https://www.nhs.uk/medicines/trastuzumab-herceptin/",
+    "issues": [
+      "Generic Dosage"
+    ]
+  },
+  {
+    "name": "Trimethoprim",
+    "url": "https://www.nhs.uk/medicines/trimethoprim/",
+    "issues": [
+      "Generic Dosage",
+      "Generic/Empty Side Effects",
+      "Generic/Empty Uses"
+    ]
+  }
+]

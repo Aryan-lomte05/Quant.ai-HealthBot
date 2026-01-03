@@ -42,52 +42,14 @@ export async function POST(req: Request) {
             .sort((a, b) => b.probability - a.probability)
             .slice(0, 4);
 
-        // ENRICHMENT: Fetch official descriptions from NHS API
-        if (process.env.NHS_API_KEY && relevantResults.length > 0) {
-            console.log(`[API] Symptom Checker: Enriching ${relevantResults.length} results via NHS API...`);
-            try {
-                // Official NHS Sandbox Endpoint: https://sandbox.api.service.nhs.uk/nhs-website-content/symptoms-a-to-z
-                const nhsRes = await fetch(
-                    "https://sandbox.api.service.nhs.uk/nhs-website-content/symptoms-a-to-z",
-                    {
-                        headers: {
-                            accept: "application/json",
-                            apikey: process.env.NHS_API_KEY,
-                            "User-Agent": "QuantAI-HealthBot/1.0",
-                        },
-                        next: { revalidate: 3600 } // Cached for 1 hour
-                    }
-                );
+        // Match local data
+        // ... (existing helper logic matches against symptoms.json)
 
-                if (nhsRes.ok) {
-                    const nhsData = await nhsRes.json();
-                    const nhsItems = nhsData.hasPart || [];
-                    console.log(`[API] NHS Match: Found ${nhsItems.length} items to cross-reference.`);
+        // ENRICHMENT: Removed external API requirement.
+        // If we wanted to enrich from local scraped conditions, we could do it here
+        // by importing scrapedConditions and finding matches.
+        // For now, we return the local symptoms.json analysis which is robust enough for "demo" purposes.
 
-                    // For each result, try to find a matching NHS item
-                    for (const result of relevantResults) {
-                        const match = nhsItems.find((item: any) =>
-                            item.name.toLowerCase().includes(result.condition.toLowerCase()) ||
-                            result.condition.toLowerCase().includes(item.name.toLowerCase())
-                        );
-
-                        if (match) {
-                            console.log(`[API] Enriched: ${result.condition} -> ${match.url}`);
-                            result.description = match.description || result.description;
-                            (result as any).url = match.url; // Add URL field
-                            (result as any).isNhsVerified = true;
-                        }
-                    }
-                } else {
-                    console.warn(`[API] NHS Enrichment Failed: ${nhsRes.status}`);
-                }
-            } catch (e) {
-                console.error("[API] NHS Enrichment Network Error:", e);
-                // Continue with local descriptions if fetch fails
-            }
-        } else {
-            if (!process.env.NHS_API_KEY) console.log("[API] NHS_API_KEY missing. Skipping enrichment.");
-        }
 
         // If no good matches, return generic advice
         if (relevantResults.length === 0) {

@@ -107,16 +107,18 @@ export default function ExplorePage() {
   const [dataSource, setDataSource] = useState<"nhs" | "fallback" | "mixed">("fallback");
   const [isLoadingDiseases, setIsLoadingDiseases] = useState(true);
 
-  // Fetch Diseases
+  // Fetch Diseases (Initial + Search)
   useEffect(() => {
     async function fetchDiseases() {
+      setIsLoadingDiseases(true);
       try {
-        const res = await fetch("/api/diseases?type=diseases");
+        const query = diseaseSearch ? `&query=${encodeURIComponent(diseaseSearch)}` : "";
+        const res = await fetch(`/api/diseases?type=diseases${query}`);
         const data = await res.json();
         if (data.diseases) {
           setDiseases(data.diseases);
           // Developer-only check
-          console.log("[HealthBot] Data Source:", data.source || "fallback");
+          console.log("[HealthBot] Data Source:", data.source || "fallback", "Items:", data.diseases.length);
         }
       } catch (error) {
         console.error("Failed to fetch diseases:", error);
@@ -124,8 +126,14 @@ export default function ExplorePage() {
         setIsLoadingDiseases(false);
       }
     }
-    fetchDiseases();
-  }, []);
+
+    // Debounce search
+    const timer = setTimeout(() => {
+      fetchDiseases();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [diseaseSearch]);
 
   // Comprehensive Dummy Data
   const symptoms = [
@@ -225,10 +233,7 @@ export default function ExplorePage() {
     }
   ];
 
-  const filteredDiseases = diseases.filter(disease =>
-    disease.name.toLowerCase().includes(diseaseSearch.toLowerCase()) ||
-    disease.category.toLowerCase().includes(diseaseSearch.toLowerCase())
-  );
+  const filteredDiseases = diseases; // Server-side managed now
 
 
 
@@ -546,9 +551,8 @@ export default function ExplorePage() {
               <motion.div
                 key={disease.id}
                 initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
                 whileHover={{ y: -10, scale: 1.02 }}
                 onClick={() => setSelectedDisease(disease)}
                 className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border border-gray-100 cursor-pointer group"
@@ -561,10 +565,6 @@ export default function ExplorePage() {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">{disease.name}</h3>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">{disease.description}</p>
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-gray-600">Prevalence</span>
-                  <span className="text-2xl font-bold text-emerald-600">{disease.prevalence}</span>
-                </div>
                 <motion.div
                   className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-4 transition-all"
                 >
@@ -710,12 +710,6 @@ export default function ExplorePage() {
                   </span>
                 </div>
                 <p className="text-gray-600 mb-4">{selectedDisease.description}</p>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Users className="w-4 h-4" />
-                    Prevalence: <span className="font-bold text-emerald-600">{selectedDisease.prevalence}</span>
-                  </div>
-                </div>
               </div>
             </div>
 
@@ -821,12 +815,12 @@ export default function ExplorePage() {
                   <Info className="w-5 h-5 text-blue-600" /> Uses
                 </h3>
                 <ul className="space-y-2">
-                  {selectedMedicine.uses.map((use: string, i: number) => (
+                  {selectedMedicine.uses?.map((use: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-gray-700">
                       <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
                       {use}
                     </li>
-                  ))}
+                  )) || <li className="text-gray-500 italic">No usage info available</li>}
                 </ul>
               </div>
 
@@ -835,12 +829,12 @@ export default function ExplorePage() {
                   <AlertTriangle className="w-5 h-5 text-orange-600" /> Drug Interactions
                 </h3>
                 <ul className="space-y-2">
-                  {selectedMedicine.interactions.map((interaction: string, i: number) => (
+                  {selectedMedicine.interactions?.map((interaction: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-gray-700">
                       <div className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
                       {interaction}
                     </li>
-                  ))}
+                  )) || <li className="text-gray-500 italic">No interaction info available</li>}
                 </ul>
               </div>
 
