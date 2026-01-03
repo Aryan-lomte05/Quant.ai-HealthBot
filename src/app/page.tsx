@@ -316,17 +316,23 @@ export default function Home() {
         />
 
         <motion.section
-          className="sticky top-0 z-0 w-full min-h-screen flex flex-col p-2 sm:p-4 md:p-6"
+          className="sticky top-0 z-10 w-full h-screen flex flex-col p-2 sm:p-4 md:p-6"
         >
           {/* Floating Particles */}
           <FloatingParticles />
 
           <motion.div
             className="flex-1 w-full bg-white rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] shadow-[0_8px_30px_rgba(16,185,129,0.08)] overflow-hidden relative border border-emerald-100/50 flex flex-col lg:flex-row"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              scale: useTransform(scrollYProgress, [0, 0.4], [1, 0.9]),
-              opacity: useTransform(scrollYProgress, [0.3, 0.5], [1, 0]),
-              y: useTransform(scrollYProgress, [0, 0.4], [0, 50])
+              scale: useSpring(useTransform(scrollYProgress, [0, 0.8], [1, 0.85]), {
+                stiffness: 60,
+                damping: 40,
+                restDelta: 0.001
+              }),
+              y: useTransform(scrollYProgress, [0, 0.8], [0, 150])
             }}
           >
             {/* Top Branding */}
@@ -429,10 +435,9 @@ export default function Home() {
         </motion.section>
 
         {/* SECTION 2: BENTO GRID - Vibrant Glassmorphism (Replaced "Dull" Dark Mode) */}
-        <div className="relative z-10 min-h-screen bg-transparent pointer-events-none h-[1px]" /> {/* Spacer for sticky hero */}
 
         <motion.section
-          className="w-full relative z-20 bg-orange-50/30 rounded-t-[2.5rem] sm:rounded-t-[3rem] md:rounded-t-[4rem] -mt-[10vh] pb-12 sm:pb-16 md:pb-20 lg:pb-24 shadow-[0_-20px_50px_rgba(251,146,60,0.08)] overflow-hidden"
+          className="w-full relative z-30 bg-orange-50/30 rounded-t-[2.5rem] sm:rounded-t-[3rem] md:rounded-t-[4rem] mt-24 pb-12 sm:pb-16 md:pb-20 lg:pb-24 shadow-[0_-20px_50px_rgba(251,146,60,0.08)] overflow-hidden"
         >
           {/* Animated Background Mesh */}
           <div className="absolute inset-0 z-0 opacity-40">
@@ -538,7 +543,7 @@ export default function Home() {
 
 
         {/* SECTION 3: HOW IT WORKS - Dynamic Timeline */}
-        <section className="w-full bg-emerald-950 py-12 sm:py-16 md:py-20 lg:py-32 rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] -mt-8 sm:mt-10 md:-mt-12 z-30 relative text-white overflow-hidden">
+        <section className="w-full bg-emerald-950 py-12 sm:py-16 md:py-20 lg:py-32 rounded-[2rem] sm:rounded-[2.5rem] md:rounded-[3rem] -mt-8 z-30 relative text-white overflow-hidden">
 
           {/* Background Gradients */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden opacity-20 pointer-events-none">

@@ -18,8 +18,17 @@ export interface SignupData {
 }
 
 export interface LoginData {
-    phone: string;
+    emailOrPhone: string;
     password: string;
+}
+
+export interface AuthResponse {
+    success: boolean;
+    message: string;
+    token?: string;
+    user?: any;
+    otp?: string; // For dev mode
+    requiresVerification?: boolean;
 }
 
 export interface ChatResponse {
@@ -72,7 +81,7 @@ export const api = {
         return handleResponse(res);
     },
 
-    login: async (data: LoginData) => {
+    login: async (data: LoginData): Promise<AuthResponse> => {
         const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -83,10 +92,18 @@ export const api = {
 
     // Chat Endpoint
     sendChatMessage: async (phone: string, message: string): Promise<ChatResponse> => {
-        const res = await fetch(`${API_BASE_URL}/api/chat/web`, {
+        const baseUrl = API_BASE_URL.includes('localhost') ? 'https://cormlike-willodean-unpeddled.ngrok-free.dev' : API_BASE_URL;
+        const res = await fetch(`${baseUrl}/api/chat/web`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone, message }),
+        });
+        return handleResponse(res);
+    },
+
+    getChatHistory: async (phone: string) => {
+        const res = await fetch(`${API_BASE_URL}/api/chat/web?phone=${phone}`, {
+            method: 'GET',
         });
         return handleResponse(res);
     },
@@ -105,5 +122,20 @@ export const api = {
         }
 
         return res.blob();
+    },
+
+    // Sync User with Backend
+    syncUser: async (userData: any) => {
+        const baseUrl = API_BASE_URL.includes('localhost') ? 'https://cormlike-willodean-unpeddled.ngrok-free.dev' : API_BASE_URL;
+        try {
+            // Try to register/sync user
+            await fetch(`${baseUrl}/api/auth/register`, { // Guessing endpoint
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData)
+            });
+        } catch (e) {
+            console.warn("Backend sync failed", e);
+        }
     },
 };

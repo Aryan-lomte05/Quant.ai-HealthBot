@@ -118,6 +118,9 @@ export default function SignupPage() {
             });
 
             if (res.success) {
+                // Sync with external backend
+                api.syncUser(res.user);
+
                 setSuccess(true);
                 setTimeout(() => {
                     router.push('/login');

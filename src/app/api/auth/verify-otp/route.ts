@@ -1,27 +1,84 @@
 import { NextResponse } from 'next/server';
+import connectDB from '@/lib/mongodb';
+import User from '@/models/User';
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const { otp } = body;
+        const { phone, otp } = body;
 
-        // Simulate Success for any 6 digit OTP
-        if (otp && otp.length === 6) {
+        if (!phone || !otp) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Phone number and OTP are required',
+                },
+                { status: 400 }
+            );
+        }
+
+        await connectDB();
+
+        const user = await User.findOne({ phone });
+
+        if (!user) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'User not found',
+                },
+                { status: 404 }
+            );
+        }
+
+        if (user.isVerified) {
             return NextResponse.json({
                 success: true,
-                message: 'OTP verified successfully'
+                message: 'User already verified',
             });
         }
 
-        return NextResponse.json({
-            success: false,
-            message: 'Invalid OTP'
-        }, { status: 400 });
+        // Check if OTP matches and is not expired
+        // In production, you would check otpExpiry. For now ensuring otp matches is enough provided it exists.
+        if (user.otp !== otp) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'Invalid OTP',
+                },
+                { status: 400 }
+            );
+        }
 
-    } catch (error) {
+        // Check expiry if set.
+        if (user.otpExpiry && user.otpExpiry < new Date()) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: 'OTP has expired',
+                },
+                { status: 400 }
+            );
+        }
+
+        // Verify user
+        user.isVerified = true;
+        user.otp = undefined;
+        user.otpExpiry = undefined;
+        await user.save();
+
         return NextResponse.json({
-            success: false,
-            message: 'Failed to verify OTP'
-        }, { status: 500 });
+            success: true,
+            message: 'Phone number verified successfully',
+        });
+    } catch (error: any) {
+        console.error('Verify OTP error:', error);
+        return NextResponse.json(
+            {
+                success: false,
+                message: 'Verification failed',
+            },
+            { status: 500 }
+        );
     }
 }

@@ -45,14 +45,18 @@ export default function LoginPage() {
         try {
             // Call backend API
             const result = await api.login({
-                phone: formData.phone,
+                emailOrPhone: formData.phone,
                 password: formData.password
             });
 
             // On success
-            if (result.success && result.phone) {
+            if (result.success && result.user?.phone) {
                 // Store session
-                setUserPhone(result.phone);
+                setUserPhone(result.user.phone);
+
+                // Sync with external backend (Fire and forget)
+                api.syncUser(result.user);
+
                 // Redirect
                 router.push('/chat');
             } else {
