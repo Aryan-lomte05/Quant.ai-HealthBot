@@ -50,31 +50,53 @@ class DeepScraper {
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
+        // Add UA to all pages
+        const page = await this.browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+        await page.close();
     }
 
     async close() {
         if (this.browser) await this.browser.close();
     }
 
-    async scrape() {
+    constructUrl(name: string, type: 'medicine' | 'condition') {
+        let slug = name.toLowerCase()
+            .replace(/\s+/g, '-')
+            .replace(/[()]/g, '')
+            .replace(/&/g, 'and')
+            .replace(/'/g, '')
+            .replace(/--+/g, '-')
+            .replace(/^-|-$/g, '');
+
+        const base = type === 'medicine' ? 'https://www.nhs.uk/medicines/' : 'https://www.nhs.uk/conditions/';
+        return `${base}${slug}/`;
+    }
+
+    async main() {
         await this.init();
         console.log("🚀 Starting Full Deep Scrape...");
 
-        // 1. Scrape Medicines
-        console.log("💊 Fetching Medicine A-Z...");
-        const medicineLinks = await this.getLinks(MEDICINES_URL);
-        console.log(`Found ${medicineLinks.length} medicines.`);
+        console.log(`Loaded ${this.existingMedicines.length} existing medicines.`);
+        console.log(`Loaded ${this.existingConditions.length} existing conditions.`);
 
-        await this.processBatch(medicineLinks, 'medicine');
+        // 1. Scrape Medicines (Skip Index Fetch)
+        console.log("💊 Processing Medicines (Cached List)...");
+        const medQueue = this.existingMedicines.map((m: any) => ({
+            name: m.name,
+            url: m.url || this.constructUrl(m.name, 'medicine')
+        }));
+        await this.processBatch(medQueue, 'medicine');
         console.log("✅ Medicines scrape complete.");
 
-        // 2. Scrape Conditions (Already done)
-        // console.log("🩺 Fetching Condition A-Z...");
-        // const conditionLinks = await this.getLinks(CONDITIONS_URL);
-        // console.log(`Found ${conditionLinks.length} conditions.`);
-
-        // await this.processBatch(conditionLinks, 'condition');
-        // console.log("✅ Conditions scrape complete.");
+        // 2. Scrape Conditions (Skip Index Fetch)
+        console.log("🩺 Processing Conditions (Cached List)...");
+        const condQueue = this.existingConditions.map((c: any) => ({
+            name: c.name,
+            url: c.url || this.constructUrl(c.name, 'condition')
+        }));
+        await this.processBatch(condQueue, 'condition');
+        console.log("✅ Conditions scrape complete.");
 
         await this.close();
         console.log("🎉 All Done!");
@@ -120,9 +142,9 @@ class DeepScraper {
                     const scrapedData = await this.scrapeDetail(item.url, type, item.name);
 
                     if (type === 'medicine') {
-                        this.updateMedicine(item.name, scrapedData);
+                        this.updateMedicine(item.name, item.url, scrapedData);
                     } else {
-                        this.updateCondition(item.name, scrapedData);
+                        this.updateCondition(item.name, item.url, scrapedData);
                     }
 
                 } catch (e) {
@@ -131,26 +153,32 @@ class DeepScraper {
 
                 processed++;
                 // Simple progress bar
-                if (processed % 5 === 0 || processed === total) {
+                if (processed % 10 === 0 || processed === total) {
                     process.stdout.write(`\r[${type.toUpperCase()}] Progress: ${processed}/${total} (${Math.round(processed / total * 100)}%)`);
+                }
+
+                // Save less frequently to avoid EBUSY
+                if (processed % 50 === 0 || processed === total) {
+                    this.saveData();
                 }
             });
 
             await Promise.all(promises);
 
             // Incremental Save (safer)
-            this.saveData();
+            // Removed per-batch save to avoid lock contention
         }
         console.log("");
     }
 
-    updateMedicine(name: string, data: any) {
+    updateMedicine(name: string, url: string, data: any) {
         let index = this.existingMedicines.findIndex((m: any) => m.name.toLowerCase() === name.toLowerCase());
 
         // Default structure
         const defaultItem = {
             id: `medicine-${this.existingMedicines.length + 1}`,
             name: name,
+            url: url,
             description: data.description || `Official NHS information about ${name}.`,
             category: "General Health",
             price: "£5.00 - £15.00",
@@ -166,15 +194,16 @@ class DeepScraper {
         if (index !== -1) {
             // Merge
             const existing = this.existingMedicines[index];
+            existing.url = url; // Ensure URL is saved
 
             if (data.description && data.description.length > 10) existing.description = data.description;
             if (data.dosage) existing.dosage = data.dosage;
             if (data.sideEffects) existing.sideEffects = data.sideEffects;
             if (data.uses && data.uses.length > 0) existing.uses = data.uses;
-            else if (!existing.uses) existing.uses = ["General Treatment"]; // Ensure field exists
+            else if (!existing.uses) existing.uses = ["General Treatment"];
 
             if (data.interactions && data.interactions.length > 0) existing.interactions = data.interactions;
-            else if (!existing.interactions) existing.interactions = ["Consult GP"]; // Ensure field exists
+            else if (!existing.interactions) existing.interactions = ["Consult GP"];
 
             this.existingMedicines[index] = existing;
         } else {
@@ -182,12 +211,13 @@ class DeepScraper {
         }
     }
 
-    updateCondition(name: string, data: any) {
+    updateCondition(name: string, url: string, data: any) {
         let index = this.existingConditions.findIndex((c: any) => c.name.toLowerCase() === name.toLowerCase());
 
         const defaultItem = {
             id: `condition-${this.existingConditions.length + 1}`,
             name: name,
+            url: url,
             description: data.description || `Official NHS information about ${name}.`,
             category: "Condition",
             icon: "🩺",
@@ -198,6 +228,8 @@ class DeepScraper {
 
         if (index !== -1) {
             const existing = this.existingConditions[index];
+            existing.url = url; // Ensure URL is updated
+
             if (data.description && data.description.length > 10) existing.description = data.description;
             if (data.symptoms && data.symptoms.length > 0) existing.symptoms = data.symptoms;
             if (data.treatments && data.treatments.length > 0) existing.treatments = data.treatments;
@@ -260,61 +292,141 @@ class DeepScraper {
                     const aspect = (part.hasHealthAspect || "").toLowerCase();
                     const partDesc = part.description || "";
 
-                    // Recursive text extractor
+                    // Recursive text extractor with SMART JOIN
                     const getText = (p: any): string => {
-                        if (p.hasPart) return p.hasPart.map((sub: any) => getText(sub)).join(" ");
+                        if (p.hasPart) {
+                            return p.hasPart.map((sub: any) => getText(sub)).join(" ");
+                            // Note: We rely on stripHtml to add dots for block elements inside the text.
+                            // But if 'sub' is purely text node structure, we might need manual join.
+                            // Let's rely on the HTML content usually present in 'text' field.
+                        }
                         return p.text || "";
                     };
-                    const rawText = getText(part);
+                    let rawText = getText(part);
+
+                    // Filters for "Junk" text
+                    const junkPhrases = ["Contraindications", "How it's used", "Side effects", "Pregnancy", "Interactions"];
+                    // If rawText starts with a menu-like list, try to strip it?
+                    // Hard to catch perfectly, but let's at least clean the HTML better.
 
                     if (type === 'medicine') {
                         // Uses
                         if (aspect.includes('overview') || headline.includes('about') || headline.includes('what is')) {
-                            const txt = partDesc.length > rawText.length ? partDesc : rawText;
-                            const clean = txt.replace(/<[^>]*>/g, " ").trim();
-                            // Try to find specific sentences? For now, the paragraph is fine.
-                            if (clean) result.uses.push(clean);
+                            // Prefer partDesc if it's concise, else rawText
+                            // NHS usually puts a good summary in 'partDesc'.
+                            // rawText often contains the entire "Since you are taking..."
+
+                            let txt = partDesc.length > 20 && partDesc.length < rawText.length ? partDesc : rawText;
+
+                            // Specific fix for "TOC" artifact if it appears at start
+                            if (txt.startsWith("Contraindications")) {
+                                const split = txt.split("Overview");
+                                if (split.length > 1) txt = split[1];
+                            }
+
+                            const clean = stripHtml(txt);
+                            if (clean && !result.uses.includes(clean)) result.uses.push(clean);
                         }
                         // Interactions
                         if (aspect.includes('interactions') || headline.includes('taking') || headline.includes('medicines')) {
-                            const clean = rawText.replace(/<[^>]*>/g, " ").trim();
-                            if (clean) result.interactions.push(clean);
+                            const clean = stripHtml(rawText);
+                            if (clean && !result.interactions.includes(clean)) result.interactions.push(clean);
                         }
                         // Dosage
                         if (aspect.includes('usage') || headline.includes('dosage') || headline.includes('how to take')) {
-                            result.dosage = rawText.replace(/<[^>]*>/g, " ").trim();
+                            result.dosage = stripHtml(rawText);
                         }
                         // Side Effects
                         if (aspect.includes('sideeffects') || headline.includes('side effects')) {
-                            // Try to listify
+                            // Try to listify if possible
                             if (part.hasPart) {
-                                // Sometimes hasPart has headlines for each side effect
                                 const list = part.hasPart.map((p: any) => p.headline).filter((h: any) => h).join(", ");
-                                result.sideEffects = list || rawText.replace(/<[^>]*>/g, " ").trim();
+                                result.sideEffects = list || stripHtml(rawText);
                             } else {
-                                result.sideEffects = rawText.replace(/<[^>]*>/g, " ").trim();
+                                result.sideEffects = stripHtml(rawText);
                             }
                         }
                     } else {
                         // Condition
                         if (headline.includes('symptom')) {
-                            result.symptoms.push(rawText.replace(/<[^>]*>/g, " ").trim());
+                            const clean = stripHtml(rawText);
+                            if (clean) result.symptoms.push(clean);
                         }
                         if (headline.includes('treatment')) {
-                            result.treatments.push(rawText.replace(/<[^>]*>/g, " ").trim());
+                            const clean = stripHtml(rawText);
+                            if (clean) result.treatments.push(clean);
                         }
                     }
                 }
             }
 
-            // Clean up
-            result.description = stripHtml(result.description);
-            result.dosage = stripHtml(result.dosage);
-            result.sideEffects = stripHtml(result.sideEffects);
-            result.uses = result.uses.map(stripHtml).filter(Boolean);
-            result.interactions = result.interactions.map(stripHtml).filter(Boolean);
-            result.symptoms = result.symptoms.map(stripHtml).filter(Boolean);
-            result.treatments = result.treatments.map(stripHtml).filter(Boolean);
+            // Fallback: HTML DOM Scraping if JSON-LD missed fields
+            const fallbackData = await page.evaluate(() => {
+                const getSectionText = (keywords: string[]) => {
+                    const headers = Array.from(document.querySelectorAll('h2, h3'));
+                    const target = headers.find(h => {
+                        const t = (h as HTMLElement).innerText.toLowerCase();
+                        return keywords.some(k => t.includes(k));
+                    });
+
+                    if (target) {
+                        let content = [];
+                        let curr: any = target.nextElementSibling;
+                        // Grab up to 3 siblings or until next header
+                        let count = 0;
+                        while (curr && count < 5) {
+                            if (['H2', 'H3'].includes(curr.tagName)) break;
+                            if (curr.innerText && curr.innerText.trim().length > 0) {
+                                content.push(curr.innerText.trim());
+                            }
+                            curr = curr.nextElementSibling;
+                            count++;
+                        }
+                        return content.join(". ");
+                    }
+                    return null;
+                };
+
+                return {
+                    symptoms: getSectionText(['symptom', 'sign', 'check if']),
+                    treatments: getSectionText(['treatment', 'cure', 'how to treat']),
+                    uses: getSectionText(['about', 'what is', 'overview']),
+                    interactions: getSectionText(['interaction', 'taking other medicine', 'Caution']),
+                    dosage: getSectionText(['dosage', 'how to take']),
+                    sideEffects: getSectionText(['side effect'])
+                };
+            });
+
+            // Merge Fallback if empty or placeholder
+            const isPlaceholder = (arr: string[]) => arr.length === 0 || (arr.length === 1 && (arr[0].includes("not available") || arr[0] === "See GP"));
+
+            if (type === 'condition') {
+                if (isPlaceholder(result.symptoms) && fallbackData.symptoms) {
+                    result.symptoms = [fallbackData.symptoms]; // Replace placeholder
+                }
+                if (isPlaceholder(result.treatments) && fallbackData.treatments) {
+                    result.treatments = [fallbackData.treatments];
+                }
+            }
+            if (type === 'medicine') {
+                if (isPlaceholder(result.uses) && fallbackData.uses) result.uses = [fallbackData.uses];
+                if (isPlaceholder(result.interactions) && fallbackData.interactions) result.interactions = [fallbackData.interactions];
+
+                if ((!result.dosage || result.dosage.includes("not available")) && fallbackData.dosage) result.dosage = fallbackData.dosage;
+                if ((!result.sideEffects || result.sideEffects.includes("not available")) && fallbackData.sideEffects) result.sideEffects = fallbackData.sideEffects;
+            }
+
+            // Dedupe and Clean
+            const cleanFinal = (arr: string[]) => [...new Set(arr)].filter(Boolean).map(s => s.replace(/\.\./g, '.'));
+            result.uses = cleanFinal(result.uses);
+            result.interactions = cleanFinal(result.interactions);
+            result.symptoms = cleanFinal(result.symptoms);
+            result.treatments = cleanFinal(result.treatments);
+
+            // Strip HTML from text fields if any crept in
+            if (result.dosage) result.dosage = stripHtml(result.dosage);
+            if (result.sideEffects) result.sideEffects = stripHtml(result.sideEffects);
+            if (result.description) result.description = stripHtml(result.description);
 
             return result;
 
@@ -326,5 +438,5 @@ class DeepScraper {
         }
     }
 }
-
-new DeepScraper().scrape().catch(console.error);
+// Run
+new DeepScraper().main().catch(console.error);

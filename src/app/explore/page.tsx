@@ -518,7 +518,8 @@ export default function ExplorePage() {
       </section>
 
       {/* DISEASE ENCYCLOPEDIA */}
-      <ScrollRevealSection id="disease-encyclopedia" className="py-32 px-8 md:px-20 max-w-7xl mx-auto">
+      {/* DISEASE ENCYCLOPEDIA */}
+      <section id="disease-encyclopedia" className="py-32 px-8 md:px-20 max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4">
             Disease Encyclopedia
@@ -547,15 +548,11 @@ export default function ExplorePage() {
               <div key={i} className="h-64 bg-gray-100 rounded-2xl animate-pulse" />
             ))
           ) : (
-            filteredDiseases.map((disease, i) => (
-              <motion.div
+            filteredDiseases.map((disease) => (
+              <div
                 key={disease.id}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: i * 0.05 }}
-                whileHover={{ y: -10, scale: 1.02 }}
                 onClick={() => setSelectedDisease(disease)}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border border-gray-100 cursor-pointer group"
+                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-200 border border-gray-100 cursor-pointer group"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="text-6xl">{disease.icon}</div>
@@ -565,12 +562,12 @@ export default function ExplorePage() {
                 </div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-2">{disease.name}</h3>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">{disease.description}</p>
-                <motion.div
+                <div
                   className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-4 transition-all"
                 >
                   Learn More <ChevronRight className="w-5 h-5" />
-                </motion.div>
-              </motion.div>
+                </div>
+              </div>
             ))
           )}
         </div>
@@ -580,7 +577,7 @@ export default function ExplorePage() {
             <p className="text-gray-500 text-lg">No diseases found matching "{diseaseSearch}"</p>
           </div>
         )}
-      </ScrollRevealSection>
+      </section>
 
       {/* MEDICINE DATABASE */}
       <section id="medicine-database" className="relative bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white py-32 overflow-hidden">
@@ -591,7 +588,7 @@ export default function ExplorePage() {
           }} />
         </div>
 
-        <ScrollRevealSection className="relative max-w-7xl mx-auto px-8 md:px-20">
+        <div className="relative max-w-7xl mx-auto px-8 md:px-20">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4">
               Medicine Database
@@ -658,11 +655,11 @@ export default function ExplorePage() {
               <p className="text-purple-200 text-lg">No medicines found matching "{medicineSearch}"</p>
             </div>
           )}
-        </ScrollRevealSection>
-      </section >
+        </div>
+      </section>
 
       {/* FOOTER CTA */}
-      < ScrollRevealSection className="py-32 px-8 md:px-20 bg-gray-50" >
+      <section className="py-32 px-8 md:px-20 bg-gray-50">
         <div className="max-w-4xl mx-auto text-center">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
@@ -693,7 +690,7 @@ export default function ExplorePage() {
             Get Started Now
           </motion.button>
         </div>
-      </ScrollRevealSection >
+      </section>
 
       {/* MODALS */}
       < Modal isOpen={!!selectedDisease
@@ -719,7 +716,7 @@ export default function ExplorePage() {
                   <Activity className="w-5 h-5 text-blue-600" /> Symptoms
                 </h3>
                 <ul className="space-y-2">
-                  {selectedDisease.symptoms.map((symptom: string, i: number) => (
+                  {(selectedDisease.symptoms || []).map((symptom: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-gray-700">
                       <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
                       {symptom}
@@ -733,7 +730,7 @@ export default function ExplorePage() {
                   <Pill className="w-5 h-5 text-green-600" /> Treatments
                 </h3>
                 <ul className="space-y-2">
-                  {selectedDisease.treatments.map((treatment: string, i: number) => (
+                  {(selectedDisease.treatments || []).map((treatment: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-gray-700">
                       <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
                       {treatment}
@@ -747,7 +744,7 @@ export default function ExplorePage() {
                   <Stethoscope className="w-5 h-5 text-purple-600" /> Specialists
                 </h3>
                 <ul className="space-y-2">
-                  {selectedDisease.specialists.map((specialist: string, i: number) => (
+                  {(selectedDisease.specialists || []).map((specialist: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-gray-700">
                       <div className="w-1.5 h-1.5 bg-purple-500 rounded-full" />
                       {specialist}
@@ -761,7 +758,7 @@ export default function ExplorePage() {
                   <AlertTriangle className="w-5 h-5 text-orange-600" /> Risk Factors
                 </h3>
                 <ul className="space-y-2">
-                  {selectedDisease.riskFactors.map((factor: string, i: number) => (
+                  {(selectedDisease.riskFactors || []).map((factor: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-gray-700">
                       <div className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
                       {factor}
@@ -805,8 +802,8 @@ export default function ExplorePage() {
                   <Activity className="w-5 h-5 text-emerald-600" /> Dosage Information
                 </h3>
                 <div className="space-y-2 text-gray-700">
-                  <p><span className="font-semibold">Typical Dose:</span> {selectedMedicine.dosage}</p>
-                  <p><span className="font-semibold">Maximum Daily:</span> {selectedMedicine.maxDaily}</p>
+                  <div className="flex flex-col sm:flex-row sm:gap-2"><span className="font-semibold min-w-fit">Typical Dose:</span> <span>{selectedMedicine.dosage}</span></div>
+                  <div className="flex flex-col sm:flex-row sm:gap-2"><span className="font-semibold min-w-fit">Maximum Daily:</span> <span>{selectedMedicine.maxDaily || "As prescribed"}</span></div>
                 </div>
               </div>
 
@@ -815,12 +812,12 @@ export default function ExplorePage() {
                   <Info className="w-5 h-5 text-blue-600" /> Uses
                 </h3>
                 <ul className="space-y-2">
-                  {selectedMedicine.uses?.map((use: string, i: number) => (
+                  {(Array.isArray(selectedMedicine.uses) ? selectedMedicine.uses : [selectedMedicine.uses]).map((use: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-gray-700">
                       <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-                      {use}
+                      {use || "General Use"}
                     </li>
-                  )) || <li className="text-gray-500 italic">No usage info available</li>}
+                  ))}
                 </ul>
               </div>
 
@@ -829,12 +826,12 @@ export default function ExplorePage() {
                   <AlertTriangle className="w-5 h-5 text-orange-600" /> Drug Interactions
                 </h3>
                 <ul className="space-y-2">
-                  {selectedMedicine.interactions?.map((interaction: string, i: number) => (
+                  {(Array.isArray(selectedMedicine.interactions) ? selectedMedicine.interactions : [selectedMedicine.interactions]).map((interaction: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-gray-700">
                       <div className="w-1.5 h-1.5 bg-orange-500 rounded-full" />
-                      {interaction}
+                      {interaction || "None reported"}
                     </li>
-                  )) || <li className="text-gray-500 italic">No interaction info available</li>}
+                  ))}
                 </ul>
               </div>
 
@@ -843,10 +840,10 @@ export default function ExplorePage() {
                   <Zap className="w-5 h-5 text-red-600" /> Side Effects
                 </h3>
                 <ul className="space-y-2">
-                  {selectedMedicine.sideEffects.map((effect: string, i: number) => (
+                  {(Array.isArray(selectedMedicine.sideEffects) ? selectedMedicine.sideEffects : [selectedMedicine.sideEffects]).map((effect: string, i: number) => (
                     <li key={i} className="flex items-center gap-2 text-gray-700">
                       <div className="w-1.5 h-1.5 bg-red-500 rounded-full" />
-                      {effect}
+                      {effect || "None reported"}
                     </li>
                   ))}
                 </ul>

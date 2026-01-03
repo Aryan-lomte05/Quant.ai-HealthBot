@@ -152,14 +152,14 @@ export async function GET(req: Request) {
     // If not searching, show featured 9 items
     const limit = query ? 20 : 9;
     diseasesCards = filtered.slice(0, limit).map((item: any, i: number) => ({
-      id: item.id,
-      name: item.name,
+      id: item.id || `fallback-id-${i}`,
+      name: item.name || "Unknown Condition",
       icon: ICONS[i % ICONS.length],
       category: CATEGORIES[i % CATEGORIES.length],
       prevalence: "Varies",
-      description: item.description,
-      symptoms: item.symptoms && item.symptoms.length > 0 ? item.symptoms : ["See details"],
-      treatments: item.treatments && item.treatments.length > 0 ? item.treatments : ["Consult a GP"],
+      description: item.description || "No description available.",
+      symptoms: (Array.isArray(item.symptoms) && item.symptoms.length > 0) ? item.symptoms : ["See details"],
+      treatments: (Array.isArray(item.treatments) && item.treatments.length > 0) ? item.treatments : ["Consult a GP"],
       specialists: ["General Practitioner", "Specialist"],
       riskFactors: ["See details on NHS website"]
     }));
