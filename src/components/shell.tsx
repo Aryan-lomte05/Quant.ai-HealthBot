@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { FloatingSOS } from "./emergency/FloatingSOS";
-import { clearAuth } from "@/lib/auth";
+import { clearAuth, getUserName } from "@/lib/auth";
 
 // Grouped Routes Configuration
 const routeGroups = [
@@ -69,6 +69,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [lang, setLang] = useState("English");
+  const [userName, setUserName] = useState("Guest");
+
+  useEffect(() => {
+    const updateName = () => {
+      const name = getUserName();
+      setUserName(name || "Guest");
+    };
+
+    updateName();
+    window.addEventListener('auth-change', updateName);
+    return () => window.removeEventListener('auth-change', updateName);
+  }, []);
 
   const handleLogout = () => {
     clearAuth();
@@ -293,10 +305,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       whileHover={{ scale: 1.1 }}
                       className="h-11 w-11 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-emerald-500/30"
                     >
-                      JD
+                      {userName.substring(0, 2).toUpperCase()}
                     </motion.div>
                     <div className="flex-1">
-                      <p className="font-semibold text-sm text-emerald-900 group-hover:text-emerald-700 transition-colors">John Doe</p>
+                      <p className="font-semibold text-sm text-emerald-900 group-hover:text-emerald-700 transition-colors truncate">{userName}</p>
                       <p className="text-xs text-emerald-600/70">Premium Member</p>
                     </div>
                   </Link>

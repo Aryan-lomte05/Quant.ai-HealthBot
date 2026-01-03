@@ -4,6 +4,7 @@
  */
 
 const STORAGE_KEY = 'user_phone';
+const NAME_KEY = 'user_name';
 
 export const setUserPhone = (phone: string) => {
     if (typeof window !== 'undefined') {
@@ -18,9 +19,25 @@ export const getUserPhone = (): string | null => {
     return null;
 };
 
+export const setUserName = (name: string) => {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem(NAME_KEY, name);
+        window.dispatchEvent(new Event('auth-change'));
+    }
+};
+
+export const getUserName = (): string | null => {
+    if (typeof window !== 'undefined') {
+        return localStorage.getItem(NAME_KEY);
+    }
+    return null;
+};
+
 export const clearAuth = () => {
     if (typeof window !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(NAME_KEY);
+        window.dispatchEvent(new Event('auth-change'));
     }
 };
 
