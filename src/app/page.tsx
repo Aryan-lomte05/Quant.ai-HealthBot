@@ -74,12 +74,11 @@ const itemVariants: any = {
 
 function OrbitalCards() {
   const time = useTime();
-  const rotate = useTransform(time, [0, 40000], [0, 360], { clamp: false }); // Slower rotation
-  // Float animation for individual cards to add "breathing" effect
+  const rotate = useTransform(time, [0, 40000], [0, 360], { clamp: false });
   const float = useTransform(time, [0, 2000], [0, -10], { clamp: false });
 
   return (
-    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] flex items-center justify-center pointer-events-none overflow-hidden">
+    <div className="relative w-full h-[400px] sm:h-[500px] md:h-[600px] flex items-center justify-center pointer-events-none overflow-hidden text-left">
       <div className="absolute inset-0 flex items-center justify-center opacity-30">
         <div className="w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] md:w-[300px] md:h-[300px] bg-gradient-to-r from-emerald-200 to-teal-200 rounded-full blur-3xl opacity-50 animate-pulse" />
       </div>

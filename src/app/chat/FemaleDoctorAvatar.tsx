@@ -59,7 +59,7 @@ function FemaleDoctorModel({ state }: { state: string }) {
 
     return (
         <group ref={group}>
-            <primitive object={scene} scale={1.6} position={[0, -0.5, 0]} rotation={[0, 0, 0]} />
+            <primitive object={scene} scale={1.4} position={[0, -0.5, 0]} rotation={[0, 0, 0]} />
         </group>
     );
 }
@@ -207,8 +207,8 @@ function DynamicAura({ state }: { state: string }) {
     });
 
     return (
-        <mesh ref={auraRef} position={[0, 0, -0.5]}>
-            <circleGeometry args={[2, 64]} />
+        <mesh ref={auraRef} position={[0, 0, -0.6]}>
+            <circleGeometry args={[1.6, 64]} />
             <meshBasicMaterial
                 color={state === 'speaking' ? '#ec4899' : '#f472b6'}
                 transparent

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { getUserPhone, parseResponse, clearAuth } from "@/lib/auth";
-import { api } from '@/lib/api';
+import { api, VoicePreference } from '@/lib/api';
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
@@ -226,14 +226,20 @@ function ChatPageContent() {
   const [expandedCitations, setExpandedCitations] = useState<Set<string>>(new Set());
   const [typingIndicator, setTypingIndicator] = useState(false);
 
+  // Voice Preference - persisted in localStorage
+  const [voicePreference, setVoicePreference] = useState<VoicePreference>('male');
+  const [isUserTyping, setIsUserTyping] = useState(false);
+  const [ttsLoading, setTtsLoading] = useState(false);
+
   // Avatar State - synced with chat flow
   const [selectedAvatar, setSelectedAvatar] = useState("male");
-  const avatarState = isSpeaking ? 'speaking' : typingIndicator ? 'thinking' : 'idle';
+  const avatarState = isSpeaking ? 'speaking' : (typingIndicator || ttsLoading) ? 'thinking' : 'idle';
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
   // Motion values for parallax effect
   const mouseX = useMotionValue(0);
@@ -242,6 +248,25 @@ function ChatPageContent() {
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
+
+  // Load voice preference from localStorage on mount
+  useEffect(() => {
+    const savedVoice = localStorage.getItem('voicePreference') as VoicePreference | null;
+    if (savedVoice && (savedVoice === 'male' || savedVoice === 'female')) {
+      setVoicePreference(savedVoice);
+    }
+  }, []);
+
+  // Save voice preference to localStorage when changed
+  useEffect(() => {
+    localStorage.setItem('voicePreference', voicePreference);
+    console.log('[TTS Client] Voice preference changed to:', voicePreference);
+  }, [voicePreference]);
+
+  // Sync avatar selection with voice preference
+  useEffect(() => {
+    setVoicePreference(selectedAvatar as VoicePreference);
+  }, [selectedAvatar]);
 
   // Emotion detection
   useEffect(() => {
@@ -342,28 +367,9 @@ function ChatPageContent() {
       };
       setMessages((prev) => [...prev, followUp]);
 
-      // Avatar will show 'speaking' animation now
-      // Start text-to-speech to sync with speaking animation
-      setIsSpeaking(true);
-      setSpeakingMessageId(followUp.id);
-
-
-      // Automatically speak the response
-      if (typeof window !== "undefined" && window.speechSynthesis) {
-        const utter = new SpeechSynthesisUtterance(cleanedResponse);
-        utter.lang = lang === "en" ? "en-IN" : "hi-IN";
-        utter.pitch = selectedAvatar === "female" ? 1.2 : 0.9;
-        utter.onend = () => {
-          setIsSpeaking(false);
-          setSpeakingMessageId(null);
-        };
-        window.speechSynthesis.speak(utter);
-      } else {
-        // If TTS not available, show speaking state for 3 seconds
-        setTimeout(() => {
-          setIsSpeaking(false);
-          setSpeakingMessageId(null);
-        }, 3000);
+      // Auto-play TTS if user is not typing
+      if (!isUserTyping) {
+        playTTSAudio(cleanedResponse, followUp.id);
       }
     } catch (error: any) {
       console.error('Chat error:', error);
@@ -418,27 +424,67 @@ function ChatPageContent() {
     recognition.start();
   };
 
-  const handleTextToSpeech = (text: string, messageId: string) => {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
+  // Play TTS audio using ElevenLabs API
+  const playTTSAudio = async (text: string, messageId: string) => {
+    try {
+      // Stop currently playing audio
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+        currentAudioRef.current = null;
+      }
 
-    if (speakingMessageId === messageId) {
-      window.speechSynthesis.cancel();
+      // If clicking on currently speaking message, stop it
+      if (speakingMessageId === messageId) {
+        setIsSpeaking(false);
+        setSpeakingMessageId(null);
+        setTtsLoading(false);
+        return;
+      }
+
+      // Show loading state while generating audio
+      setTtsLoading(true);
+      setSpeakingMessageId(messageId);
+
+      // Call ElevenLabs TTS API
+      console.log('[TTS Client] Requesting TTS with voice:', voicePreference);
+      const audioBlob = await api.generateTTS({ text, voice: voicePreference });
+
+      // Audio is ready, now set speaking state
+      setTtsLoading(false);
+      setIsSpeaking(true);
+
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      currentAudioRef.current = audio;
+
+      // Handle audio end
+      audio.onended = () => {
+        setIsSpeaking(false);
+        setSpeakingMessageId(null);
+        URL.revokeObjectURL(audioUrl);
+        currentAudioRef.current = null;
+      };
+
+      // Handle errors
+      audio.onerror = (error) => {
+        console.error('Audio playback error:', error);
+        setIsSpeaking(false);
+        setSpeakingMessageId(null);
+        currentAudioRef.current = null;
+      };
+
+      // Play audio
+      await audio.play();
+    } catch (error) {
+      console.error('TTS error:', error);
       setIsSpeaking(false);
       setSpeakingMessageId(null);
-      return;
+      setTtsLoading(false);
     }
+  };
 
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = lang === "en" ? "en-IN" : "hi-IN";
-    utter.pitch = selectedAvatar === "female" ? 1.2 : 0.9;
-    utter.onend = () => {
-      setIsSpeaking(false);
-      setSpeakingMessageId(null);
-    };
-    setIsSpeaking(true);
-    setSpeakingMessageId(messageId);
-    window.speechSynthesis.speak(utter);
+  const handleTextToSpeech = (text: string, messageId: string) => {
+    playTTSAudio(text, messageId);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, type: UploadPreview["type"]) => {
@@ -635,6 +681,24 @@ function ChatPageContent() {
             </div>
 
             <div className="flex items-center gap-2 sm:gap-3">
+              {/* Voice Preference Toggle with better visual feedback */}
+              <button
+                onClick={() => setVoicePreference(prev => prev === 'male' ? 'female' : 'male')}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium text-white transition-all border ${voicePreference === 'male'
+                  ? 'bg-blue-500/30 border-blue-400/50 hover:bg-blue-500/40'
+                  : 'bg-pink-500/30 border-pink-400/50 hover:bg-pink-500/40'
+                  }`}
+                title="Toggle voice gender"
+              >
+                <Volume2 className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">
+                  {voicePreference === 'male' ? '🎙️ Male' : '🎙️ Female'}
+                </span>
+                <span className="sm:hidden">
+                  {voicePreference === 'male' ? 'M' : 'F'}
+                </span>
+              </button>
+
               {/* Controls */}
               <button
                 onClick={handleLogout}
@@ -813,14 +877,21 @@ function ChatPageContent() {
                                 {m.from === "sakha" && (
                                   <motion.button
                                     onClick={() => handleTextToSpeech(m.text, m.id)}
-                                    className={`rounded-full p-1 sm:p-1.5 transition-all ${speakingMessageId === m.id
+                                    className={`rounded-full p-1 sm:p-1.5 transition-all ${speakingMessageId === m.id && (isSpeaking || ttsLoading)
                                       ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/50"
                                       : "hover:bg-white/10"
                                       }`}
                                     whileHover={{ scale: 1.15 }}
                                     whileTap={{ scale: 0.9 }}
                                   >
-                                    {speakingMessageId === m.id ? (
+                                    {speakingMessageId === m.id && ttsLoading ? (
+                                      <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                                      >
+                                        <Volume2 className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-white" />
+                                      </motion.div>
+                                    ) : speakingMessageId === m.id && isSpeaking ? (
                                       <div className="flex items-center gap-0.5 sm:gap-1">
                                         {[0, 1, 2].map((i) => (
                                           <motion.div
@@ -1125,11 +1196,16 @@ function ChatPageContent() {
                       className="w-full resize-none rounded-2xl sm:rounded-3xl border-none bg-white/10 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 text-xs sm:text-sm text-white placeholder-white/40 outline-none backdrop-blur-xl transition-all focus:bg-white/15 focus:ring-2 focus:ring-emerald-400/50"
                       placeholder="Type in Hindi, English or Hinglish…"
                       value={input}
-                      onChange={(e) => setInput(e.target.value)}
+                      onChange={(e) => {
+                        setInput(e.target.value);
+                        setIsUserTyping(true);
+                      }}
+                      onBlur={() => setIsUserTyping(false)}
                       onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                           e.preventDefault();
                           sendMessage(input);
+                          setIsUserTyping(false);
                         }
                       }}
                     />

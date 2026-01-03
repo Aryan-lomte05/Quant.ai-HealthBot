@@ -28,6 +28,13 @@ export interface ChatResponse {
     timestamp?: string;
 }
 
+export type VoicePreference = 'male' | 'female';
+
+export interface TTSRequest {
+    text: string;
+    voice: VoicePreference;
+}
+
 const handleResponse = async (response: Response) => {
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -82,5 +89,21 @@ export const api = {
             body: JSON.stringify({ phone, message }),
         });
         return handleResponse(res);
+    },
+
+    // TTS Endpoint - Returns audio blob
+    generateTTS: async (request: TTSRequest): Promise<Blob> => {
+        const res = await fetch(`${API_BASE_URL}/api/tts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(request),
+        });
+
+        if (!res.ok) {
+            const errorData = await res.json().catch(() => ({ error: 'TTS generation failed' }));
+            throw new Error(errorData.error || 'TTS generation failed');
+        }
+
+        return res.blob();
     },
 };
