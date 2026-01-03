@@ -35,8 +35,8 @@ export default function LoginPage() {
             return;
         }
 
-        if (formData.phone.length !== 10) {
-            setError('Please enter a valid 10-digit phone number');
+        if (formData.phone.length !== 12) {
+            setError('Please enter a valid 12-digit mobile number');
             return;
         }
 
@@ -124,8 +124,8 @@ export default function LoginPage() {
                                 <input
                                     type="tel"
                                     value={formData.phone}
-                                    onChange={(e) => handleInputChange('phone', e.target.value.replace(/\D/g, '').slice(0, 10))}
-                                    placeholder="1234567890"
+                                    onChange={(e) => handleInputChange('phone', e.target.value.replace(/\D/g, '').slice(0, 12))}
+                                    placeholder="911234567890"
                                     className="w-full pl-12 pr-4 py-4 rounded-xl border border-emerald-100 bg-white/50 focus:bg-white focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all font-medium text-emerald-900 placeholder:text-emerald-300"
                                     disabled={loading}
                                 />

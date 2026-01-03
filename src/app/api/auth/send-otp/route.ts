@@ -19,14 +19,16 @@ export async function POST(request: Request) {
 
         await connectDB();
 
+        console.log('SEND-OTP: Searching for user with phone:', phone);
         let user = await User.findOne({ phone });
+        console.log('SEND-OTP: User found:', user ? 'Yes' : 'No');
 
         // Generate new OTP (Fixed for testing)
         const otp = '123456';
         const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
         if (!user) {
-            // Create a temporary user with just phone and OTP
+            console.log('SEND-OTP: Creating new temporary user for phone:', phone);
             user = await User.create({
                 phone,
                 otp,
@@ -36,6 +38,7 @@ export async function POST(request: Request) {
                 email: `${phone}@temp.com`, // Placeholder to satisfy unique constraint temporarily
                 password: await import('bcryptjs').then(b => b.hash(Math.random().toString(36), 10)), // Random placeholder password
             });
+            console.log('SEND-OTP: User created successfully');
         } else {
             // Update existing user's OTP
             user.otp = otp;
@@ -50,7 +53,7 @@ export async function POST(request: Request) {
         return NextResponse.json({
             success: true,
             message: 'OTP sent successfully',
-            otp: process.env.NODE_ENV === 'development' ? otp : undefined,
+            otp: otp,
         });
     } catch (error: any) {
         console.error('Send OTP error:', error);

@@ -108,9 +108,7 @@ UserSchema.methods.comparePassword = async function (
     }
 };
 
-// Create indexes
-UserSchema.index({ email: 1 });
-UserSchema.index({ phone: 1 });
+// Indexing is already handled by unique: true in schema definition
 
 // Prevent model recompilation in development
 const User: Model<IUser> =
