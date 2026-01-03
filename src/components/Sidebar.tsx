@@ -13,7 +13,6 @@ import {
     Heart,
     Gamepad2,
     Settings,
-    Handshake,
     X,
     LogOut
 } from "lucide-react";
@@ -145,15 +144,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                             <span className="text-[15px] font-medium group-hover:text-gray-900">Settings</span>
                         </motion.div>
                     </Link>
-                    <Link href="/integrations">
-                        <motion.div
-                            whileHover={{ x: 2 }}
-                            className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-gray-600 hover:bg-gray-50 transition-all"
-                        >
-                            <Handshake className="w-5 h-5 text-teal-500 group-hover:text-emerald-500 transition-colors" />
-                            <span className="text-[15px] font-medium group-hover:text-gray-900">Partners</span>
-                        </motion.div>
-                    </Link>
+
 
                     {/* Logout Button */}
                     <button onClick={handleLogout}>

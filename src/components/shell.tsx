@@ -16,7 +16,6 @@ import {
   Users,
   Activity,
   Phone,
-  Handshake,
   Gamepad2,
   LineChart,
   Heart,
@@ -57,7 +56,6 @@ const routeGroups = [
     title: "System",
     items: [
       { href: "/settings", label: "Settings", icon: Settings },
-      { href: "/integrations", label: "Partners", icon: Handshake },
     ],
   },
 ];
