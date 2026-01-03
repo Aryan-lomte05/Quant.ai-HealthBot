@@ -8,6 +8,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-producti
 export async function POST(request: Request) {
     try {
         const body = await request.json();
+        console.log('Signup Request Body:', JSON.stringify(body));
         const { name, email, phone, password, age, weight, height, gender, location } = body;
 
         // Validate required fields
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
         // 1. Check if an account with this email ALREADY exists and is FULLY REGISTERED (not a placeholder)
         // We check if email exists AND name is NOT 'Guest' (or checks if we are updating a different user)
         const existingEmail = await User.findOne({ email: email.toLowerCase() });
+        console.log('Existing email search result:', existingEmail ? `Found (phone: ${existingEmail.phone})` : 'Not found');
         // If we find a user with this email, and it's NOT the user currently trying to signup (by phone), block it
         if (existingEmail && existingEmail.phone !== phone) {
             return NextResponse.json(
@@ -47,11 +49,27 @@ export async function POST(request: Request) {
         }
 
         // 2. Find the user by phone (which should have been created/verified by OTP step)
+        console.log('Searching for user with phone:', phone);
         const user = await User.findOne({ phone });
+        console.log('User found:', user ? 'Yes' : 'No');
 
         if (!user) {
+            console.log('User not found for phone:', phone);
+            // DEBUG: List all users to see if there is a format mismatch
+            const allUsers = await User.find({}, 'phone isVerified');
+            console.log('Total users in DB:', allUsers.length);
+            console.log('All users phone numbers:', JSON.stringify(allUsers.map(u => u.phone)));
+
             return NextResponse.json(
-                { success: false, message: 'Please verify your phone number first' },
+                {
+                    success: false,
+                    message: `Please verify your phone number first. (Searching for: ${phone})`,
+                    debug: {
+                        searchedPhone: phone,
+                        dbUserCount: allUsers.length,
+                        firstFewPhones: allUsers.slice(0, 5).map(u => u.phone)
+                    }
+                },
                 { status: 400 }
             );
         }

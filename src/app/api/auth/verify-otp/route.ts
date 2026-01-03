@@ -19,7 +19,9 @@ export async function POST(request: Request) {
 
         await connectDB();
 
+        console.log('VERIFY-OTP: Searching for user with phone:', phone);
         const user = await User.findOne({ phone });
+        console.log('VERIFY-OTP: User found:', user ? 'Yes' : 'No');
 
         if (!user) {
             return NextResponse.json(
@@ -62,10 +64,12 @@ export async function POST(request: Request) {
         }
 
         // Verify user
+        console.log('VERIFY-OTP: Marking user as verified for phone:', phone);
         user.isVerified = true;
         user.otp = undefined;
         user.otpExpiry = undefined;
         await user.save();
+        console.log('VERIFY-OTP: User saved successfully');
 
         return NextResponse.json({
             success: true,

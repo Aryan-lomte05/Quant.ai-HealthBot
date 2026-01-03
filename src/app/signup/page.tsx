@@ -44,8 +44,8 @@ export default function SignupPage() {
 
     // Step 1: Send OTP
     const handleSendOTP = async () => {
-        if (formData.phone.length !== 10) {
-            setError('Please enter a valid 10-digit phone number');
+        if (formData.phone.length !== 12) {
+            setError('Please enter a valid 12-digit phone number');
             return;
         }
 
@@ -236,10 +236,10 @@ export default function SignupPage() {
                                     <input
                                         type="tel"
                                         className="w-full pl-10 pr-4 py-3 rounded-xl border border-emerald-100 bg-white focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/10 outline-none transition-all text-emerald-900"
-                                        placeholder="1234567890"
-                                        maxLength={10}
+                                        placeholder="911234567890"
+                                        maxLength={12}
                                         value={formData.phone}
-                                        onChange={e => handleInputChange('phone', e.target.value.replace(/\D/g, '').slice(0, 10))}
+                                        onChange={e => handleInputChange('phone', e.target.value.replace(/\D/g, '').slice(0, 12))}
                                         disabled={otpVerified || otpSent}
                                     />
                                 </div>
@@ -248,7 +248,7 @@ export default function SignupPage() {
                                     <button
                                         type="button"
                                         onClick={handleSendOTP}
-                                        disabled={otpLoading || formData.phone.length !== 10 || otpSent}
+                                        disabled={otpLoading || formData.phone.length !== 12 || otpSent}
                                         className="px-6 py-3 rounded-xl bg-emerald-600 text-white font-bold disabled:opacity-50 hover:bg-emerald-700 transition-colors flex items-center gap-2 whitespace-nowrap"
                                     >
                                         {otpLoading && !otpSent ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
