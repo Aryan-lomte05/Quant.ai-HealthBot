@@ -181,7 +181,6 @@ class DeepScraper {
             url: url,
             description: data.description || `Official NHS information about ${name}.`,
             category: "General Health",
-            price: "£5.00 - £15.00",
             icon: "💊",
             type: "Tablet",
             genericName: name,

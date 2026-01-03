@@ -637,10 +637,6 @@ export default function ExplorePage() {
                 <h3 className="text-xl font-bold mb-1">{medicine.name}</h3>
                 <p className="text-sm text-purple-200 mb-2">{medicine.genericName}</p>
                 <p className="text-sm text-purple-100 mb-4">{medicine.type}</p>
-                <div className="flex items-center justify-between text-sm mb-4">
-                  <span className="text-purple-200">Price Range</span>
-                  <span className="font-semibold">{medicine.price}</span>
-                </div>
                 <motion.div
                   className="flex items-center gap-2 text-emerald-400 font-semibold group-hover:gap-4 transition-all"
                 >
