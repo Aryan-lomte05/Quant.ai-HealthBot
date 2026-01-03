@@ -1,0 +1,2205 @@
+{
+  "Common Cold": {
+    "description": "Viral infection of the upper respiratory tract.",
+    "symptoms": [
+      "Cough",
+      "Sore Throat",
+      "Runny Nose",
+      "Fatigue",
+      "Body Ache"
+    ],
+    "color": "bg-emerald-500"
+  },
+  "Flu (Influenza)": {
+    "description": "Contagious respiratory illness caused by influenza viruses.",
+    "symptoms": [
+      "Fever",
+      "Cough",
+      "Fatigue",
+      "Body Ache",
+      "Headache"
+    ],
+    "color": "bg-blue-500"
+  },
+  "Migraine": {
+    "description": "Severe recurring headache, often on one side of the head.",
+    "symptoms": [
+      "Headache",
+      "Nausea",
+      "Dizziness",
+      "Light Sensitivity"
+    ],
+    "color": "bg-purple-500"
+  },
+  "COVID-19": {
+    "description": "Infectious disease caused by the SARS-CoV-2 virus.",
+    "symptoms": [
+      "Fever",
+      "Cough",
+      "Shortness of Breath",
+      "Fatigue",
+      "Loss of Appetite"
+    ],
+    "color": "bg-red-500"
+  },
+  "Gastroenteritis (Stomach Flu)": {
+    "description": "Inflammation of the lining of the intestines.",
+    "symptoms": [
+      "Nausea",
+      "Stomach Pain",
+      "Fatigue",
+      "Vomiting",
+      "Diarrhea"
+    ],
+    "color": "bg-amber-500"
+  },
+  "Allergies": {
+    "description": "Immune system reaction to foreign substances.",
+    "symptoms": [
+      "Runny Nose",
+      "Sore Throat",
+      "Cough",
+      "Itchy Eyes",
+      "Sneezing"
+    ],
+    "color": "bg-orange-500"
+  },
+  "Bronchitis": {
+    "description": "Inflammation of the lining of bronchial tubes.",
+    "symptoms": [
+      "Cough",
+      "Fatigue",
+      "Shortness of Breath",
+      "Chest Discomfort"
+    ],
+    "color": "bg-yellow-600"
+  },
+  "Pneumonia": {
+    "description": "Infection that inflames air sacs in one or both lungs.",
+    "symptoms": [
+      "Fever",
+      "Cough",
+      "Shortness of Breath",
+      "Chills",
+      "Chest Pain"
+    ],
+    "color": "bg-red-600"
+  },
+  "Anxiety Disorder": {
+    "description": "Mental health disorder characterized by feelings of worry, anxiety, or fear.",
+    "symptoms": [
+      "Fatigue",
+      "Restlessness",
+      "Rapid Heart Rate",
+      "Sweating",
+      "Trembling"
+    ],
+    "color": "bg-indigo-400"
+  },
+  "Depression": {
+    "description": "Mood disorder that causes a persistent feeling of sadness and loss of interest.",
+    "symptoms": [
+      "Fatigue",
+      "Loss of Appetite",
+      "Persistent Sadness",
+      "Sleep Issues"
+    ],
+    "color": "bg-slate-500"
+  },
+  "Diabetes Type 2": {
+    "description": "Chronic condition that affects the way the body processes blood sugar.",
+    "symptoms": [
+      "Increased Thirst",
+      "Frequent Urination",
+      "Hunger",
+      "Fatigue",
+      "Blurred Vision"
+    ],
+    "color": "bg-teal-500"
+  },
+  "Hypertension (High BP)": {
+    "description": "Condition where blood pressure against artery walls is too high.",
+    "symptoms": [
+      "Headache",
+      "Shortness of Breath",
+      "Nosebleeds",
+      "Flushing"
+    ],
+    "color": "bg-rose-500"
+  },
+  "Asthma": {
+    "description": "Condition in which your airways narrow and swell.",
+    "symptoms": [
+      "Shortness of Breath",
+      "Chest Pain",
+      "Wheezing",
+      "Cough"
+    ],
+    "color": "bg-cyan-500"
+  },
+  "Sinusitis (Sinus Infection)": {
+    "description": "Inflammation or swelling of the tissue lining the sinuses.",
+    "symptoms": [
+      "Headache",
+      "Runny Nose",
+      "Congestion",
+      "Facial Pain",
+      "Fatigue"
+    ],
+    "color": "bg-lime-600"
+  },
+  "Strep Throat": {
+    "description": "Bacterial infection that may cause a sore, scratchy throat.",
+    "symptoms": [
+      "Sore Throat",
+      "Fever",
+      "Swollen Lymph Nodes",
+      "Pain Swallowing"
+    ],
+    "color": "bg-pink-500"
+  },
+  "Food Poisoning": {
+    "description": "Illness caused by bacteria or other toxins in food.",
+    "symptoms": [
+      "Nausea",
+      "Vomiting",
+      "Diarrhea",
+      "Stomach Pain",
+      "Fever"
+    ],
+    "color": "bg-yellow-500"
+  },
+  "Anemia": {
+    "description": "Condition in which you lack enough healthy red blood cells.",
+    "symptoms": [
+      "Fatigue",
+      "Weakness",
+      "Pale Skin",
+      "Shortness of Breath",
+      "Dizziness"
+    ],
+    "color": "bg-red-200"
+  },
+  "Dehydration": {
+    "description": "Condition caused by the loss of too much fluid from the body.",
+    "symptoms": [
+      "Thirst",
+      "Dry Mouth",
+      "Fatigue",
+      "Dizziness",
+      "Dark Urine"
+    ],
+    "color": "bg-blue-300"
+  },
+  "Insomnia": {
+    "description": "Sleep disorder that makes it hard to fall asleep or stay asleep.",
+    "symptoms": [
+      "Fatigue",
+      "Sleep Issues",
+      "Irritability",
+      "Difficulty Concentrating"
+    ],
+    "color": "bg-indigo-800"
+  },
+  "Tension Headache": {
+    "description": "Mild to moderate pain often described as feeling like a tight band around the head.",
+    "symptoms": [
+      "Headache",
+      "Neck Pain",
+      "Fatigue"
+    ],
+    "color": "bg-purple-400"
+  },
+  "Acid reflux in babies, see Reflux in babies": {
+    "description": "Reflux is when a baby brings up milk, or is sick, during or shortly after feeding. It's very common and usually gets better on its own.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/reflux-in-babies/"
+  },
+  "Acid reflux, see Heartburn and acid reflux": {
+    "description": "Heartburn is a burning feeling in the chest caused by stomach acid travelling up towards the throat (acid reflux). If it keeps happening, it may be called gastro-oesophageal reflux disease (GORD).",
+    "symptoms": [
+      "certain food and drink – such as coffee, tomatoes, alcohol, chocolate and fatty or spicy foods",
+      "being overweight",
+      "smoking",
+      "pregnancy - find out more about indigestion and heartburn in pregnancy",
+      "stress and anxiety"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/heartburn-and-acid-reflux/"
+  },
+  "Amnesia, see Memory loss (amnesia)": {
+    "description": "Most people forget things from time to time, but see a GP if you keep having problems with your memory. It could be caused by something that can be treated.",
+    "symptoms": [
+      "stress",
+      "anxiety or depression",
+      "sleeping problems (insomnia)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/memory-loss-amnesia/"
+  },
+  "Anal pain": {
+    "description": "Anal pain (pain in the bottom) is common. There are things you can do to ease it, but see a GP if you're in a lot of pain or it does not get better.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/anal-pain/"
+  },
+  "Anger": {
+    "description": "Most people feel angry sometimes, but if it's affecting your life, there are things you can try that may help.",
+    "symptoms": [
+      "being treated unfairly and feeling powerless to do anything about it",
+      "feeling threatened or attacked",
+      "other people not respecting your authority, feelings or property",
+      "being interrupted when you're trying to achieve a goal",
+      "the situation you're in at the moment – if you're dealing with lots of problems or stress, you may find it harder to control your anger"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/feelings-and-symptoms/anger/"
+  },
+  "Ankle pain": {
+    "description": "There are lots of causes of ankle pain. You can usually ease the pain yourself. But it might be something more serious like a broken ankle.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/foot-pain/ankle-pain/"
+  },
+  "Ankles (swollen), see Swollen ankles, feet and legs (oedema)": {
+    "description": "Swelling in the ankles, feet or legs often goes away on its own. See a GP if it does not get better in a few days.",
+    "symptoms": [
+      "standing or sitting in the same position for too long",
+      "eating too much salty food",
+      "being overweight",
+      "being pregnant",
+      "taking certain medicines – such as some blood pressure medicines, contraceptive pills, hormone therapy, antidepressants or steroids"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/oedema/"
+  },
+  "Anosmia, see Lost or changed sense of smell": {
+    "description": "A change in your sense of smell can be unpleasant and affect how things taste. But it's not usually serious and may get better in a few weeks or months.",
+    "symptoms": [
+      "illnesses such as a cold, flu or COVID-19",
+      "sinusitis (sinus infection)",
+      "an allergy, like hay fever",
+      "growths in your nose (nasal polyps)",
+      "loss of smell (anosmia)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/lost-or-changed-sense-smell/"
+  },
+  "Anus (itchy), see Itchy bottom": {
+    "description": "You can often do simple things yourself to ease an itchy bottom (anus). Get medical help if the itching does not stop.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/itchy-anus/"
+  },
+  "Anxiety, fear and panic": {
+    "description": "Most people feel anxious or scared sometimes, but if it's affecting your life there are things you can try that may help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/feelings-and-symptoms/anxiety-fear-panic/"
+  },
+  "Arm pain, see Elbow and arm pain": {
+    "description": "Elbow and arm pain is not usually a sign of anything serious. If it does not go away after a few weeks, see a GP.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/elbow-and-arm-pain/"
+  },
+  "Back pain": {
+    "description": "Back pain, particularly lower back pain, is very common. It usually improves within a few weeks but can sometimes last longer or keep coming back. There are things you can do to help ease the pain.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/back-pain/"
+  },
+  "Bad breath": {
+    "description": "Bad breath (sometimes called halitosis) is very common. You can usually treat it yourself.",
+    "symptoms": [
+      "eating or drinking strong-smelling or spicy foods and drinks",
+      "problems with your teeth or gums, such as gum disease, holes in your teeth or an infection",
+      "fasting or crash dieting",
+      "some medical conditions, like dry mouth, tonsillitis and acid reflux",
+      "smoking"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/bad-breath/"
+  },
+  "Bedwetting in children": {
+    "description": "Bedwetting is common and often runs in families. It can be upsetting, but most children and young people will grow out of it. See a GP or school nurse for advice.",
+    "symptoms": [
+      "not feeling the need to pee while sleeping",
+      "making too much pee at night",
+      "stress at home or at school"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/bedwetting/"
+  },
+  "Being sick, see Diarrhoea and vomiting": {
+    "description": "Diarrhoea and vomiting are common in adults, children and babies. They're often caused by a stomach bug and should stop in a few days.",
+    "symptoms": [
+      "a stomach bug",
+      "food poisoning"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/diarrhoea-and-vomiting/"
+  },
+  "Bleeding after the menopause, see Postmenopausal bleeding": {
+    "description": "Menopause is usually diagnosed in women over 45 who have not had a period for more than a year. Any bleeding from the vagina after this time needs to be checked by a GP.",
+    "symptoms": [
+      "inflammation and thinning of the vaginal lining (atrophic vaginitis) or womb lining (endometrial atrophy) – caused by lower oestrogen levels",
+      "cervical or womb polyps – growths that are usually non-cancerous",
+      "a thickened womb lining (endometrial hyperplasia) – this can be caused by hormone replacement therapy (HRT), high levels of oestrogen or being overweight, and can lead to womb cancer"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/post-menopausal-bleeding/"
+  },
+  "Bleeding between periods or after sex, see Vaginal bleeding between periods or after sex": {
+    "description": "Bleeding from your vagina between periods or after sex can have a lot of different causes. It's not usually serious, but always get it checked by a doctor.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/vaginal-bleeding-between-periods-or-after-sex/"
+  },
+  "Bleeding from the bottom (rectal bleeding)": {
+    "description": "A small amount of one-off bleeding from the bottom is not usually a serious problem. But a GP can check.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/bleeding-from-the-bottom-rectal-bleeding/"
+  },
+  "Bloating": {
+    "description": "Bloating is where your tummy feels full and uncomfortable. It's very common and there are things you can do to ease it. But see a GP if you feel bloated a lot or it does not go away.",
+    "symptoms": [
+      "constipation",
+      "a food intolerance",
+      "coeliac disease",
+      "irritable bowel syndrome (IBS)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/bloating/"
+  },
+  "Blood in phlegm, see Coughing up blood (blood in phlegm)": {
+    "description": "Coughing up blood can have lots of possible causes. It could be something serious so it's important to get it checked.",
+    "symptoms": [
+      "a long-lasting or severe cough",
+      "a lung or airway infection like a chest infection, pneumonia, tuberculosis or bronchitis",
+      "a problem with your airways that causes them to widen and produce more mucus (bronchiectasis)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/coughing-up-blood/"
+  },
+  "Blood in semen": {
+    "description": "Blood in semen is not usually caused by something serious, but you should get it checked by a GP just in case.",
+    "symptoms": [
+      "an infection, such as a urinary tract infection (UTI) or sexually transmitted infection (STI)",
+      "a recent procedure or test, such as transurethral resection of the prostate (TURP), a cystoscopy or a vasectomy",
+      "a problem with the prostate, such as prostatitis or an enlarged prostate"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/blood-in-semen/"
+  },
+  "Blood in urine": {
+    "description": "Blood in urine (pee) is not usually caused by anything serious, but you must get it checked out by a GP.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/blood-in-urine/"
+  },
+  "Blue or grey skin or lips (cyanosis)": {
+    "description": "Cyanosis is where your skin or lips turn blue or grey. It can be a sign of a serious problem.",
+    "symptoms": [
+      "lungs, like asthma or pneumonia",
+      "airways, like choking or croup",
+      "heart, like heart failure or congenital heart disease",
+      "Raynaud's, which affects your fingers and toes",
+      "beta blockers, medicines used to treat high blood pressure"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/blue-skin-or-lips-cyanosis/"
+  },
+  "Blushing": {
+    "description": "Blushing is a common problem that can be embarrassing and affect your day-to-day life. There are things you can do to help stop it.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/blushing/"
+  },
+  "Body odour (BO)": {
+    "description": "Body odour is a common problem. You can usually treat it yourself.",
+    "symptoms": [
+      "exercise",
+      "hot weather",
+      "hormonal changes",
+      "being overweight",
+      "having a condition like diabetes, kidney disease or liver disease"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/body-odour-bo/"
+  },
+  "Bowel incontinence": {
+    "description": "Bowel incontinence is when you cannot control when you poo. See a GP if you think you have bowel incontinence as there are treatments that can help.",
+    "symptoms": [
+      "poo leaking out without you being able to stop it",
+      "feeling like you need to poo, but not being able to get to the toilet in time",
+      "not being able to get fully clean after going to the toilet",
+      "seeing streaks or stains of poo in your underwear"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/bowel-incontinence/"
+  },
+  "Breast lumps": {
+    "description": "If you feel a lump in your breast, always get it checked by a GP. Most breast lumps are harmless, but some can be serious.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/breast-lump/"
+  },
+  "Breast pain": {
+    "description": "There are many reasons breasts can be painful. It's not usually anything serious, but see a GP if the pain does not improve.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/breast-pain/"
+  },
+  "Bruxism, see Teeth grinding (bruxism)": {
+    "description": "Teeth grinding (also called bruxism) is often related to stress or anxiety. There are things you can do to help and treatments available from a dentist or GP.",
+    "symptoms": [
+      "stress and anxiety – this is the most common cause of teeth grinding",
+      "sleep problems like snoring and sleep apnoea",
+      "taking certain medicines, including a type of antidepressant called selective serotonin reuptake inhibitors (SSRIs)",
+      "smoking, drinking lots of alcohol and caffeine, and taking drugs like ecstasy and cocaine"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/teeth-grinding/"
+  },
+  "Bulging eyes (exophthalmos)": {
+    "description": "Bulging eyes (exophthalmos) could be a sign of a problem with your thyroid gland. It can be treated, but get it checked quickly as your vision can be affected.",
+    "symptoms": [
+      "an infection or injury around or behind your eyes",
+      "bleeding behind the eyes or problems with blood vessels behind the eyes",
+      "tumours, including those caused by neuroblastoma and some soft tissue sarcomas"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/bulging-eyes/"
+  },
+  "Catarrh": {
+    "description": "Catarrh is a build-up of mucus in your nose and sinuses and phlegm in your throat. It usually clears up by itself but see a GP if it lasts longer than a few weeks.",
+    "symptoms": [
+      "infections like cold, flu and sinusitis",
+      "pollution and cigarette smoke",
+      "allergic reactions to things like pollen, dust and animals",
+      "conditions that affect the nose, such as nasal polyps"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/catarrh/"
+  },
+  "Chest pain": {
+    "description": "Most chest pain is not a sign of anything serious but get medical advice just in case. Get immediate medical help if you think you're having a heart attack.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/chest-pain/"
+  },
+  "Coccyx pain, see Tailbone (coccyx) pain": {
+    "description": "Tailbone pain is pain in the bone at the base of the spine (coccyx), near the top of your bottom. There are things you can do to ease the pain, but get medical help if it does not get better after a few weeks.",
+    "symptoms": [
+      "pregnancy and childbirth",
+      "an injury or accident, such as a fall onto your coccyx",
+      "repeated or prolonged strain on the coccyx – for example, after sitting for a long time while driving or cycling",
+      "poor posture",
+      "being overweight or underweight"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/tailbone-coccyx-pain/"
+  },
+  "Confusion (sudden), see Sudden confusion (delirium)": {
+    "description": "Sudden confusion (delirium) can have many different causes. Get medical help immediately if someone suddenly becomes confused (delirious).",
+    "symptoms": [
+      "an infection – urinary tract infections (UTIs) are a common cause in older people or people with dementia",
+      "a stroke or TIA (\"mini-stroke\")",
+      "a low blood sugar level in people with diabetes",
+      "a head injury",
+      "some types of prescription medicine"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/confusion/"
+  },
+  "Constipation": {
+    "description": "Constipation is where you have changes to how you poo, including not pooing as often or finding it hard to poo. It's common and it affects people of all ages. You can usually treat it with simple changes to your diet and lifestyle.",
+    "symptoms": [
+      "not eating enough fibre, which is found in fruits, vegetables and cereals",
+      "not drinking enough fluids",
+      "not moving enough and spending long periods sitting or lying down",
+      "being less active and not exercising",
+      "often ignoring the urge to go to the toilet"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/constipation/"
+  },
+  "Cough": {
+    "description": "A cough will usually clear up on its own within 3 to 4 weeks.",
+    "symptoms": [
+      "smoking",
+      "heartburn (acid reflux)",
+      "allergies – for example, hay fever",
+      "infections like bronchitis or COVID-19",
+      "mucus dripping down the throat from the back of the nose"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/cough/"
+  },
+  "Coughing up blood (blood in phlegm)": {
+    "description": "Coughing up blood can have lots of possible causes. It could be something serious so it's important to get it checked.",
+    "symptoms": [
+      "a long-lasting or severe cough",
+      "a lung or airway infection like a chest infection, pneumonia, tuberculosis or bronchitis",
+      "a problem with your airways that causes them to widen and produce more mucus (bronchiectasis)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/coughing-up-blood/"
+  },
+  "Cyanosis, see Blue or grey skin or lips (cyanosis)": {
+    "description": "Cyanosis is where your skin or lips turn blue or grey. It can be a sign of a serious problem.",
+    "symptoms": [
+      "lungs, like asthma or pneumonia",
+      "airways, like choking or croup",
+      "heart, like heart failure or congenital heart disease",
+      "Raynaud's, which affects your fingers and toes",
+      "beta blockers, medicines used to treat high blood pressure"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/blue-skin-or-lips-cyanosis/"
+  },
+  "Deafness, see Hearing loss": {
+    "description": "Hearing loss is common, particularly as you get older. See a GP if you have problems with your hearing. It could be caused by something that can be easily treated.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/hearing-loss/"
+  },
+  "Delirium, see Sudden confusion (delirium)": {
+    "description": "Sudden confusion (delirium) can have many different causes. Get medical help immediately if someone suddenly becomes confused (delirious).",
+    "symptoms": [
+      "an infection – urinary tract infections (UTIs) are a common cause in older people or people with dementia",
+      "a stroke or TIA (\"mini-stroke\")",
+      "a low blood sugar level in people with diabetes",
+      "a head injury",
+      "some types of prescription medicine"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/confusion/"
+  },
+  "Dental pain, see Toothache": {
+    "description": "See a dentist if you have toothache that lasts more than 2 days. They can treat the cause of the pain and stop any problems getting worse. There are also things you can do to ease toothache while you wait for an appointment.",
+    "symptoms": [
+      "tooth decay",
+      "a dental abscess",
+      "a cracked or damaged tooth",
+      "a loose or broken filling",
+      "an infection – this often happens when a tooth (such as a wisdom tooth) has broken the skin, but does not have enough room to fully come through"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/toothache/"
+  },
+  "Diarrhoea and vomiting": {
+    "description": "Diarrhoea and vomiting are common in adults, children and babies. They're often caused by a stomach bug and should stop in a few days.",
+    "symptoms": [
+      "a stomach bug",
+      "food poisoning"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/diarrhoea-and-vomiting/"
+  },
+  "Dizziness": {
+    "description": "It's common to sometimes feel dizzy, lightheaded or off-balance, and it's not usually serious. See a GP if you're worried.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/dizziness/"
+  },
+  "Double vision": {
+    "description": "Double vision (diplopia) is not usually serious, but it's important to get it checked, even if it comes and goes.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/double-vision/"
+  },
+  "Dry eyes": {
+    "description": "Many people get dry eyes. It's not usually serious and there are things you can do to help.",
+    "symptoms": [
+      "you're over the age of 50",
+      "you wear contact lenses",
+      "you look at computer screens for a long time without a break",
+      "you spend time in air conditioned or heated environments",
+      "it's windy, dry or dusty"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/dry-eyes/"
+  },
+  "Dry lips, see Sore or dry lips": {
+    "description": "Dry or sore lips are a common problem, especially during hot or cold weather. There are things you can try yourself that may help.",
+    "symptoms": [
+      "cold weather, dry air or wind",
+      "damage from the sun",
+      "dehydration",
+      "a lip injury",
+      "allergies"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/sore-or-dry-lips/"
+  },
+  "Dry mouth": {
+    "description": "A dry mouth is rarely a sign of anything serious. There are things you can do to help ease it yourself. See a GP if these do not work or you also have other symptoms.",
+    "symptoms": [
+      "dehydration – for example, from not drinking enough, sweating a lot or being ill",
+      "medicines – check the leaflet that comes with your medicine to see if dry mouth is a side effect",
+      "breathing through your mouth at night – this can happen if you have a blocked nose or you sleep with your mouth open",
+      "anxiety",
+      "cancer treatment (radiotherapy or chemotherapy)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/dry-mouth/"
+  },
+  "Dysphagia (swallowing problems)": {
+    "description": "Dysphagia is where you have problems swallowing. It's usually caused by certain medicines or another condition, such as acid reflux or a stroke.",
+    "symptoms": [
+      "some medicines, such as antipsychotics",
+      "having a learning disability",
+      "a cleft lip and palate in babies",
+      "heartburn and acid reflux, especially in children or people who have gastro-oesophageal reflux disease",
+      "problems with your breathing caused by conditions like chronic obstructive pulmonary disease (COPD)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/swallowing-problems-dysphagia/"
+  },
+  "Earache": {
+    "description": "Earache and ear pain is common, particularly in young children. It can be painful but is not usually a sign of anything serious.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/earache/"
+  },
+  "Ectopic beats, see Heart palpitations": {
+    "description": "Heart palpitations are when your heartbeat becomes more noticeable. They're usually harmless, but get help if you keep getting them or you also have other symptoms.",
+    "symptoms": [
+      "strenuous exercise",
+      "lack of sleep",
+      "stress and anxiety",
+      "medicines (check the leaflet that comes with the medicine)",
+      "alcohol, caffeine, nicotine and recreational drugs"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/heart-palpitations/"
+  },
+  "Ejaculation problems": {
+    "description": "Ejaculation problems are common sexual problems in men.",
+    "symptoms": [
+      "prostate problems",
+      "thyroid problems – an overactive thyroid or an underactive thyroid",
+      "using recreational drugs",
+      "depression",
+      "stress"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/ejaculation-problems/"
+  },
+  "Elbow and arm pain": {
+    "description": "Elbow and arm pain is not usually a sign of anything serious. If it does not go away after a few weeks, see a GP.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/elbow-and-arm-pain/"
+  },
+  "Erectile dysfunction (impotence)": {
+    "description": "Erectile dysfunction (impotence) is very common, particularly in men over 40. It's usually nothing to worry about, but see a GP if it keeps happening.",
+    "symptoms": [
+      "high blood pressure or high cholesterol",
+      "diabetes",
+      "depression or anxiety",
+      "hormone problems"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/erection-problems-erectile-dysfunction/"
+  },
+  "Essential tremor, see Tremor or shaking hands": {
+    "description": "A tremor is when you're not able to control shaking or trembling in part of your body. See a GP if a tremor is affecting your life as treatment may help to reduce it.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/tremor-or-shaking-hands/"
+  },
+  "Excessive daytime sleepiness (hypersomnia)": {
+    "description": "Excessive daytime sleepiness (hypersomnia) is a condition where people fall asleep repeatedly during the day.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/excessive-daytime-sleepiness-hypersomnia/"
+  },
+  "Excessive hair growth (hirsutism)": {
+    "description": "Hirsutism is where women have thick, dark hair on their face, neck, chest, tummy, lower back, buttocks or thighs. See a GP if it's a problem for you, particularly if you've noticed other symptoms such as irregular periods. This might be caused by a medical condition that can be treated.",
+    "symptoms": [
+      "certain medicines such as some epilepsy medicines and steroids including anabolic steroids",
+      "other hormonal conditions like Cushing's syndrome and acromegaly",
+      "a tumour affecting your hormone levels"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hirsutism/"
+  },
+  "Excessive sweating (hyperhidrosis)": {
+    "description": "Excessive sweating is common and can affect the whole body or just certain areas. Sometimes it gets better with age but there are things you can do and treatments that can help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/excessive-sweating-hyperhidrosis/"
+  },
+  "Excessive thirst": {
+    "description": "It's normal to sometimes feel thirsty, but it's not normal to constantly feel thirsty even when you're drinking a lot. See a GP to find out what's causing your excessive thirst.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/thirst/"
+  },
+  "Eye floaters and flashes, see Floaters and flashes in the eyes": {
+    "description": "Dots and lines (floaters) or flashes of light in your vision are common. They're not usually serious.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/floaters-and-flashes-in-the-eyes/"
+  },
+  "Eye pain": {
+    "description": "Eye pain can be felt behind, inside or around the eye. It's common and usually nothing to worry about, but sometimes it may be serious and you'll need medical help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/eye-pain/"
+  },
+  "Eyelid problems": {
+    "description": "Find out what to do if you have a lump on your eyelid, or an eyelid that's swollen, sticky, itchy or painful.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/eyelid-problems/"
+  },
+  "Fainting": {
+    "description": "Fainting is when you pass out for a short time.",
+    "symptoms": [
+      "standing up too quickly – this could be a sign of low blood pressure",
+      "not eating or drinking enough",
+      "being too hot",
+      "being very upset, angry or in severe pain",
+      "heart problems"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/fainting/"
+  },
+  "Farting (flatulence)": {
+    "description": "Farting, also known as flatulence or wind, is normal. There are things you can do if you fart a lot or it's smelly. Sometimes it can be a sign of a health condition.",
+    "symptoms": [
+      "non-steroidal anti-inflammatory drugs (NSAIDS), like ibuprofen",
+      "some laxatives",
+      "antifungal medicines",
+      "statins"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/flatulence/"
+  },
+  "Feeling sick (nausea)": {
+    "description": "Feeling sick (nausea) is common and usually goes away on its own. There are some things you can try that might help.",
+    "symptoms": [
+      "pregnancy (morning sickness)",
+      "motion sickness",
+      "anxiety",
+      "alcohol",
+      "medicines"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/feeling-sick-nausea/"
+  },
+  "Fever in adults, see High temperature (fever) in adults": {
+    "description": "Normal body temperature is different for everyone and changes during the day.",
+    "symptoms": [
+      "your chest or back feels hotter than usual",
+      "you have other symptoms, such as feeling hot or cold, feeling shivery (chills), sweating, or your skin being warm and red (this may be harder to see on black or brown skin)",
+      "a thermometer says your temperature is 38C or above"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/fever-in-adults/"
+  },
+  "Fever in children, see High temperature (fever) in children": {
+    "description": "A high temperature (fever) is very common in young children. The temperature usually returns to normal within 1 to 4 days.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/fever-in-children/"
+  },
+  "Finger pain": {
+    "description": "There are many causes of finger pain. You can often ease the pain yourself. But sometimes it can be something more serious like a broken finger.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hand-pain/finger-pain/"
+  },
+  "Fits (seizures), see What to do if someone has a seizure (fit)": {
+    "description": "If you see someone having a seizure or fit, there are some simple things you can do to help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/"
+  },
+  "Flatulence, see Farting (flatulence)": {
+    "description": "Farting, also known as flatulence or wind, is normal. There are things you can do if you fart a lot or it's smelly. Sometimes it can be a sign of a health condition.",
+    "symptoms": [
+      "non-steroidal anti-inflammatory drugs (NSAIDS), like ibuprofen",
+      "some laxatives",
+      "antifungal medicines",
+      "statins"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/flatulence/"
+  },
+  "Floaters and flashes in the eyes": {
+    "description": "Dots and lines (floaters) or flashes of light in your vision are common. They're not usually serious.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/floaters-and-flashes-in-the-eyes/"
+  },
+  "Foot pain": {
+    "description": "Choose which area of your foot hurts most to find out about treatments, when to get medical help and possible causes.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/foot-pain/"
+  },
+  "Gastro-oesophageal reflux disease (GORD), see Heartburn and acid reflux": {
+    "description": "Heartburn is a burning feeling in the chest caused by stomach acid travelling up towards the throat (acid reflux). If it keeps happening, it may be called gastro-oesophageal reflux disease (GORD).",
+    "symptoms": [
+      "certain food and drink – such as coffee, tomatoes, alcohol, chocolate and fatty or spicy foods",
+      "being overweight",
+      "smoking",
+      "pregnancy - find out more about indigestion and heartburn in pregnancy",
+      "stress and anxiety"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/heartburn-and-acid-reflux/"
+  },
+  "Hair loss": {
+    "description": "Losing your hair is not usually anything to be worried about, but it can be upsetting. Treatment may help with some types of hair loss.",
+    "symptoms": [
+      "an illness",
+      "stress",
+      "cancer treatment",
+      "weight loss",
+      "iron deficiency"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hair-loss/"
+  },
+  "Hallucinations and hearing voices": {
+    "description": "Hallucinations are where you hear, see, smell, taste or feel things that appear to be real but only exist in your mind. Get medical help if you or someone else have hallucinations.",
+    "symptoms": [
+      "mental health conditions like schizophrenia or bipolar disorder",
+      "drugs and alcohol",
+      "dementia, including Alzheimer's disease or dementia with Lewy bodies",
+      "Parkinson's disease",
+      "a change or loss of vision, such as Charles Bonnet syndrome"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/feelings-and-symptoms/hallucinations-hearing-voices/"
+  },
+  "Hand pain": {
+    "description": "Choose which area of your hand hurts most to find out about treatments, when to get medical help and possible causes.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hand-pain/"
+  },
+  "Headaches": {
+    "description": "Most headaches go away on their own and are not a sign of something more serious.",
+    "symptoms": [
+      "having a cold or flu",
+      "stress",
+      "drinking too much alcohol",
+      "bad posture",
+      "eyesight problems"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/headaches/"
+  },
+  "Hearing loss": {
+    "description": "Hearing loss is common, particularly as you get older. See a GP if you have problems with your hearing. It could be caused by something that can be easily treated.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/hearing-loss/"
+  },
+  "Hearing voices, see Hallucinations and hearing voices": {
+    "description": "Hallucinations are where you hear, see, smell, taste or feel things that appear to be real but only exist in your mind. Get medical help if you or someone else have hallucinations.",
+    "symptoms": [
+      "mental health conditions like schizophrenia or bipolar disorder",
+      "drugs and alcohol",
+      "dementia, including Alzheimer's disease or dementia with Lewy bodies",
+      "Parkinson's disease",
+      "a change or loss of vision, such as Charles Bonnet syndrome"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/feelings-and-symptoms/hallucinations-hearing-voices/"
+  },
+  "Heart pain, see Chest pain": {
+    "description": "Most chest pain is not a sign of anything serious but get medical advice just in case. Get immediate medical help if you think you're having a heart attack.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/chest-pain/"
+  },
+  "Heart palpitations": {
+    "description": "Heart palpitations are when your heartbeat becomes more noticeable. They're usually harmless, but get help if you keep getting them or you also have other symptoms.",
+    "symptoms": [
+      "strenuous exercise",
+      "lack of sleep",
+      "stress and anxiety",
+      "medicines (check the leaflet that comes with the medicine)",
+      "alcohol, caffeine, nicotine and recreational drugs"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/heart-palpitations/"
+  },
+  "Heartburn and acid reflux": {
+    "description": "Heartburn is a burning feeling in the chest caused by stomach acid travelling up towards the throat (acid reflux). If it keeps happening, it may be called gastro-oesophageal reflux disease (GORD).",
+    "symptoms": [
+      "certain food and drink – such as coffee, tomatoes, alcohol, chocolate and fatty or spicy foods",
+      "being overweight",
+      "smoking",
+      "pregnancy - find out more about indigestion and heartburn in pregnancy",
+      "stress and anxiety"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/heartburn-and-acid-reflux/"
+  },
+  "Heavy periods": {
+    "description": "Many women have heavy periods (also called menorrhagia) and they may be normal for you. They can affect anyone who has periods. Treatment can help if they're affecting your daily life.",
+    "symptoms": [
+      "conditions affecting your womb or ovaries, such as polycystic ovary syndrome, fibroids, endometriosis, adenomyosis and pelvic inflammatory disease",
+      "conditions that can make you bleed more easily, such as Von Willebrand disease",
+      "some medicines and treatments, including some anticoagulant medicines and chemotherapy medicines"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/heavy-periods/"
+  },
+  "Heel pain": {
+    "description": "There are lots of causes of heel pain. You can usually ease the pain yourself. But sometimes it can be something more serious like a broken bone.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/foot-pain/heel-pain/"
+  },
+  "Hiccups": {
+    "description": "Most people get hiccups sometimes. They should only last a few minutes. You can usually wait for them to go away or treat them yourself without seeing a GP.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hiccups/"
+  },
+  "High temperature (fever) in adults": {
+    "description": "Normal body temperature is different for everyone and changes during the day.",
+    "symptoms": [
+      "your chest or back feels hotter than usual",
+      "you have other symptoms, such as feeling hot or cold, feeling shivery (chills), sweating, or your skin being warm and red (this may be harder to see on black or brown skin)",
+      "a thermometer says your temperature is 38C or above"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/fever-in-adults/"
+  },
+  "High temperature (fever) in children": {
+    "description": "A high temperature (fever) is very common in young children. The temperature usually returns to normal within 1 to 4 days.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/fever-in-children/"
+  },
+  "Hip pain in adults": {
+    "description": "Hip pain is common, especially as you get older. There are things you can do to ease the pain. But sometimes it can be something serious like a hip fracture.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hip-pain/"
+  },
+  "Hip pain in children (irritable hip)": {
+    "description": "Hip pain in children is most often caused by a condition called irritable hip, which usually gets better on its own. But it should always be checked because it could be a sign of something serious.",
+    "symptoms": [
+      "an infected hip joint (septic arthritis)",
+      "an injury like a broken bone",
+      "a problem with the hip bones and blood supply to the hip joint (Perthes' disease)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hip-pain-children-irritable-hip/"
+  },
+  "Hirsutism, see Excessive hair growth (hirsutism)": {
+    "description": "Hirsutism is where women have thick, dark hair on their face, neck, chest, tummy, lower back, buttocks or thighs. See a GP if it's a problem for you, particularly if you've noticed other symptoms such as irregular periods. This might be caused by a medical condition that can be treated.",
+    "symptoms": [
+      "certain medicines such as some epilepsy medicines and steroids including anabolic steroids",
+      "other hormonal conditions like Cushing's syndrome and acromegaly",
+      "a tumour affecting your hormone levels"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hirsutism/"
+  },
+  "Hives": {
+    "description": "Hives rashes usually get better within a few days. You can often treat hives yourself.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/hives/"
+  },
+  "Hookworm, see Worms in humans": {
+    "description": "Some types of worms can infect people. Some can be caught in the UK and others are only caught abroad. Most worm infections are not serious and can be easily treated with medicine.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/worms-in-humans/"
+  },
+  "Hyperhidrosis, see Excessive sweating (hyperhidrosis)": {
+    "description": "Excessive sweating is common and can affect the whole body or just certain areas. Sometimes it gets better with age but there are things you can do and treatments that can help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/excessive-sweating-hyperhidrosis/"
+  },
+  "Hypersomnia, see Excessive daytime sleepiness (hypersomnia)": {
+    "description": "Excessive daytime sleepiness (hypersomnia) is a condition where people fall asleep repeatedly during the day.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/excessive-daytime-sleepiness-hypersomnia/"
+  },
+  "Impotence, see Erectile dysfunction (impotence)": {
+    "description": "Erectile dysfunction (impotence) is very common, particularly in men over 40. It's usually nothing to worry about, but see a GP if it keeps happening.",
+    "symptoms": [
+      "high blood pressure or high cholesterol",
+      "diabetes",
+      "depression or anxiety",
+      "hormone problems"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/erection-problems-erectile-dysfunction/"
+  },
+  "Incontinence (bowel), see Bowel incontinence": {
+    "description": "Bowel incontinence is when you cannot control when you poo. See a GP if you think you have bowel incontinence as there are treatments that can help.",
+    "symptoms": [
+      "poo leaking out without you being able to stop it",
+      "feeling like you need to poo, but not being able to get to the toilet in time",
+      "not being able to get fully clean after going to the toilet",
+      "seeing streaks or stains of poo in your underwear"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/bowel-incontinence/"
+  },
+  "Incontinence (urinary), see Urinary incontinence": {
+    "description": "Urinary incontinence is the unintentional passing of urine. It's a common problem thought to affect millions of people.",
+    "symptoms": [
+      "pregnancy and vaginal birth",
+      "obesity",
+      "a family history of incontinence",
+      "increasing age – although incontinence is not an inevitable part of ageing"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/urinary-incontinence/"
+  },
+  "Indigestion": {
+    "description": "Most people have indigestion (dyspepsia) at some point. Usually, it's not a sign of anything more serious and you can treat it yourself.",
+    "symptoms": [
+      "certain food and drink – such as coffee, tomatoes, alcohol, chocolate and fatty or spicy foods",
+      "being overweight",
+      "smoking",
+      "pregnancy",
+      "stress and anxiety"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/indigestion/"
+  },
+  "Irregular periods": {
+    "description": "Irregular periods are not usually a sign of a problem. But speak to a GP if your periods are irregular or your normal pattern of periods changes.",
+    "symptoms": [
+      "puberty, when you start your periods",
+      "the start of menopause (usually between the ages of 45 and 55)",
+      "pregnancy – a missed period is often an early sign of pregnancy",
+      "hormonal contraception like the progestogen-only pill, contraceptive injection and intrauterine system (IUS)",
+      "losing or gaining a lot of weight"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/irregular-periods/"
+  },
+  "Irritable hip, see Hip pain in children (irritable hip)": {
+    "description": "Hip pain in children is most often caused by a condition called irritable hip, which usually gets better on its own. But it should always be checked because it could be a sign of something serious.",
+    "symptoms": [
+      "an infected hip joint (septic arthritis)",
+      "an injury like a broken bone",
+      "a problem with the hip bones and blood supply to the hip joint (Perthes' disease)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hip-pain-children-irritable-hip/"
+  },
+  "Itchy bottom": {
+    "description": "You can often do simple things yourself to ease an itchy bottom (anus). Get medical help if the itching does not stop.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/itchy-anus/"
+  },
+  "Itchy skin": {
+    "description": "Itchy skin is not usually a sign of anything serious. You can often treat it yourself and it will usually go away after a few weeks.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/itchy-skin/"
+  },
+  "Joint pain": {
+    "description": "Joint pain is common, especially as you get older. There are things you can do to ease the pain but get medical help if it's very painful or it does not get better.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/joint-pain/"
+  },
+  "Knee pain": {
+    "description": "Knee pain can often be treated at home. You should start to feel better in a few days. Call 111 if the pain is very bad.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/knee-pain/"
+  },
+  "Leg cramps": {
+    "description": "Leg cramps are common, usually harmless, and only last a short time. They can happen at any time, but most people have them at night or when resting.",
+    "symptoms": [
+      "ageing",
+      "putting too much strain on muscles during exercise, which can be worse in hot or humid weather",
+      "pregnancy (usually in the later stage)",
+      "certain medicines – for example, medicine for lowering cholesterol (statins) or high blood pressure (diuretics)",
+      "not drinking enough fluids (dehydration)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/leg-cramps/"
+  },
+  "Limping in children": {
+    "description": "Limping in children is not usually serious and could be caused by something minor like a sprain or strain. But you should see a GP if it's not obvious what's causing it.",
+    "symptoms": [
+      "a sprain or strain",
+      "a blister, cut or bruise",
+      "a broken bone"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/limp-in-children/"
+  },
+  "Lips (sore or dry), see Sore or dry lips": {
+    "description": "Dry or sore lips are a common problem, especially during hot or cold weather. There are things you can try yourself that may help.",
+    "symptoms": [
+      "cold weather, dry air or wind",
+      "damage from the sun",
+      "dehydration",
+      "a lip injury",
+      "allergies"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/sore-or-dry-lips/"
+  },
+  "Lost or changed sense of smell": {
+    "description": "A change in your sense of smell can be unpleasant and affect how things taste. But it's not usually serious and may get better in a few weeks or months.",
+    "symptoms": [
+      "illnesses such as a cold, flu or COVID-19",
+      "sinusitis (sinus infection)",
+      "an allergy, like hay fever",
+      "growths in your nose (nasal polyps)",
+      "loss of smell (anosmia)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/lost-or-changed-sense-smell/"
+  },
+  "Low mood, sadness and depression": {
+    "description": "Most people feel low sometimes, but if it's affecting your life, there are things you can try that may help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/feelings-and-symptoms/low-mood-sadness-depression/"
+  },
+  "Low sex drive (loss of libido)": {
+    "description": "There are many possible reasons for having a low sex drive (loss of libido). Treating the cause should help increase your sex drive.",
+    "symptoms": [
+      "relationship problems",
+      "stress, anxiety or depression",
+      "sexual problems like erectile dysfunction or vaginal dryness",
+      "pregnancy and having a baby – your hormone levels change when you're pregnant, and looking after a baby can be stressful and tiring",
+      "lower hormone levels as you get older, particularly during the menopause"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/loss-of-libido/"
+  },
+  "Lumps": {
+    "description": "Lumps can appear anywhere on your body. Most lumps are harmless but it's important to see a GP if you're worried or the lump is still there after 2 weeks.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/lumps/"
+  },
+  "Memory loss (amnesia)": {
+    "description": "Most people forget things from time to time, but see a GP if you keep having problems with your memory. It could be caused by something that can be treated.",
+    "symptoms": [
+      "stress",
+      "anxiety or depression",
+      "sleeping problems (insomnia)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/memory-loss-amnesia/"
+  },
+  "Menstrual pain, see Period pain": {
+    "description": "It's common to have pain or discomfort before or during your period. There are things you can do to help ease the pain.",
+    "symptoms": [
+      "womb tissue growing in other places (endometriosis and adenomyosis)",
+      "growths in and around the womb (fibroids)",
+      "an infection of the womb, fallopian tubes and ovaries (pelvic inflammatory disease)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/period-pain/"
+  },
+  "Metallic taste": {
+    "description": "A metallic taste is not usually serious. What you can do to get rid of it will depend on the cause.",
+    "symptoms": [
+      "gum disease",
+      "taking certain medicines, like metronidazole or zopiclone",
+      "cancer treatments, like chemotherapy and radiotherapy",
+      "colds, sinus infections and other airway problems",
+      "indigestion"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/metallic-taste/"
+  },
+  "Metatarsalgia, see Pain in the ball of the foot": {
+    "description": "Pain in the ball of your foot is known as metatarsalgia. You can usually ease the pain yourself. But see a GP if it does not improve.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/foot-pain/pain-in-the-ball-of-the-foot/"
+  },
+  "Missed or late periods": {
+    "description": "Late or missed periods can be caused by many things. Most of the time it’s nothing to worry about but see a doctor about them just in case.",
+    "symptoms": [
+      "being pregnant",
+      "stress",
+      "the start of menopause (perimenopause), usually between the ages of 45 and 55",
+      "polycystic ovary syndrome (PCOS)",
+      "sudden weight loss"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/missed-or-late-periods/"
+  },
+  "Nail problems": {
+    "description": "Nail problems are not usually caused by anything serious. Common nail problems include brittle, loose nails that may change colour or shape.",
+    "symptoms": [
+      "injuries or biting your nails",
+      "staining your nails, for example, by smoking or applying a lot of nail varnish",
+      "not regularly trimming your nails, or cutting them at an angle",
+      "your hands often being in water or cleaning products",
+      "a fungal nail infection"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/nail-problems/"
+  },
+  "Nausea, see Feeling sick (nausea)": {
+    "description": "Feeling sick (nausea) is common and usually goes away on its own. There are some things you can try that might help.",
+    "symptoms": [
+      "pregnancy (morning sickness)",
+      "motion sickness",
+      "anxiety",
+      "alcohol",
+      "medicines"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/feeling-sick-nausea/"
+  },
+  "Neck pain": {
+    "description": "Most neck pain only lasts a few weeks. There are things you can do yourself to ease it, but see a GP if it does not go away.",
+    "symptoms": [
+      "the neck becoming locked in an awkward position while sleeping",
+      "bad posture – for example, when sitting at a desk for a long time",
+      "a pinched nerve",
+      "an injury – for example, whiplash from a traffic accident or fall"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/neck-pain-and-stiff-neck/"
+  },
+  "Night sweats": {
+    "description": "Most people sweat during the night. If you regularly wake up with soaking wet sheets you should get it checked by a GP.",
+    "symptoms": [
+      "menopause symptoms (\"hot flushes\")",
+      "anxiety",
+      "medicines, such as some antidepressants, steroids and painkillers",
+      "low blood sugar (hypoglycaemia)",
+      "alcohol or drug use"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/night-sweats/"
+  },
+  "Nipple discharge": {
+    "description": "Nipple discharge may not be anything serious, but it's important to get it checked.",
+    "symptoms": [
+      "pregnancy or breastfeeding, which can lead to leaking from your nipples",
+      "non-cancerous changes in the breast that happen with age (duct ectasia)",
+      "a blocked or enlarged milk duct",
+      "a small, non-cancerous lump in the breast (papilloma)",
+      "a breast infection (mastitis)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/nipple-discharge/"
+  },
+  "Ovulation pain": {
+    "description": "It's common to have ovulation pain about 14 days before your period. It usually lasts a short time and is nothing to worry about.",
+    "symptoms": [
+      "conditions that affect the womb or ovaries such as endometriosis and ovarian cysts",
+      "some sexually transmitted infections (STIs), such as chlamydia",
+      "scar tissue (adhesions) from surgery you've had near the ovaries, such as a caesarean section",
+      "an ectopic pregnancy"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/ovulation-pain/"
+  },
+  "Pain in testicles, see Testicle pain": {
+    "description": "There are lots of possible causes of pain in the testicles (balls). It can sometimes be serious, so get medical help straight away if the pain is sudden, severe or does not go away.",
+    "symptoms": [
+      "an infection (epididymitis)",
+      "an injury",
+      "an inguinal hernia",
+      "a build-up of fluid (cyst)",
+      "swollen veins in the testicles (varicocele)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/testicle-pain/"
+  },
+  "Pain in the back of the hand": {
+    "description": "There are many causes of pain in the back of your hand. You can often ease the pain yourself. But it can sometimes be something more serious like a broken bone.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hand-pain/pain-in-the-back-of-the-hand/"
+  },
+  "Pain in the ball of the foot": {
+    "description": "Pain in the ball of your foot is known as metatarsalgia. You can usually ease the pain yourself. But see a GP if it does not improve.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/foot-pain/pain-in-the-ball-of-the-foot/"
+  },
+  "Pain in the bottom of the foot": {
+    "description": "Pain in the bottom of your foot (arch, ball or sole) often gets better in a few weeks. The pain may not seem to have a cause, or it may have started after an injury. But it can also be something more serious, like a broken bone. Go to A&E if the pain becomes so severe you cannot walk.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/foot-pain/pain-in-the-bottom-of-the-foot/"
+  },
+  "Pain in the palm of the hand": {
+    "description": "There are many causes of pain in the palm of your hand. You can often ease the pain yourself. But see a GP if the pain does not improve.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hand-pain/pain-in-the-palm-of-the-hand/"
+  },
+  "Pain in the top of the foot": {
+    "description": "Pain in the top of your foot will usually get better in a few weeks. But sometimes it can be something more serious like a broken foot.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/foot-pain/pain-in-the-top-of-the-foot/"
+  },
+  "Painful periods, see Period pain": {
+    "description": "It's common to have pain or discomfort before or during your period. There are things you can do to help ease the pain.",
+    "symptoms": [
+      "womb tissue growing in other places (endometriosis and adenomyosis)",
+      "growths in and around the womb (fibroids)",
+      "an infection of the womb, fallopian tubes and ovaries (pelvic inflammatory disease)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/period-pain/"
+  },
+  "Palpitations, see Heart palpitations": {
+    "description": "Heart palpitations are when your heartbeat becomes more noticeable. They're usually harmless, but get help if you keep getting them or you also have other symptoms.",
+    "symptoms": [
+      "strenuous exercise",
+      "lack of sleep",
+      "stress and anxiety",
+      "medicines (check the leaflet that comes with the medicine)",
+      "alcohol, caffeine, nicotine and recreational drugs"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/heart-palpitations/"
+  },
+  "Paralysis": {
+    "description": "Paralysis is when you are not able to move some or all your body. It can be temporary or permanent depending on what causes it.",
+    "symptoms": [
+      "a transient ischaemic attack (TIA or \"mini-stroke\") or stroke (paralysis in 1 half of the face with arm weakness)",
+      "a head injury",
+      "a spinal cord (back) injury",
+      "Bell's palsy (paralysis in 1 half of the face)",
+      "multiple sclerosis"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/paralysis/"
+  },
+  "Pelvic pain": {
+    "description": "Pelvic pain is felt in the lower part of your tummy. The type of pain varies, and it may be sudden and severe (acute pelvic pain) or last 6 months or longer (chronic pelvic pain).",
+    "symptoms": [
+      "constipation or irritable bowel syndrome",
+      "urinary tract infections (UTIs)",
+      "sexually transmitted infections (STIs)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/pelvic-pain/"
+  },
+  "Penis lumps and spots": {
+    "description": "Lumps or spots on your penis are not usually caused by anything serious, but you should always get them checked out.",
+    "symptoms": [
+      "a sexually transmitted infection like genital warts or herpes",
+      "a skin condition like molluscum contagiosum or lichen planus"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/penis-lumps-and-spots/"
+  },
+  "Period pain": {
+    "description": "It's common to have pain or discomfort before or during your period. There are things you can do to help ease the pain.",
+    "symptoms": [
+      "womb tissue growing in other places (endometriosis and adenomyosis)",
+      "growths in and around the womb (fibroids)",
+      "an infection of the womb, fallopian tubes and ovaries (pelvic inflammatory disease)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/period-pain/"
+  },
+  "Periods (heavy), see Heavy periods": {
+    "description": "Many women have heavy periods (also called menorrhagia) and they may be normal for you. They can affect anyone who has periods. Treatment can help if they're affecting your daily life.",
+    "symptoms": [
+      "conditions affecting your womb or ovaries, such as polycystic ovary syndrome, fibroids, endometriosis, adenomyosis and pelvic inflammatory disease",
+      "conditions that can make you bleed more easily, such as Von Willebrand disease",
+      "some medicines and treatments, including some anticoagulant medicines and chemotherapy medicines"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/heavy-periods/"
+  },
+  "Periods (irregular), see Irregular periods": {
+    "description": "Irregular periods are not usually a sign of a problem. But speak to a GP if your periods are irregular or your normal pattern of periods changes.",
+    "symptoms": [
+      "puberty, when you start your periods",
+      "the start of menopause (usually between the ages of 45 and 55)",
+      "pregnancy – a missed period is often an early sign of pregnancy",
+      "hormonal contraception like the progestogen-only pill, contraceptive injection and intrauterine system (IUS)",
+      "losing or gaining a lot of weight"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/irregular-periods/"
+  },
+  "Periods (missed or late), see Missed or late periods": {
+    "description": "Late or missed periods can be caused by many things. Most of the time it’s nothing to worry about but see a doctor about them just in case.",
+    "symptoms": [
+      "being pregnant",
+      "stress",
+      "the start of menopause (perimenopause), usually between the ages of 45 and 55",
+      "polycystic ovary syndrome (PCOS)",
+      "sudden weight loss"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/missed-or-late-periods/"
+  },
+  "Pins and needles": {
+    "description": "Everyone can get pins and needles but see a GP if you keep getting it or it lasts a long time.",
+    "symptoms": [
+      "treatments – such as chemotherapy",
+      "some medicines – such as HIV medicine, medicine to prevent seizures, or some antibiotics",
+      "toxic substances – such as lead or radiation",
+      "poor diet",
+      "a trapped nerve in your back or neck"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/pins-and-needles/"
+  },
+  "Postmenopausal bleeding": {
+    "description": "Menopause is usually diagnosed in women over 45 who have not had a period for more than a year. Any bleeding from the vagina after this time needs to be checked by a GP.",
+    "symptoms": [
+      "inflammation and thinning of the vaginal lining (atrophic vaginitis) or womb lining (endometrial atrophy) – caused by lower oestrogen levels",
+      "cervical or womb polyps – growths that are usually non-cancerous",
+      "a thickened womb lining (endometrial hyperplasia) – this can be caused by hormone replacement therapy (HRT), high levels of oestrogen or being overweight, and can lead to womb cancer"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/post-menopausal-bleeding/"
+  },
+  "Premature ejaculation, see Ejaculation problems": {
+    "description": "Ejaculation problems are common sexual problems in men.",
+    "symptoms": [
+      "prostate problems",
+      "thyroid problems – an overactive thyroid or an underactive thyroid",
+      "using recreational drugs",
+      "depression",
+      "stress"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/ejaculation-problems/"
+  },
+  "Priapism (painful erections)": {
+    "description": "Priapism is a long-lasting painful erection. It can cause permanent damage to your penis if not treated quickly.",
+    "symptoms": [
+      "blood-thinning medicines, like warfarin",
+      "some antidepressants",
+      "drugs, like cannabis and cocaine",
+      "some medicines for high blood pressure",
+      "other blood disorders, like thalassaemia and leukaemia"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/priapism-painful-erections/"
+  },
+  "Rashes in babies and children": {
+    "description": "Many things can cause a rash in babies and children, and they're often nothing to worry about.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/rashes-babies-and-children/"
+  },
+  "Red eye": {
+    "description": "A red eye is usually nothing to worry about and often gets better on its own. But sometimes it can be serious and you'll need to get medical help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/red-eye/"
+  },
+  "Reflux in babies": {
+    "description": "Reflux is when a baby brings up milk, or is sick, during or shortly after feeding. It's very common and usually gets better on its own.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/reflux-in-babies/"
+  },
+  "Roundworm, see Worms in humans": {
+    "description": "Some types of worms can infect people. Some can be caught in the UK and others are only caught abroad. Most worm infections are not serious and can be easily treated with medicine.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/worms-in-humans/"
+  },
+  "Seizures (fits), see What to do if someone has a seizure (fit)": {
+    "description": "If you see someone having a seizure or fit, there are some simple things you can do to help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/"
+  },
+  "Sense of smell (lost/changed), see Lost or changed sense of smell": {
+    "description": "A change in your sense of smell can be unpleasant and affect how things taste. But it's not usually serious and may get better in a few weeks or months.",
+    "symptoms": [
+      "illnesses such as a cold, flu or COVID-19",
+      "sinusitis (sinus infection)",
+      "an allergy, like hay fever",
+      "growths in your nose (nasal polyps)",
+      "loss of smell (anosmia)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/lost-or-changed-sense-smell/"
+  },
+  "Shaking, see Tremor or shaking hands": {
+    "description": "A tremor is when you're not able to control shaking or trembling in part of your body. See a GP if a tremor is affecting your life as treatment may help to reduce it.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/tremor-or-shaking-hands/"
+  },
+  "Shortness of breath": {
+    "description": "Shortness of breath might not be anything to worry about, but sometimes it can be serious and you'll need to get medical help.",
+    "symptoms": [
+      "asthma",
+      "a chest infection",
+      "being overweight",
+      "smoking",
+      "a panic attack"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/shortness-of-breath/"
+  },
+  "Shoulder pain": {
+    "description": "You can usually do things to ease shoulder pain yourself. See a GP if it does not start feeling better after 2 weeks.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/shoulder-pain/"
+  },
+  "Sleepiness, see Excessive daytime sleepiness (hypersomnia)": {
+    "description": "Excessive daytime sleepiness (hypersomnia) is a condition where people fall asleep repeatedly during the day.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/excessive-daytime-sleepiness-hypersomnia/"
+  },
+  "Smelly feet": {
+    "description": "Smelly feet (bromodosis) are common and often caused by a build-up of sweat and bacteria. You can usually treat them yourself.",
+    "symptoms": [
+      "hot weather",
+      "exercise",
+      "standing all day",
+      "being overweight",
+      "hormonal changes, which happen during puberty, menopause and pregnancy"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/smelly-feet/"
+  },
+  "Smelly urine": {
+    "description": "Smelly pee on its own is not usually a cause for concern. There are often things you can do to help your pee return to normal.",
+    "symptoms": [
+      "certain types of food and drink, like asparagus or coffee",
+      "not drinking enough fluids (dehydration)",
+      "some medicines",
+      "vitamin B6 supplements"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/smelly-urine/"
+  },
+  "Snoring": {
+    "description": "Snoring is very common and is not usually caused by anything serious. There are things that can help if it's a problem.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/snoring/"
+  },
+  "Soiling (child pooing their pants)": {
+    "description": "Soiling is when a child regularly poos their pants. If they're already potty-trained, the soiling is usually because they are badly constipated. Treatment from a GP can help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/soiling-child-pooing-their-pants/"
+  },
+  "Sore or dry lips": {
+    "description": "Dry or sore lips are a common problem, especially during hot or cold weather. There are things you can try yourself that may help.",
+    "symptoms": [
+      "cold weather, dry air or wind",
+      "damage from the sun",
+      "dehydration",
+      "a lip injury",
+      "allergies"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/sore-or-dry-lips/"
+  },
+  "Sore or white tongue": {
+    "description": "A sore or white tongue is not usually serious and is often easily treated.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/sore-or-white-tongue/"
+  },
+  "Sore throat": {
+    "description": "Sore throats are very common and usually nothing to worry about. They normally get better by themselves within a week.",
+    "symptoms": [
+      "laryngitis",
+      "tonsillitis",
+      "strep throat (a bacterial throat infection)",
+      "glandular fever"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/sore-throat/"
+  },
+  "Stomach ache": {
+    "description": "Most stomach aches are not anything serious and will go away after a few days.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/stomach-ache/"
+  },
+  "Stress": {
+    "description": "Most people feel stressed sometimes and some people find stress helpful or even motivating. But if stress is affecting your life, there are things you can try that may help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/mental-health/feelings-symptoms-behaviours/feelings-and-symptoms/stress/"
+  },
+  "Stretch marks": {
+    "description": "Stretch marks are very common. They're harmless and often get less visible over time.",
+    "symptoms": [
+      "are pregnant",
+      "are going through puberty",
+      "lose or gain weight quickly",
+      "are female",
+      "are overweight"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/stretch-marks/"
+  },
+  "Sudden confusion (delirium)": {
+    "description": "Sudden confusion (delirium) can have many different causes. Get medical help immediately if someone suddenly becomes confused (delirious).",
+    "symptoms": [
+      "an infection – urinary tract infections (UTIs) are a common cause in older people or people with dementia",
+      "a stroke or TIA (\"mini-stroke\")",
+      "a low blood sugar level in people with diabetes",
+      "a head injury",
+      "some types of prescription medicine"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/confusion/"
+  },
+  "Swallowing problems, see Dysphagia (swallowing problems)": {
+    "description": "Dysphagia is where you have problems swallowing. It's usually caused by certain medicines or another condition, such as acid reflux or a stroke.",
+    "symptoms": [
+      "some medicines, such as antipsychotics",
+      "having a learning disability",
+      "a cleft lip and palate in babies",
+      "heartburn and acid reflux, especially in children or people who have gastro-oesophageal reflux disease",
+      "problems with your breathing caused by conditions like chronic obstructive pulmonary disease (COPD)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/swallowing-problems-dysphagia/"
+  },
+  "Sweating (excessive), see Excessive sweating (hyperhidrosis)": {
+    "description": "Excessive sweating is common and can affect the whole body or just certain areas. Sometimes it gets better with age but there are things you can do and treatments that can help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/excessive-sweating-hyperhidrosis/"
+  },
+  "Sweating at night, see Night sweats": {
+    "description": "Most people sweat during the night. If you regularly wake up with soaking wet sheets you should get it checked by a GP.",
+    "symptoms": [
+      "menopause symptoms (\"hot flushes\")",
+      "anxiety",
+      "medicines, such as some antidepressants, steroids and painkillers",
+      "low blood sugar (hypoglycaemia)",
+      "alcohol or drug use"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/night-sweats/"
+  },
+  "Swollen ankles, feet and legs (oedema)": {
+    "description": "Swelling in the ankles, feet or legs often goes away on its own. See a GP if it does not get better in a few days.",
+    "symptoms": [
+      "standing or sitting in the same position for too long",
+      "eating too much salty food",
+      "being overweight",
+      "being pregnant",
+      "taking certain medicines – such as some blood pressure medicines, contraceptive pills, hormone therapy, antidepressants or steroids"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/oedema/"
+  },
+  "Swollen arms and hands (oedema)": {
+    "description": "Swelling in the arms or hands (oedema) can sometimes get better on its own. See a GP if it does not go away, you're worried or if you do not know what's causing it.",
+    "symptoms": [
+      "staying in the same position for too long",
+      "eating too much salty food",
+      "taking certain medicines, such as some blood pressure medicines, contraceptive pills, antidepressants and steroids",
+      "cancer treatment",
+      "an infection or injury, such as a sprain or strain"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/swollen-arms-and-hands-oedema/"
+  },
+  "Swollen glands": {
+    "description": "Swollen glands are usually a sign the body is fighting an infection. Swollen glands caused by an infection will usually get better by themselves within 1 to 2 weeks.",
+    "symptoms": [
+      "often caused by common illnesses like colds, tonsillitis and ear or throat infections",
+      "sometimes caused by viral infections such as glandular fever",
+      "rarely caused by anything more serious, like cancer of the blood (leukaemia) or lymph system (lymphoma)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/swollen-glands/"
+  },
+  "Tailbone (coccyx) pain": {
+    "description": "Tailbone pain is pain in the bone at the base of the spine (coccyx), near the top of your bottom. There are things you can do to ease the pain, but get medical help if it does not get better after a few weeks.",
+    "symptoms": [
+      "pregnancy and childbirth",
+      "an injury or accident, such as a fall onto your coccyx",
+      "repeated or prolonged strain on the coccyx – for example, after sitting for a long time while driving or cycling",
+      "poor posture",
+      "being overweight or underweight"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/tailbone-coccyx-pain/"
+  },
+  "Tapeworm, see Worms in humans": {
+    "description": "Some types of worms can infect people. Some can be caught in the UK and others are only caught abroad. Most worm infections are not serious and can be easily treated with medicine.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/worms-in-humans/"
+  },
+  "Teeth grinding (bruxism)": {
+    "description": "Teeth grinding (also called bruxism) is often related to stress or anxiety. There are things you can do to help and treatments available from a dentist or GP.",
+    "symptoms": [
+      "stress and anxiety – this is the most common cause of teeth grinding",
+      "sleep problems like snoring and sleep apnoea",
+      "taking certain medicines, including a type of antidepressant called selective serotonin reuptake inhibitors (SSRIs)",
+      "smoking, drinking lots of alcohol and caffeine, and taking drugs like ecstasy and cocaine"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/teeth-grinding/"
+  },
+  "Testicle lumps and swellings": {
+    "description": "Lumps and swellings in the testicles (balls) are not usually caused by anything serious, but you should always get them checked by a GP.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/testicle-lumps-and-swellings/"
+  },
+  "Testicle pain": {
+    "description": "There are lots of possible causes of pain in the testicles (balls). It can sometimes be serious, so get medical help straight away if the pain is sudden, severe or does not go away.",
+    "symptoms": [
+      "an infection (epididymitis)",
+      "an injury",
+      "an inguinal hernia",
+      "a build-up of fluid (cyst)",
+      "swollen veins in the testicles (varicocele)"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/testicle-pain/"
+  },
+  "Thirst (excessive), see Excessive thirst": {
+    "description": "It's normal to sometimes feel thirsty, but it's not normal to constantly feel thirsty even when you're drinking a lot. See a GP to find out what's causing your excessive thirst.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/thirst/"
+  },
+  "Throat (sore), see Sore throat": {
+    "description": "Sore throats are very common and usually nothing to worry about. They normally get better by themselves within a week.",
+    "symptoms": [
+      "laryngitis",
+      "tonsillitis",
+      "strep throat (a bacterial throat infection)",
+      "glandular fever"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/sore-throat/"
+  },
+  "Thumb pain": {
+    "description": "There are many causes of thumb pain. You can often ease the pain yourself. But see a GP if the pain does not improve.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hand-pain/thumb-pain/"
+  },
+  "Tinnitus": {
+    "description": "Tinnitus is the name for hearing noises that do not come from an outside source. It's not usually a sign of anything serious and may get better by itself.",
+    "symptoms": [
+      "some form of hearing loss",
+      "Ménière's disease",
+      "conditions such as diabetes, thyroid disorders or multiple sclerosis",
+      "anxiety or depression",
+      "taking certain medicines – tinnitus can be a side effect of some chemotherapy medicines, antibiotics, non-steroidal anti-inflammatory drugs (NSAIDs) and aspirin"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/tinnitus/"
+  },
+  "Tiredness and fatigue": {
+    "description": "It's normal to feel tired sometimes. But if you're tired all the time and do not know why, it could be a sign of a problem.",
+    "symptoms": [
+      "not getting enough sleep or finding it hard to get to sleep (insomnia)",
+      "an unhealthy lifestyle (such as having an unhealthy diet and not getting much exercise)",
+      "stress, depression and dealing with life challenges, such as bereavement or looking after a new baby",
+      "hormonal changes (such as during puberty, pregnancy or the menopause)",
+      "some illnesses, like glandular fever and COVID-19"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/tiredness-and-fatigue/"
+  },
+  "Tongue (sore or white), see Sore or white tongue": {
+    "description": "A sore or white tongue is not usually serious and is often easily treated.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/sore-or-white-tongue/"
+  },
+  "Toothache": {
+    "description": "See a dentist if you have toothache that lasts more than 2 days. They can treat the cause of the pain and stop any problems getting worse. There are also things you can do to ease toothache while you wait for an appointment.",
+    "symptoms": [
+      "tooth decay",
+      "a dental abscess",
+      "a cracked or damaged tooth",
+      "a loose or broken filling",
+      "an infection – this often happens when a tooth (such as a wisdom tooth) has broken the skin, but does not have enough room to fully come through"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/toothache/"
+  },
+  "Tremor or shaking hands": {
+    "description": "A tremor is when you're not able to control shaking or trembling in part of your body. See a GP if a tremor is affecting your life as treatment may help to reduce it.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/tremor-or-shaking-hands/"
+  },
+  "Tummy ache, see Stomach ache": {
+    "description": "Most stomach aches are not anything serious and will go away after a few days.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/stomach-ache/"
+  },
+  "Twitching eyes and muscles": {
+    "description": "Twitches are common and very rarely a sign of anything serious. They often go away on their own, but see a GP if a twitch lasts more than 2 weeks.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/twitching-eyes-and-muscles/"
+  },
+  "Unintentional weight loss": {
+    "description": "Unintentional weight loss is when you lose weight without changing your diet or exercise routine. It can be a sign of stress or a serious illness. See a GP just in case.",
+    "symptoms": [
+      "mental health conditions, such as depression, anxiety, eating disorders and obsessive compulsive disorder (OCD)",
+      "problems with digestion, such as coeliac disease or inflammatory bowel disease (IBD)",
+      "hormone conditions, such as an overactive thyroid or type 1 diabetes",
+      "heart conditions, such as heart failure",
+      "poor nutrition (malnutrition) or lack of appetite, although sometimes weight loss can happen when there's no change to a person's diet or appetite"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/unintentional-weight-loss/"
+  },
+  "Urinary incontinence": {
+    "description": "Urinary incontinence is the unintentional passing of urine. It's a common problem thought to affect millions of people.",
+    "symptoms": [
+      "pregnancy and vaginal birth",
+      "obesity",
+      "a family history of incontinence",
+      "increasing age – although incontinence is not an inevitable part of ageing"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/urinary-incontinence/"
+  },
+  "Urine (smelly), see Smelly urine": {
+    "description": "Smelly pee on its own is not usually a cause for concern. There are often things you can do to help your pee return to normal.",
+    "symptoms": [
+      "certain types of food and drink, like asparagus or coffee",
+      "not drinking enough fluids (dehydration)",
+      "some medicines",
+      "vitamin B6 supplements"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/smelly-urine/"
+  },
+  "Vaginal bleeding between periods or after sex": {
+    "description": "Bleeding from your vagina between periods or after sex can have a lot of different causes. It's not usually serious, but always get it checked by a doctor.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/vaginal-bleeding-between-periods-or-after-sex/"
+  },
+  "Vaginal discharge": {
+    "description": "Vaginal discharge is normal – most women and girls get it. It's a fluid or mucus that keeps the vagina clean and moist, and protects it from infection.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/vaginal-discharge/"
+  },
+  "Vaginal dryness": {
+    "description": "Vaginal dryness is a common problem that many women have at some point in their lives. But there are things that can help.",
+    "symptoms": [
+      "experience menopause",
+      "are pregnant or breastfeeding",
+      "take certain medicines such as hormonal contraceptives or antidepressants",
+      "have your womb removed (a hysterectomy), especially if your ovaries were also removed",
+      "have cancer treatments, such as chemotherapy, radiotherapy, hormonal therapy or surgery"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/vaginal-dryness/"
+  },
+  "Vision loss": {
+    "description": "Vision loss affects how well you see. The causes of vision loss can often be treated, but sometimes it may be permanent. Get your sight checked if you have symptoms.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/conditions/vision-loss/"
+  },
+  "Vomiting blood": {
+    "description": "You should always get medical help if you are vomiting blood (called haematemesis). Vomit can vary from bright red to brown or black. It may be like liquid or more solid, or look like coffee granules.",
+    "symptoms": [
+      "gastritis",
+      "stomach ulcers",
+      "heart burn and acid reflux",
+      "alcohol-related liver disease",
+      "damage to your food pipe from being sick or coughing a lot"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/vomiting-blood/"
+  },
+  "Vomiting, see Diarrhoea and vomiting": {
+    "description": "Diarrhoea and vomiting are common in adults, children and babies. They're often caused by a stomach bug and should stop in a few days.",
+    "symptoms": [
+      "a stomach bug",
+      "food poisoning"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/diarrhoea-and-vomiting/"
+  },
+  "Watering eyes": {
+    "description": "Watering eyes are common and often get better on their own, but treatment may be needed if the watering affects your daily activities.",
+    "symptoms": [
+      "blocked tear ducts (the small tubes that tears drain into)",
+      "an allergy or infection (such as conjunctivitis)",
+      "your eyelid drooping away from the eye (ectropion) or other eyelid problems",
+      "dry eyes – this can cause your eyes to produce too many tears",
+      "Bell's palsy – weakness to one side of the face that is usually temporary"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/watering-eyes/"
+  },
+  "Weight loss (unintentional), see Unintentional weight loss": {
+    "description": "Unintentional weight loss is when you lose weight without changing your diet or exercise routine. It can be a sign of stress or a serious illness. See a GP just in case.",
+    "symptoms": [
+      "mental health conditions, such as depression, anxiety, eating disorders and obsessive compulsive disorder (OCD)",
+      "problems with digestion, such as coeliac disease or inflammatory bowel disease (IBD)",
+      "hormone conditions, such as an overactive thyroid or type 1 diabetes",
+      "heart conditions, such as heart failure",
+      "poor nutrition (malnutrition) or lack of appetite, although sometimes weight loss can happen when there's no change to a person's diet or appetite"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/unintentional-weight-loss/"
+  },
+  "What to do if someone has a seizure (fit)": {
+    "description": "If you see someone having a seizure or fit, there are some simple things you can do to help.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/what-to-do-if-someone-has-a-seizure-fit/"
+  },
+  "Wind, see Farting (flatulence)": {
+    "description": "Farting, also known as flatulence or wind, is normal. There are things you can do if you fart a lot or it's smelly. Sometimes it can be a sign of a health condition.",
+    "symptoms": [
+      "non-steroidal anti-inflammatory drugs (NSAIDS), like ibuprofen",
+      "some laxatives",
+      "antifungal medicines",
+      "statins"
+    ],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/flatulence/"
+  },
+  "Worms in humans": {
+    "description": "Some types of worms can infect people. Some can be caught in the UK and others are only caught abroad. Most worm infections are not serious and can be easily treated with medicine.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/worms-in-humans/"
+  },
+  "Wrist pain": {
+    "description": "There are many causes of wrist pain. You can often ease the pain yourself. But sometimes it can be more serious, like a broken wrist.",
+    "symptoms": [],
+    "color": "bg-emerald-600",
+    "isWebScraped": true,
+    "url": "https://www.nhs.uk/symptoms/hand-pain/wrist-pain/"
+  }
+}
