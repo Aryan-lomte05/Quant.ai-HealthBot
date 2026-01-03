@@ -1,0 +1,213 @@
+{
+    "Common Cold": {
+        "description": "Viral infection of the upper respiratory tract.",
+        "symptoms": [
+            "Cough",
+            "Sore Throat",
+            "Runny Nose",
+            "Fatigue",
+            "Body Ache"
+        ],
+        "color": "bg-emerald-500"
+    },
+    "Flu (Influenza)": {
+        "description": "Contagious respiratory illness caused by influenza viruses.",
+        "symptoms": [
+            "Fever",
+            "Cough",
+            "Fatigue",
+            "Body Ache",
+            "Headache"
+        ],
+        "color": "bg-blue-500"
+    },
+    "Migraine": {
+        "description": "Severe recurring headache, often on one side of the head.",
+        "symptoms": [
+            "Headache",
+            "Nausea",
+            "Dizziness",
+            "Light Sensitivity"
+        ],
+        "color": "bg-purple-500"
+    },
+    "COVID-19": {
+        "description": "Infectious disease caused by the SARS-CoV-2 virus.",
+        "symptoms": [
+            "Fever",
+            "Cough",
+            "Shortness of Breath",
+            "Fatigue",
+            "Loss of Appetite"
+        ],
+        "color": "bg-red-500"
+    },
+    "Gastroenteritis (Stomach Flu)": {
+        "description": "Inflammation of the lining of the intestines.",
+        "symptoms": [
+            "Nausea",
+            "Stomach Pain",
+            "Fatigue",
+            "Vomiting",
+            "Diarrhea"
+        ],
+        "color": "bg-amber-500"
+    },
+    "Allergies": {
+        "description": "Immune system reaction to foreign substances.",
+        "symptoms": [
+            "Runny Nose",
+            "Sore Throat",
+            "Cough",
+            "Itchy Eyes",
+            "Sneezing"
+        ],
+        "color": "bg-orange-500"
+    },
+    "Bronchitis": {
+        "description": "Inflammation of the lining of bronchial tubes.",
+        "symptoms": [
+            "Cough",
+            "Fatigue",
+            "Shortness of Breath",
+            "Chest Discomfort"
+        ],
+        "color": "bg-yellow-600"
+    },
+    "Pneumonia": {
+        "description": "Infection that inflames air sacs in one or both lungs.",
+        "symptoms": [
+            "Fever",
+            "Cough",
+            "Shortness of Breath",
+            "Chills",
+            "Chest Pain"
+        ],
+        "color": "bg-red-600"
+    },
+    "Anxiety Disorder": {
+        "description": "Mental health disorder characterized by feelings of worry, anxiety, or fear.",
+        "symptoms": [
+            "Fatigue",
+            "Restlessness",
+            "Rapid Heart Rate",
+            "Sweating",
+            "Trembling"
+        ],
+        "color": "bg-indigo-400"
+    },
+    "Depression": {
+        "description": "Mood disorder that causes a persistent feeling of sadness and loss of interest.",
+        "symptoms": [
+            "Fatigue",
+            "Loss of Appetite",
+            "Persistent Sadness",
+            "Sleep Issues"
+        ],
+        "color": "bg-slate-500"
+    },
+    "Diabetes Type 2": {
+        "description": "Chronic condition that affects the way the body processes blood sugar.",
+        "symptoms": [
+            "Increased Thirst",
+            "Frequent Urination",
+            "Hunger",
+            "Fatigue",
+            "Blurred Vision"
+        ],
+        "color": "bg-teal-500"
+    },
+    "Hypertension (High BP)": {
+        "description": "Condition where blood pressure against artery walls is too high.",
+        "symptoms": [
+            "Headache",
+            "Shortness of Breath",
+            "Nosebleeds",
+            "Flushing"
+        ],
+        "color": "bg-rose-500"
+    },
+    "Asthma": {
+        "description": "Condition in which your airways narrow and swell.",
+        "symptoms": [
+            "Shortness of Breath",
+            "Chest Pain",
+            "Wheezing",
+            "Cough"
+        ],
+        "color": "bg-cyan-500"
+    },
+    "Sinusitis (Sinus Infection)": {
+        "description": "Inflammation or swelling of the tissue lining the sinuses.",
+        "symptoms": [
+            "Headache",
+            "Runny Nose",
+            "Congestion",
+            "Facial Pain",
+            "Fatigue"
+        ],
+        "color": "bg-lime-600"
+    },
+    "Strep Throat": {
+        "description": "Bacterial infection that may cause a sore, scratchy throat.",
+        "symptoms": [
+            "Sore Throat",
+            "Fever",
+            "Swollen Lymph Nodes",
+            "Pain Swallowing"
+        ],
+        "color": "bg-pink-500"
+    },
+    "Food Poisoning": {
+        "description": "Illness caused by bacteria or other toxins in food.",
+        "symptoms": [
+            "Nausea",
+            "Vomiting",
+            "Diarrhea",
+            "Stomach Pain",
+            "Fever"
+        ],
+        "color": "bg-yellow-500"
+    },
+    "Anemia": {
+        "description": "Condition in which you lack enough healthy red blood cells.",
+        "symptoms": [
+            "Fatigue",
+            "Weakness",
+            "Pale Skin",
+            "Shortness of Breath",
+            "Dizziness"
+        ],
+        "color": "bg-red-200"
+    },
+    "Dehydration": {
+        "description": "Condition caused by the loss of too much fluid from the body.",
+        "symptoms": [
+            "Thirst",
+            "Dry Mouth",
+            "Fatigue",
+            "Dizziness",
+            "Dark Urine"
+        ],
+        "color": "bg-blue-300"
+    },
+    "Insomnia": {
+        "description": "Sleep disorder that makes it hard to fall asleep or stay asleep.",
+        "symptoms": [
+            "Fatigue",
+            "Sleep Issues",
+            "Irritability",
+            "Difficulty Concentrating"
+        ],
+        "color": "bg-indigo-800"
+    },
+    "Tension Headache": {
+        "description": "Mild to moderate pain often described as feeling like a tight band around the head.",
+        "symptoms": [
+            "Headache",
+            "Neck Pain",
+            "Fatigue"
+        ],
+        "color": "bg-purple-400"
+    }
+}

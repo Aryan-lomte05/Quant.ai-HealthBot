@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -24,6 +24,7 @@ import {
   Users,
   Info,
 } from "lucide-react";
+
 
 // Scroll Reveal Component
 function ScrollRevealSection({ children, className = "", id }: { children: React.ReactNode; className?: string; id?: string }) {
@@ -101,6 +102,31 @@ export default function ExplorePage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
   const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1]);
 
+  // State for fetched data
+  const [diseases, setDiseases] = useState<any[]>([]);
+  const [dataSource, setDataSource] = useState<"nhs" | "fallback" | "mixed">("fallback");
+  const [isLoadingDiseases, setIsLoadingDiseases] = useState(true);
+
+  // Fetch Diseases
+  useEffect(() => {
+    async function fetchDiseases() {
+      try {
+        const res = await fetch("/api/diseases?type=diseases");
+        const data = await res.json();
+        if (data.diseases) {
+          setDiseases(data.diseases);
+          // Developer-only check
+          console.log("[HealthBot] Data Source:", data.source || "fallback");
+        }
+      } catch (error) {
+        console.error("Failed to fetch diseases:", error);
+      } finally {
+        setIsLoadingDiseases(false);
+      }
+    }
+    fetchDiseases();
+  }, []);
+
   // Comprehensive Dummy Data
   const symptoms = [
     "Fever", "Headache", "Cough", "Fatigue", "Nausea",
@@ -108,198 +134,69 @@ export default function ExplorePage() {
     "Chest Pain", "Shortness of Breath", "Loss of Appetite"
   ];
 
-  const conditionResults = [
-    { condition: "Common Cold", probability: 75, color: "bg-emerald-500", description: "Viral infection of the upper respiratory tract" },
-    { condition: "Flu (Influenza)", probability: 60, color: "bg-blue-500", description: "Contagious respiratory illness" },
-    { condition: "Migraine", probability: 45, color: "bg-purple-500", description: "Severe recurring headache" },
-    { condition: "Allergies", probability: 30, color: "bg-orange-500", description: "Immune system reaction" },
-  ];
+  // State for Conditions (Symptom Checker)
+  const [conditionResults, setConditionResults] = useState<any[]>([]);
+  const [isAnalyzingSymptoms, setIsAnalyzingSymptoms] = useState(false);
 
-  const diseases = [
-    {
-      id: 1,
-      name: "Diabetes Type 2",
-      icon: "🩺",
-      category: "Metabolic",
-      prevalence: "8.5%",
-      description: "A chronic condition affecting how your body processes blood sugar (glucose).",
-      symptoms: ["Increased thirst", "Frequent urination", "Hunger", "Fatigue", "Blurred vision"],
-      treatments: ["Metformin", "Insulin therapy", "Lifestyle changes", "Diet management"],
-      specialists: ["Endocrinologist", "Diabetologist"],
-      riskFactors: ["Obesity", "Sedentary lifestyle", "Family history", "Age over 45"]
-    },
-    {
-      id: 2,
-      name: "Hypertension",
-      icon: "❤️",
-      category: "Cardiovascular",
-      prevalence: "31%",
-      description: "High blood pressure is a common condition affecting the body's arteries.",
-      symptoms: ["Headaches", "Shortness of breath", "Nosebleeds", "Dizziness"],
-      treatments: ["ACE inhibitors", "Beta blockers", "Diuretics", "Lifestyle modifications"],
-      specialists: ["Cardiologist", "General Physician"],
-      riskFactors: ["High salt intake", "Stress", "Obesity", "Lack of exercise"]
-    },
-    {
-      id: 3,
-      name: "Asthma",
-      icon: "🫁",
-      category: "Respiratory",
-      prevalence: "6.5%",
-      description: "A condition in which airways narrow and swell, producing extra mucus.",
-      symptoms: ["Wheezing", "Shortness of breath", "Chest tightness", "Coughing"],
-      treatments: ["Inhalers", "Bronchodilators", "Corticosteroids", "Allergy medications"],
-      specialists: ["Pulmonologist", "Allergist"],
-      riskFactors: ["Allergies", "Family history", "Smoking exposure", "Air pollution"]
-    },
-    {
-      id: 4,
-      name: "Migraine",
-      icon: "🧠",
-      category: "Neurological",
-      prevalence: "15%",
-      description: "A neurological disorder characterized by recurrent headaches.",
-      symptoms: ["Severe headache", "Nausea", "Light sensitivity", "Aura"],
-      treatments: ["Triptans", "Pain relievers", "Anti-nausea drugs", "Preventive medications"],
-      specialists: ["Neurologist", "Headache specialist"],
-      riskFactors: ["Stress", "Hormonal changes", "Certain foods", "Sleep changes"]
-    },
-    {
-      id: 5,
-      name: "Arthritis",
-      icon: "🦴",
-      category: "Musculoskeletal",
-      prevalence: "22%",
-      description: "Inflammation of one or more joints causing pain and stiffness.",
-      symptoms: ["Joint pain", "Stiffness", "Swelling", "Reduced mobility"],
-      treatments: ["NSAIDs", "Physical therapy", "Corticosteroids", "DMARDs"],
-      specialists: ["Rheumatologist", "Orthopedist"],
-      riskFactors: ["Age", "Family history", "Obesity", "Joint injuries"]
-    },
-    {
-      id: 6,
-      name: "Depression",
-      icon: "😔",
-      category: "Mental Health",
-      prevalence: "7%",
-      description: "A mental health disorder causing persistent sadness and loss of interest.",
-      symptoms: ["Persistent sadness", "Loss of interest", "Fatigue", "Sleep changes"],
-      treatments: ["Antidepressants", "Psychotherapy", "CBT", "Lifestyle changes"],
-      specialists: ["Psychiatrist", "Psychologist"],
-      riskFactors: ["Trauma", "Chronic stress", "Family history", "Substance abuse"]
-    }
-  ];
+  // State for Medicines
+  const [medicines, setMedicines] = useState<any[]>([]);
+  const [isLoadingMedicines, setIsLoadingMedicines] = useState(false);
+  const [medicineSource, setMedicineSource] = useState<"nhs" | "fallback" | "mixed">("fallback");
 
-  const medicines = [
-    {
-      id: 1,
-      name: "Paracetamol",
-      genericName: "Acetaminophen",
-      type: "Pain Reliever & Fever Reducer",
-      category: "Analgesic",
-      dosage: "500-1000mg every 4-6 hours",
-      maxDaily: "4000mg/day",
-      icon: "💊",
-      price: "₹20-50",
-      manufacturer: "Multiple",
-      description: "Common over-the-counter medication for pain and fever relief.",
-      uses: ["Headache", "Fever", "Muscle pain", "Toothache", "Cold symptoms"],
-      sideEffects: ["Nausea", "Allergic reactions", "Liver damage (overdose)", "Stomach upset (rare)"],
-      interactions: ["Alcohol (liver damage risk)", "Warfarin (bleeding risk)", "Isoniazid"],
-      warnings: ["Do not exceed maximum dose", "Avoid with liver disease", "Check other medications for paracetamol"],
-      storage: "Store at room temperature, away from moisture"
-    },
-    {
-      id: 2,
-      name: "Ibuprofen",
-      genericName: "Ibuprofen",
-      type: "NSAID - Anti-inflammatory",
-      category: "NSAID",
-      dosage: "200-400mg every 4-6 hours",
-      maxDaily: "1200mg/day (OTC)",
-      icon: "💉",
-      price: "₹30-80",
-      manufacturer: "Multiple",
-      description: "Nonsteroidal anti-inflammatory drug for pain, fever, and inflammation.",
-      uses: ["Arthritis", "Menstrual pain", "Headache", "Dental pain", "Fever"],
-      sideEffects: ["Stomach upset", "Heartburn", "Nausea", "Ulcers", "Increased bleeding risk"],
-      interactions: ["Aspirin", "Blood thinners", "ACE inhibitors", "Lithium", "Methotrexate"],
-      warnings: ["Take with food", "Avoid with stomach ulcers", "Risk of heart attack/stroke"],
-      storage: "Keep in original container, room temperature"
-    },
-    {
-      id: 3,
-      name: "Metformin",
-      genericName: "Metformin HCl",
-      type: "Type 2 Diabetes Medication",
-      category: "Antidiabetic",
-      dosage: "500-2000mg daily with meals",
-      maxDaily: "2550mg/day",
-      icon: "🧪",
-      price: "₹50-150",
-      manufacturer: "Various",
-      description: "First-line medication for managing type 2 diabetes.",
-      uses: ["Type 2 diabetes", "Prediabetes", "PCOS"],
-      sideEffects: ["Diarrhea", "Nausea", "Stomach upset", "Vitamin B12 deficiency", "Lactic acidosis (rare)"],
-      interactions: ["Alcohol", "Iodinated contrast dyes", "Carbonic anhydrase inhibitors"],
-      warnings: ["Monitor kidney function", "Stop before surgery", "Risk of lactic acidosis"],
-      storage: "Store at room temperature, protect from light"
-    },
-    {
-      id: 4,
-      name: "Amoxicillin",
-      genericName: "Amoxicillin",
-      type: "Antibiotic",
-      category: "Penicillin",
-      dosage: "250-500mg every 8 hours",
-      maxDaily: "1500mg/day (varies)",
-      icon: "💊",
-      price: "₹40-120",
-      manufacturer: "Multiple",
-      description: "Common antibiotic for bacterial infections.",
-      uses: ["Respiratory infections", "Ear infections", "Urinary tract infections", "Dental infections"],
-      sideEffects: ["Diarrhea", "Nausea", "Rash", "Yeast infection", "Allergic reaction"],
-      interactions: ["Oral contraceptives", "Probenecid", "Methotrexate"],
-      warnings: ["Complete full course", "Allergic to penicillin", "May reduce contraceptive effectiveness"],
-      storage: "Refrigerate liquid form, protect from light"
-    },
-    {
-      id: 5,
-      name: "Omeprazole",
-      genericName: "Omeprazole",
-      type: "Proton Pump Inhibitor",
-      category: "Gastric",
-      dosage: "20-40mg once daily",
-      maxDaily: "40mg/day",
-      icon: "💊",
-      price: "₹60-200",
-      manufacturer: "Various",
-      description: "Reduces stomach acid production for treating acid reflux and ulcers.",
-      uses: ["GERD", "Peptic ulcers", "Heartburn", "Zollinger-Ellison syndrome"],
-      sideEffects: ["Headache", "Nausea", "Diarrhea", "Stomach pain", "Vitamin B12 deficiency"],
-      interactions: ["Clopidogrel", "Warfarin", "Diazepam", "Antifungals"],
-      warnings: ["Take before meals", "Long-term use risks", "May mask stomach cancer"],
-      storage: "Store in dry place, away from moisture"
-    },
-    {
-      id: 6,
-      name: "Losartan",
-      genericName: "Losartan Potassium",
-      type: "Blood Pressure Medication",
-      category: "ARB",
-      dosage: "25-100mg once daily",
-      maxDaily: "100mg/day",
-      icon: "💉",
-      price: "₹80-250",
-      manufacturer: "Multiple",
-      description: "Angiotensin receptor blocker for treating high blood pressure.",
-      uses: ["Hypertension", "Diabetic nephropathy", "Heart failure"],
-      sideEffects: ["Dizziness", "Fatigue", "Low blood pressure", "Hyperkalemia"],
-      interactions: ["Potassium supplements", "NSAIDs", "Lithium", "Diuretics"],
-      warnings: ["Not for pregnancy", "Monitor kidney function", "Check potassium levels"],
-      storage: "Store at room temperature, protect from moisture"
+  // Fetch Medicines (Initial + Search)
+  useEffect(() => {
+    async function fetchMedicines() {
+      setIsLoadingMedicines(true);
+      try {
+        const query = medicineSearch ? `?query=${encodeURIComponent(medicineSearch)}` : "";
+        const res = await fetch(`/api/medicines${query}`);
+        const data = await res.json();
+        if (data.medicines) {
+          setMedicines(data.medicines);
+          if (data.source) setMedicineSource(data.source);
+        }
+      } catch (error) {
+        console.error("Failed to fetch medicines:", error);
+      } finally {
+        setIsLoadingMedicines(false);
+      }
     }
-  ];
+
+    // Debounce search
+    const timer = setTimeout(() => {
+      fetchMedicines();
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [medicineSearch]);
+
+  const handleAnalyzeSymptoms = async () => {
+    if (selectedSymptoms.length > 0) {
+      setIsAnalyzingSymptoms(true);
+      setShowResults(false); // Reset view logic if needed
+
+      try {
+        const res = await fetch("/api/symptoms", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ symptoms: selectedSymptoms })
+        });
+        const data = await res.json();
+        if (data.results) {
+          setConditionResults(data.results);
+          setShowResults(true);
+        }
+      } catch (error) {
+        console.error("Analysis failed:", error);
+      } finally {
+        setIsAnalyzingSymptoms(false);
+      }
+    }
+  };
+
+
+
+
 
   const healthCategories = [
     {
@@ -333,17 +230,7 @@ export default function ExplorePage() {
     disease.category.toLowerCase().includes(diseaseSearch.toLowerCase())
   );
 
-  const filteredMedicines = medicines.filter(medicine =>
-    medicine.name.toLowerCase().includes(medicineSearch.toLowerCase()) ||
-    medicine.genericName.toLowerCase().includes(medicineSearch.toLowerCase()) ||
-    medicine.category.toLowerCase().includes(medicineSearch.toLowerCase())
-  );
 
-  const handleAnalyzeSymptoms = () => {
-    if (selectedSymptoms.length > 0) {
-      setShowResults(true);
-    }
-  };
 
   return (
     <div ref={containerRef} className="relative bg-white">
@@ -550,7 +437,7 @@ export default function ExplorePage() {
                 disabled={selectedSymptoms.length === 0}
                 className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-full font-semibold hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Analyze {selectedSymptoms.length > 0 && `(${selectedSymptoms.length} symptoms)`}
+                {isAnalyzingSymptoms ? "Analyzing..." : `Analyze ${selectedSymptoms.length > 0 ? `(${selectedSymptoms.length} symptoms)` : ''}`}
               </motion.button>
             </div>
 
@@ -583,8 +470,25 @@ export default function ExplorePage() {
                     >
                       <div className="flex items-center justify-between mb-3">
                         <div>
-                          <h4 className="font-bold text-lg">{result.condition}</h4>
-                          <p className="text-sm text-gray-300">{result.description}</p>
+                          <h4 className="font-bold text-lg flex items-center gap-2">
+                            {result.condition}
+                            {result.isNhsVerified && (
+                              <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                                NHS VERIFIED
+                              </span>
+                            )}
+                          </h4>
+                          <p className="text-sm text-gray-300 mb-2">{result.description}</p>
+                          {result.url && (
+                            <a
+                              href={result.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1 underline underline-offset-2"
+                            >
+                              Read official article on NHS website <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
                         </div>
                         <div className="text-emerald-400 font-bold text-3xl">{result.probability}%</div>
                       </div>
@@ -632,36 +536,43 @@ export default function ExplorePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredDiseases.map((disease, i) => (
-            <motion.div
-              key={disease.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -10, scale: 1.02 }}
-              onClick={() => setSelectedDisease(disease)}
-              className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border border-gray-100 cursor-pointer group"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="text-6xl">{disease.icon}</div>
-                <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
-                  {disease.category}
-                </span>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">{disease.name}</h3>
-              <p className="text-gray-600 text-sm mb-4 line-clamp-2">{disease.description}</p>
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-sm text-gray-600">Prevalence</span>
-                <span className="text-2xl font-bold text-emerald-600">{disease.prevalence}</span>
-              </div>
+          {isLoadingDiseases ? (
+            // Simple Loading Skeleton
+            [...Array(6)].map((_, i) => (
+              <div key={i} className="h-64 bg-gray-100 rounded-2xl animate-pulse" />
+            ))
+          ) : (
+            filteredDiseases.map((disease, i) => (
               <motion.div
-                className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-4 transition-all"
+                key={disease.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                onClick={() => setSelectedDisease(disease)}
+                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all border border-gray-100 cursor-pointer group"
               >
-                Learn More <ChevronRight className="w-5 h-5" />
+                <div className="flex items-start justify-between mb-4">
+                  <div className="text-6xl">{disease.icon}</div>
+                  <span className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-medium">
+                    {disease.category}
+                  </span>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{disease.name}</h3>
+                <p className="text-gray-600 text-sm mb-4 line-clamp-2">{disease.description}</p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-sm text-gray-600">Prevalence</span>
+                  <span className="text-2xl font-bold text-emerald-600">{disease.prevalence}</span>
+                </div>
+                <motion.div
+                  className="flex items-center gap-2 text-emerald-600 font-semibold group-hover:gap-4 transition-all"
+                >
+                  Learn More <ChevronRight className="w-5 h-5" />
+                </motion.div>
               </motion.div>
-            </motion.div>
-          ))}
+            ))
+          )}
         </div>
 
         {filteredDiseases.length === 0 && (
@@ -700,10 +611,16 @@ export default function ExplorePage() {
                 className="w-full pl-14 pr-6 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-full focus:outline-none focus:border-white/40 transition-colors text-lg text-white placeholder-white/60"
               />
             </div>
+            {/* Loading Indicator */}
+            {isLoadingMedicines && (
+              <div className="mt-4 text-white/70 animate-pulse">
+                Fetching medicines...
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMedicines.map((medicine, i) => (
+            {medicines.map((medicine: any, i: number) => (
               <motion.div
                 key={medicine.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -736,16 +653,16 @@ export default function ExplorePage() {
             ))}
           </div>
 
-          {filteredMedicines.length === 0 && (
+          {medicines.length === 0 && !isLoadingMedicines && (
             <div className="text-center py-20">
               <p className="text-purple-200 text-lg">No medicines found matching "{medicineSearch}"</p>
             </div>
           )}
         </ScrollRevealSection>
-      </section>
+      </section >
 
       {/* FOOTER CTA */}
-      <ScrollRevealSection className="py-32 px-8 md:px-20 bg-gray-50">
+      < ScrollRevealSection className="py-32 px-8 md:px-20 bg-gray-50" >
         <div className="max-w-4xl mx-auto text-center">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
@@ -776,10 +693,11 @@ export default function ExplorePage() {
             Get Started Now
           </motion.button>
         </div>
-      </ScrollRevealSection>
+      </ScrollRevealSection >
 
       {/* MODALS */}
-      <Modal isOpen={!!selectedDisease} onClose={() => setSelectedDisease(null)}>
+      < Modal isOpen={!!selectedDisease
+      } onClose={() => setSelectedDisease(null)}>
         {selectedDisease && (
           <div>
             <div className="flex items-start gap-4 mb-6">
@@ -860,7 +778,7 @@ export default function ExplorePage() {
             </div>
           </div>
         )}
-      </Modal>
+      </Modal >
 
       <Modal isOpen={!!selectedMedicine} onClose={() => setSelectedMedicine(null)}>
         {selectedMedicine && (
@@ -962,6 +880,6 @@ export default function ExplorePage() {
           </div>
         )}
       </Modal>
-    </div>
+    </div >
   );
 }
