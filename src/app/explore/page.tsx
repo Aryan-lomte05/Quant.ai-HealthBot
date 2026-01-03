@@ -265,7 +265,7 @@ export default function ExplorePage() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 1 }}
-            className="text-7xl md:text-9xl font-bold text-white mb-6 tracking-tight"
+            className="text-5xl sm:text-7xl md:text-9xl font-bold text-white mb-6 tracking-tight"
           >
             Explore.
           </motion.h1>
@@ -330,7 +330,7 @@ export default function ExplorePage() {
       {/* CATEGORIES SECTION */}
       <ScrollRevealSection id="categories" className="py-32 px-8 md:px-20 max-w-7xl mx-auto">
         <div className="text-center mb-20">
-          <motion.h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+          <motion.h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4">
             Browse Health Tools
           </motion.h2>
           <p className="text-xl text-gray-600">
@@ -383,7 +383,7 @@ export default function ExplorePage() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-5xl md:text-6xl font-bold mb-6"
+                className="text-3xl sm:text-4xl md:text-6xl font-bold mb-6"
               >
                 Symptom Analysis
               </motion.h2>
@@ -515,7 +515,7 @@ export default function ExplorePage() {
       {/* DISEASE ENCYCLOPEDIA */}
       <ScrollRevealSection id="disease-encyclopedia" className="py-32 px-8 md:px-20 max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-4">
             Disease Encyclopedia
           </h2>
           <p className="text-xl text-gray-600 mb-8">
@@ -593,7 +593,7 @@ export default function ExplorePage() {
 
         <ScrollRevealSection className="relative max-w-7xl mx-auto px-8 md:px-20">
           <div className="text-center mb-12">
-            <h2 className="text-5xl md:text-6xl font-bold mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4">
               Medicine Database
             </h2>
             <p className="text-xl text-purple-100 mb-8">
@@ -668,7 +668,7 @@ export default function ExplorePage() {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-5xl md:text-6xl font-bold text-gray-900 mb-6"
+            className="text-3xl sm:text-4xl md:text-6xl font-bold text-gray-900 mb-6"
           >
             Ready to explore?
           </motion.h2>

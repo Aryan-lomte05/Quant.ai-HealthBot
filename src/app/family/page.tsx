@@ -129,8 +129,8 @@ function TiltCard({ member, i, selectedMember, setSelectedMember, getStatusColor
                 perspective: "1500px",
             }}
             className={`relative bg-white rounded-[2rem] p-8 shadow-xl hover:shadow-2xl transition-shadow duration-300 cursor-pointer border-2 group overflow-visible ${selectedMember?.id === member.id
-                    ? `border-${member.color}-400`
-                    : 'border-gray-200'
+                ? `border-${member.color}-400`
+                : 'border-gray-200'
                 }`}
         >
             {/* Inner rotating content */}
@@ -445,7 +445,7 @@ export default function FamilyPage() {
                     <p className="text-gray-600">Select a member to view their health information</p>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                     {familyMembers.map((member, i) => (
                         <TiltCard
                             key={member.id}
