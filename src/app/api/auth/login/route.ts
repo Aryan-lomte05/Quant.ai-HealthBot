@@ -77,7 +77,7 @@ export async function POST(request: Request) {
 
         // Return user data (without password)
         const userData = {
-            id: user._id,
+            id: user.id,
             name: user.name,
             email: user.email,
             phone: user.phone,

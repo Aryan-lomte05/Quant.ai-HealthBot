@@ -5,6 +5,7 @@ export interface Answer {
     id: string;
     author: string;
     text: string;
+    isAI?: boolean; // true if this is an AI-generated response
     isVerifiedDoctor: boolean;
     timestamp: string;
 }
