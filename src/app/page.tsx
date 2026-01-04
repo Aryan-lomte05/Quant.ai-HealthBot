@@ -18,11 +18,14 @@ import {
   Lock,
   Globe2,
   ChevronRight,
-  ArrowRight
+  ArrowRight,
+  MessageCircle,
+  Send
 } from "lucide-react";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import Lenis from "lenis";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // --- Smooth Scroll Provider ---
 const SmoothScroll = ({ children }: { children: React.ReactNode }) => {
@@ -121,27 +124,43 @@ function MagneticButton({ children, className }: { children: React.ReactNode; cl
 
 // Floating Particles Component
 function FloatingParticles() {
-  const particles = Array.from({ length: 20 });
+  const [particles, setParticles] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Generate particles only on client-side to assume hydration match
+    const newParticles = Array.from({ length: 20 }).map((_, i) => ({
+      id: i,
+      initialX: Math.random() * window.innerWidth,
+      initialY: Math.random() * window.innerHeight,
+      animateY: Math.random() * -200 - 100,
+      animateX: (Math.random() - 0.5) * 100,
+      duration: Math.random() * 10 + 10,
+      delay: Math.random() * 5,
+    }));
+    setParticles(newParticles);
+  }, []);
+
+  if (particles.length === 0) return null;
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((_, i) => (
+      {particles.map((p) => (
         <motion.div
-          key={i}
+          key={p.id}
           className="absolute w-1 h-1 bg-emerald-400/30 rounded-full"
           initial={{
-            x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1920),
-            y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1080),
+            x: p.initialX,
+            y: p.initialY,
           }}
           animate={{
-            y: [null, Math.random() * -200 - 100],
-            x: [null, (Math.random() - 0.5) * 100],
+            y: [null, p.animateY],
+            x: [null, p.animateX],
             opacity: [0.3, 0.6, 0],
           }}
           transition={{
-            duration: Math.random() * 10 + 10,
+            duration: p.duration,
             repeat: Infinity,
-            delay: Math.random() * 5,
+            delay: p.delay,
             ease: "linear",
           }}
         />
@@ -305,6 +324,8 @@ export default function Home() {
     restDelta: 0.001
   });
 
+  const { t } = useTranslation();
+
   return (
     <SmoothScroll>
       <div ref={containerRef} className="flex flex-col gap-2 relative bg-orange-50 selection:bg-orange-200">
@@ -354,13 +375,11 @@ export default function Home() {
             {/* Left Section - Typography */}
             <div className="p-6 sm:p-8 md:p-12 lg:p-16 xl:p-20 flex flex-col relative z-10 flex-1 pt-32 sm:pt-36 md:pt-40 lg:pt-44">
               <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-4 sm:space-y-6 md:space-y-8">
-                <motion.h1 variants={itemVariants} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-medium tracking-tighter leading-[0.9] text-gray-900">
-                  Expert care for <br />
-                  <span className="italic font-serif font-light text-emerald-800">your health</span> <br />
-                  and wellness<span className="text-yellow-400">.</span>
+                <motion.h1 variants={itemVariants} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-medium tracking-tighter leading-[1.1] text-gray-900">
+                  {t('landing.heroTitle')} <span className="text-yellow-400">.</span>
                 </motion.h1>
                 <motion.p variants={itemVariants} className="max-w-md text-gray-500 text-sm sm:text-base md:text-lg leading-relaxed ml-1 sm:ml-2 font-medium">
-                  AI medical experts providing compassionate, professional support to keep you safe.
+                  {t('landing.heroSubtitle')}
                 </motion.p>
                 <motion.div variants={itemVariants} className="pt-2 sm:pt-4 ml-1 sm:ml-2">
                   <Link href="/chat">
@@ -378,18 +397,18 @@ export default function Home() {
                         {/* Pulsing glow effect */}
                         <span className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
                         <span className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:animate-ping rounded-full" style={{ animationDuration: '1.5s' }} />
-                        <span className="relative z-10">Book an appointment</span>
+                        <span className="relative z-10">{t('landing.startChat')}</span>
                       </motion.button>
                     </MagneticButton>
                   </Link>
                 </motion.div>
                 <motion.div variants={itemVariants} className="pt-6 sm:pt-8 md:pt-12 flex flex-wrap gap-2 sm:gap-3">
                   {[
-                    { label: "Vaccinations", icon: Syringe },
-                    { label: "High-quality", icon: Sparkles },
-                    { label: "Laboratory", icon: Microscope },
-                    { label: "Check-ups", icon: Stethoscope },
-                    { label: "Emergency", icon: Phone },
+                    { label: t('landing.features.vaccinations'), icon: Syringe },
+                    { label: t('landing.features.quality'), icon: Sparkles },
+                    { label: t('landing.features.laboratory'), icon: Microscope },
+                    { label: t('landing.features.checkups'), icon: Stethoscope },
+                    { label: t('landing.features.emergency'), icon: Phone },
                   ].map((feature, i) => (
                     <motion.div
                       key={i}
@@ -453,15 +472,15 @@ export default function Home() {
               className="text-center mb-12 sm:mb-16 md:mb-20 lg:mb-24 space-y-3 sm:space-y-4"
             >
               <span className="inline-block py-1 px-3 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[10px] sm:text-xs uppercase tracking-widest">
-                Holistic Ecosystem
+                {t('landing.ecosystem')}
               </span>
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-medium text-emerald-950 tracking-tight px-4">
-                Healthcare <span className="font-serif italic text-emerald-600">reimagined</span> <br />for everyone.
+                {t('landing.reimagined')}
               </h2>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 h-auto md:h-[600px]">
-              {/* Card 1: Large Left - Glassmorphic */}
+              {/* Card 1: Large Left - Glassmorphism */}
               <motion.div
                 className="md:col-span-2 md:row-span-2 bg-white/60 backdrop-blur-xl rounded-[2rem] sm:rounded-[2.25rem] md:rounded-[2.5rem] border border-white/60 shadow-xl shadow-emerald-900/5 p-6 sm:p-8 md:p-10 flex flex-col justify-between relative overflow-hidden group"
                 whileHover={{
@@ -477,9 +496,9 @@ export default function Home() {
                   <div className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-xl sm:rounded-2xl bg-emerald-500 text-white flex items-center justify-center mb-6 sm:mb-7 md:mb-8 shadow-lg shadow-emerald-500/30">
                     <Brain className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7" />
                   </div>
-                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-medium text-emerald-950 mb-3 sm:mb-4">AI Diagnostics</h3>
+                  <h3 className="text-2xl sm:text-3xl md:text-4xl font-medium text-emerald-950 mb-3 sm:mb-4">{t('landing.cards.ai.title')}</h3>
                   <p className="text-gray-600 text-sm sm:text-base md:text-lg leading-relaxed max-w-md">
-                    Advanced symptom analysis in 12+ Indian languages. It listens, understands, and guides you instantly.
+                    {t('landing.cards.ai.desc')}
                   </p>
                 </div>
 
@@ -517,8 +536,8 @@ export default function Home() {
                 <div className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-xl sm:rounded-2xl bg-blue-500 text-white flex items-center justify-center mb-4 sm:mb-5 md:mb-6 shadow-lg shadow-blue-500/30">
                   <Globe2 className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-medium text-blue-950 mb-2">Multilingual</h3>
-                <p className="text-blue-900/60 font-medium text-sm sm:text-base">Hindi, Tamil, Bengali & more.</p>
+                <h3 className="text-xl sm:text-2xl font-medium text-blue-950 mb-2">{t('landing.cards.multi.title')}</h3>
+                <p className="text-blue-900/60 font-medium text-sm sm:text-base">{t('landing.cards.multi.desc')}</p>
               </motion.div>
 
               {/* Card 3: Bottom Right - Indigo Glass */}
@@ -534,8 +553,8 @@ export default function Home() {
                 <div className="h-10 w-10 sm:h-11 sm:w-11 md:h-12 md:w-12 rounded-xl sm:rounded-2xl bg-indigo-500 text-white flex items-center justify-center mb-4 sm:mb-5 md:mb-6 shadow-lg shadow-indigo-500/30">
                   <Lock className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-medium text-indigo-950 mb-2">Secure Data</h3>
-                <p className="text-indigo-900/60 font-medium text-sm sm:text-base">Encrypted & private records.</p>
+                <h3 className="text-xl sm:text-2xl font-medium text-indigo-950 mb-2">{t('landing.cards.secure.title')}</h3>
+                <p className="text-indigo-900/60 font-medium text-sm sm:text-base">{t('landing.cards.secure.desc')}</p>
               </motion.div>
             </div>
           </div>
@@ -554,14 +573,14 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-10 sm:mb-12 md:mb-16 lg:mb-20 gap-4 sm:gap-6 md:gap-8">
               <div>
-                <span className="text-emerald-400 font-bold tracking-widest uppercase text-[10px] sm:text-xs mb-2 sm:mb-3 block">The Process</span>
+                <span className="text-emerald-400 font-bold tracking-widest uppercase text-[10px] sm:text-xs mb-2 sm:mb-3 block">{t('landing.process.label')}</span>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight leading-tight">
-                  Simple steps to<br className="hidden sm:inline" /><span className="sm:hidden"> </span>better health.
+                  {t('landing.process.title')}
                 </h2>
               </div>
               <Link href="/chat">
                 <button className="group flex items-center gap-2 sm:gap-3 text-white border border-white/20 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 rounded-full hover:bg-white hover:text-emerald-950 transition-all font-medium text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start">
-                  Start your journey
+                  {t('landing.process.start')}
                   <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
@@ -572,9 +591,9 @@ export default function Home() {
               <div className="hidden md:block absolute top-[88px] left-[16%] right-[16%] h-[2px] border-t-2 border-dashed border-emerald-800/50 z-0" />
 
               {[
-                { step: "01", title: "Tell us", desc: "Speak or type in your local language.", icon: MessageCircleHeart },
-                { step: "02", title: "Analysis", desc: "Our engine checks your symptoms instantly.", icon: Brain },
-                { step: "03", title: "Guidance", desc: "Get remedies or doctor connection.", icon: Stethoscope }
+                { step: "01", title: t('landing.process.steps.1.title'), desc: t('landing.process.steps.1.desc'), icon: MessageCircleHeart },
+                { step: "02", title: t('landing.process.steps.2.title'), desc: t('landing.process.steps.2.desc'), icon: Brain },
+                { step: "03", title: t('landing.process.steps.3.title'), desc: t('landing.process.steps.3.desc'), icon: Stethoscope }
               ].map((item, i) => (
                 <motion.div
                   key={i}
@@ -602,8 +621,139 @@ export default function Home() {
           </div>
         </section>
 
+        {/* SECTION 4: CONNECT (WhatsApp & Telegram) - Newly Added */}
+        <section className="w-full bg-slate-50 py-12 sm:py-16 md:py-20 lg:py-24 z-20 -mt-8 sm:-mt-10 md:-mt-12 rounded-t-[2rem] sm:rounded-t-[2.5rem] md:rounded-t-[3rem] relative overflow-hidden">
+          {/* Background Decor */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-emerald-100/50 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,_var(--tw-gradient-stops))] from-blue-100/50 via-transparent to-transparent pointer-events-none" />
 
-        {/* SECTION 4: COMMUNITY - Minimal & Clean */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+              {/* Text Content */}
+              <div className="space-y-6 text-center lg:text-left">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mx-auto lg:mx-0"
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  Always Connected
+                </motion.div>
+
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                  className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-tight"
+                >
+                  Available on <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">WhatsApp</span> & <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500">Telegram</span>
+                </motion.h2>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="text-base sm:text-lg text-slate-600 font-medium max-w-xl mx-auto lg:mx-0"
+                >
+                  SwasthyaSakha is right where you chat. Get instant health advice, emergency support, and symptom analysis instantly.
+                </motion.p>
+              </div>
+
+              {/* Cards Grid */}
+              <div className="grid gap-6">
+                {/* WhatsApp Card */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="group relative bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-100 hover:border-emerald-200 transition-all hover:shadow-2xl overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-emerald-50 rounded-full blur-2xl group-hover:bg-emerald-100 transition-colors" />
+
+                  <div className="flex items-start gap-4 sm:gap-6 relative z-10">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
+                      <MessageCircle className="w-8 h-8 text-white fill-white" />
+                    </div>
+
+                    <div className="flex-1 space-y-4">
+                      <div>
+                        <h3 className="text-xl font-bold text-slate-900">WhatsApp</h3>
+                        <p className="text-sm text-slate-500">Powered by Twilio Sandbox</p>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Step 1: Save Number</p>
+                          <p className="text-lg font-mono font-bold text-slate-700 select-all">+1 (415) 523-8886</p>
+                        </div>
+
+                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Step 2: Send Code</p>
+                          <div className="flex items-center gap-2">
+                            <p className="text-lg font-mono font-bold text-emerald-600 select-all">join tribe-topic</p>
+                            <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Exact Match</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Telegram Card */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="group relative bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-100 hover:border-blue-200 transition-all hover:shadow-2xl overflow-hidden"
+                >
+                  <div className="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-blue-50 rounded-full blur-2xl group-hover:bg-blue-100 transition-colors" />
+
+                  <div className="flex items-start gap-4 sm:gap-6 relative z-10">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
+                      <Send className="w-8 h-8 text-white -ml-1 mt-1" />
+                    </div>
+
+                    <div className="flex-1 space-y-4">
+                      <div>
+                        <h3 className="text-xl font-bold text-slate-900">Telegram</h3>
+                        <p className="text-sm text-slate-500">Official SwasthyaSakha Bot</p>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Step 1: Open Bot</p>
+                          <a href="https://t.me/SwasthyasakhaBot" target="_blank" rel="noopener noreferrer" className="text-base font-bold text-blue-600 hover:underline flex items-center gap-1">
+                            t.me/SwasthyasakhaBot <ArrowRight className="w-4 h-4" />
+                          </a>
+                        </div>
+
+                        <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                          <p className="text-xs font-bold text-slate-400 uppercase mb-1">Step 2: Login</p>
+                          <p className="text-sm text-slate-600 mb-1">Note: Backend must be running!</p>
+                          <div className="bg-slate-900 text-slate-200 p-2 rounded-lg font-mono text-sm">
+                            /login 919920190161
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        {/* SECTION 5: COMMUNITY - Minimal & Clean */}
         <section className="w-full bg-orange-50/30 py-12 sm:py-16 md:py-20 lg:py-24 z-20 -mt-8 sm:-mt-10 md:-mt-12 rounded-t-[2rem] sm:rounded-t-[2.5rem] md:rounded-t-[3rem] relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <motion.div
@@ -615,7 +765,7 @@ export default function Home() {
                 <Users className="h-2.5 w-2.5 sm:h-3 sm:w-3" /> Community
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium text-gray-900 tracking-tight">
-                Trusted by <AnimatedCounter target={10000} duration={2.5} />+ families.
+                {t('landing.trustedBy')} <AnimatedCounter target={10000} duration={2.5} />+ families.
               </h2>
             </motion.div>
 

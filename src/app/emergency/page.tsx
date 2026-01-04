@@ -12,6 +12,7 @@ import { MentalHealthSupport } from "@/components/emergency/MentalHealthSupport"
 import { TherapistDirectory } from "@/components/emergency/TherapistDirectory";
 import { EmergencyBackground } from "@/components/emergency/EmergencyBackground";
 import { useRef } from "react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 // GPU-optimized scroll fade component
 function ScrollFadeIn({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
@@ -37,6 +38,7 @@ function ScrollFadeIn({ children, className = "", delay = 0 }: { children: React
 }
 
 export default function EmergencyPage() {
+    const { t } = useTranslation();
     return (
         <>
             <EmergencyBackground />
@@ -62,13 +64,13 @@ export default function EmergencyPage() {
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600"></span>
                                 </span>
                                 <Sparkles className="h-3 w-3" />
-                                Live Emergency System
+                                {t('liveSystem')}
                             </div>
                             <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 pb-2 leading-tight">
-                                Emergency Center
+                                {t('title')}
                             </h1>
                             <p className="text-sm sm:text-base text-slate-600 font-semibold max-w-2xl">
-                                Critical response tools at your fingertips • Available 24/7
+                                {t('subtitle')}
                             </p>
                         </div>
                         <div className="hidden sm:block">
@@ -185,9 +187,9 @@ export default function EmergencyPage() {
                                 <AlertCircle className="h-5 w-5 text-slate-500" />
                             </div>
                             <div className="flex-1 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                <h4 className="font-bold text-slate-800 mb-1">Medical Disclaimer</h4>
+                                <h4 className="font-bold text-slate-800 mb-1">{t('disclaimerTitle')}</h4>
                                 <p>
-                                    This application facilitates connection to emergency services. For life-threatening emergencies, call <strong className="text-red-600">108</strong> (India) directly.
+                                    {t('disclaimerText')} <strong className="text-red-600">108</strong> (India) directly.
                                 </p>
                             </div>
                         </div>

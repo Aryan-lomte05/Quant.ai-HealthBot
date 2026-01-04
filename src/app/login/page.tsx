@@ -1,23 +1,25 @@
 "use client";
 
 import { useState, FormEvent } from 'react';
-import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { Lock, Phone, ArrowRight, Loader2, AlertCircle, LogIn } from 'lucide-react';
+import { Lock, Phone, ArrowRight, Loader2, LogIn, AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
+import { useUser } from '@/context/UserContext';
+import { useTranslation } from '@/hooks/useTranslation';
 import { setUserPhone } from '@/lib/auth';
 import Link from 'next/link';
 
 export default function LoginPage() {
     const router = useRouter();
+    // Remove setUserPhone from useUser hook
+    useUser();
 
-    // Form State
+    // Form and UI State
     const [formData, setFormData] = useState({
         phone: '',
         password: ''
     });
-
-    // UI State
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -26,17 +28,19 @@ export default function LoginPage() {
         setError('');
     };
 
+    const { t } = useTranslation();
+
     const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
         setError('');
 
         if (!formData.phone || !formData.password) {
-            setError('Please fill in all fields');
+            setError(t('auth.errors.fillAll'));
             return;
         }
 
         if (formData.phone.length !== 12) {
-            setError('Please enter a valid 12-digit mobile number');
+            setError(t('auth.errors.invalidPhone'));
             return;
         }
 
@@ -92,10 +96,10 @@ export default function LoginPage() {
                             <LogIn className="w-8 h-8 text-white" />
                         </div>
                         <h1 className="text-3xl font-black text-emerald-950 mb-2 tracking-tight">
-                            Welcome Back
+                            {t('auth.welcomeBack')}
                         </h1>
                         <p className="text-emerald-600/80 font-medium">
-                            Login to access your health assistant
+                            {t('auth.loginSubtitle')}
                         </p>
                     </div>
 
@@ -117,7 +121,7 @@ export default function LoginPage() {
                         {/* Phone Input */}
                         <div>
                             <label className="block text-sm font-bold text-emerald-900 mb-2">
-                                Phone Number
+                                {t('auth.phone')}
                             </label>
                             <div className="relative group">
                                 <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-400 group-focus-within:text-emerald-600 transition-colors" />
@@ -135,7 +139,7 @@ export default function LoginPage() {
                         {/* Password Input */}
                         <div>
                             <label className="block text-sm font-bold text-emerald-900 mb-2">
-                                Password
+                                {t('auth.password')}
                             </label>
                             <div className="relative group">
                                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-400 group-focus-within:text-emerald-600 transition-colors" />
@@ -160,7 +164,7 @@ export default function LoginPage() {
                                 <Loader2 className="w-6 h-6 animate-spin" />
                             ) : (
                                 <>
-                                    Login
+                                    {t('auth.login')}
                                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                                 </>
                             )}
@@ -170,9 +174,9 @@ export default function LoginPage() {
                     {/* Footer */}
                     <div className="mt-8 text-center">
                         <p className="text-emerald-600/80 font-medium">
-                            Don't have an account?{' '}
+                            {t('auth.noAccount')}{' '}
                             <Link href="/signup" className="text-emerald-700 font-bold hover:text-emerald-900 hover:underline decoration-2 underline-offset-4 transition-colors">
-                                Sign up here
+                                {t('auth.signup')}
                             </Link>
                         </p>
                     </div>

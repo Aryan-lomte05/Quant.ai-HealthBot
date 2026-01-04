@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { getUserPhone, parseResponse, clearAuth } from "@/lib/auth";
 import { api, VoicePreference } from '@/lib/api';
+import { useTranslation } from "@/hooks/useTranslation";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
 import {
@@ -93,19 +94,20 @@ type SessionData = {
   topics: string[];
 };
 
-const mockResponses: ChatMessage[] = [
+// Mock responses moved inside component for translation
+const getInitialMessages = (t: any): ChatMessage[] => [
   {
     id: "intro-1",
     from: "sakha",
     lang: "hinglish",
-    text: "Namaste 👋, main Sakha hoon. Aap apni problem simple shabdon mein bata sakte hain.",
+    text: t('chatPage.intro1'),
     tone: "calm",
   },
   {
     id: "intro-2",
     from: "sakha",
     lang: "hinglish",
-    text: "Yaad rakhiye, main doctor nahi hoon. Emergency mein turant 108 par call karein.",
+    text: t('chatPage.intro2'),
     tone: "alert",
   },
 ];
@@ -203,9 +205,10 @@ const symptomClusters = [
 
 
 function ChatPageContent() {
+  const { t } = useTranslation();
   const router = useRouter();
   const userPhone = getUserPhone();
-  const [messages, setMessages] = useState<ChatMessage[]>(mockResponses);
+  const [messages, setMessages] = useState<ChatMessage[]>(getInitialMessages(t));
   const [input, setInput] = useState("");
   const [lang, setLang] = useState<Lang>("hinglish");
   const [recording, setRecording] = useState(false);
@@ -672,10 +675,10 @@ function ChatPageContent() {
                 <Bot className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h1 className="text-sm sm:text-base font-semibold text-white">AI Sakha</h1>
+                <h1 className="text-sm sm:text-base font-semibold text-white">{t('chatPage.aiSakha')}</h1>
                 <p className="text-[10px] sm:text-xs text-emerald-100 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
-                  Online
+                  {t('chatPage.online')}
                 </p>
               </div>
             </div>
@@ -705,7 +708,7 @@ function ChatPageContent() {
                 className="hidden sm:flex items-center gap-1.5 rounded-xl bg-white/10 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-red-500/20 hover:text-red-100"
               >
                 <LogOut className="h-3.5 w-3.5" />
-                <span>Logout</span>
+                <span>{t('logout')}</span>
               </button>
 
               <select
@@ -753,7 +756,7 @@ function ChatPageContent() {
                 <div className="px-2.5 py-1 lg:px-3 lg:py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
                   <span className="text-[9px] lg:text-[10px] uppercase tracking-wider font-bold text-emerald-300 flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
-                    Live
+                    {t('chatPage.live')}
                   </span>
                 </div>
               </div>
@@ -775,8 +778,8 @@ function ChatPageContent() {
                   <div className="flex items-center gap-2 lg:mb-3">
                     <div className={`w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full ${avatarState === "speaking" ? "bg-emerald-400 animate-pulse" : "bg-white/30"}`} />
                     <span className="text-[10px] lg:text-xs text-white/80 font-medium">
-                      {avatarState === "speaking" ? "Speaking..." :
-                        avatarState === "thinking" ? "Thinking..." : "Ready"}
+                      {avatarState === "speaking" ? t('chatPage.speaking') :
+                        avatarState === "thinking" ? t('chatPage.thinking') : t('chatPage.ready')}
                     </span>
                   </div>
 
@@ -1018,7 +1021,7 @@ function ChatPageContent() {
                             <Activity className="h-5 w-5 text-emerald-400" />
                           </div>
                           <div className="flex-1">
-                            <h3 className="text-sm font-semibold text-white">Symptom Cluster Detected</h3>
+                            <h3 className="text-sm font-semibold text-white">{t('chatPage.clusterDetected')}</h3>
                           </div>
                           <span className={`rounded-full px-3 py-1 text-xs font-medium ${cluster.severity === "high"
                             ? "bg-red-500/20 text-red-300"
@@ -1026,7 +1029,7 @@ function ChatPageContent() {
                               ? "bg-amber-500/20 text-amber-300"
                               : "bg-green-500/20 text-green-300"
                             }`}>
-                            {cluster.severity} severity
+                            {cluster.severity} {t('chatPage.severity')}
                           </span>
                         </div>
                         <div className="mb-4 flex flex-wrap gap-2">
@@ -1043,7 +1046,7 @@ function ChatPageContent() {
                           ))}
                         </div>
                         <p className="text-xs text-white/70">
-                          Possibly related to: {cluster.relatedConditions?.join(", ") || "N/A"}
+                          {t('chatPage.relatedConditions')}: {cluster.relatedConditions?.join(", ") || "N/A"}
                         </p>
                       </motion.div>
                     ))}
@@ -1062,10 +1065,10 @@ function ChatPageContent() {
                     >
                       <div className="text-center mb-4 sm:mb-5 md:mb-6">
                         <h3 className="text-base sm:text-lg font-semibold text-white mb-1.5 sm:mb-2">
-                          Quick Symptom Selection
+                          {t('chatPage.quickSymptom')}
                         </h3>
                         <p className="text-xs sm:text-sm text-white/60">
-                          Choose a common condition to get started quickly
+                          {t('chatPage.quickSymptomDesc')}
                         </p>
                       </div>
 
@@ -1147,7 +1150,7 @@ function ChatPageContent() {
                         <Mic className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                       </motion.div>
                       <div className="flex-1">
-                        <p className="text-[10px] sm:text-xs font-semibold text-white">Listening…</p>
+                        <p className="text-[10px] sm:text-xs font-semibold text-white">{t('chatPage.listening')}</p>
                         <p className="line-clamp-1 text-[10px] sm:text-xs text-white/70">{listeningText}</p>
                       </div>
                     </motion.div>
@@ -1160,7 +1163,7 @@ function ChatPageContent() {
                     <textarea
                       rows={2}
                       className="w-full resize-none rounded-2xl sm:rounded-3xl border-none bg-white/10 px-4 sm:px-5 md:px-6 py-3 sm:py-3.5 md:py-4 text-xs sm:text-sm text-white placeholder-white/40 outline-none backdrop-blur-xl transition-all focus:bg-white/15 focus:ring-2 focus:ring-emerald-400/50"
-                      placeholder="Type in Hindi, English or Hinglish…"
+                      placeholder={t('chatPage.inputPlaceholder')}
                       value={input}
                       onChange={(e) => {
                         setInput(e.target.value);
@@ -1252,7 +1255,7 @@ function ChatPageContent() {
                 </div>
 
                 <p className="mt-1.5 sm:mt-2 px-1 sm:px-2 text-center text-[9px] sm:text-[10px] text-white/40">
-                  ⚕️ AI is not a doctor.
+                  ⚕️ {t('chatPage.aiDisclaimer')}
                 </p>
               </motion.div>
             </div>

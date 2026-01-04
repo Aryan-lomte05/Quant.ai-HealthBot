@@ -26,18 +26,21 @@ const TOPICS = [
 
 const TRENDING_TAGS = ["High BP", "Diet Plan", "Yoga", "Insulin", "Meditation"];
 
-export function LeftSidebar({ selectedFilter, onSelectFilter, onSearch, recentSearches }: LeftSidebarProps) {
+import { useTranslation } from "@/hooks/useTranslation";
 
-    const handleToolsClick = (id: string) => {
-        onSelectFilter(id);
-    };
+export function LeftSidebar({ selectedFilter, onSelectFilter, onSearch, recentSearches }: LeftSidebarProps) {
+    const { t } = useTranslation();
+
+    const MAIN_TOOLS = [
+        // "All" is now covered by "General" in Topics
+        { icon: UserCheck, label: t('communityPage.myQuestions'), id: "my_questions" },
+    ];
 
     return (
         <div className="hidden space-y-6 lg:block">
-            {/* Main Tools Bubble */}
             <div className="rounded-[24px] border border-emerald-200 bg-emerald-100/50 p-4 shadow-sm backdrop-blur-md">
                 <h3 className="mb-3 px-2 text-xs font-bold text-emerald-800 uppercase tracking-wider">
-                    Feed
+                    {t('communityPage.feed')}
                 </h3>
                 <nav className="space-y-1 relative">
                     {MAIN_TOOLS.map((item) => {
@@ -46,7 +49,7 @@ export function LeftSidebar({ selectedFilter, onSelectFilter, onSearch, recentSe
                             <motion.button
                                 whileHover={{ x: 4, transition: { type: "spring", stiffness: 300, damping: 20 } }}
                                 key={item.label}
-                                onClick={() => handleToolsClick(item.id)}
+                                onClick={() => onSelectFilter(item.id)}
                                 className={`relative z-10 flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-colors duration-300 ${isActive ? "text-emerald-700" : "text-emerald-900/70 hover:text-emerald-800"
                                     }`}
                             >
@@ -65,10 +68,9 @@ export function LeftSidebar({ selectedFilter, onSelectFilter, onSearch, recentSe
                 </nav>
             </div>
 
-            {/* Topics Bubble */}
             <div className="rounded-[24px] border border-emerald-200 bg-emerald-100/50 p-4 shadow-sm backdrop-blur-md">
                 <h3 className="mb-3 px-2 text-xs font-bold text-emerald-800 uppercase tracking-wider">
-                    Topics
+                    {t('communityPage.topics')}
                 </h3>
                 <nav className="space-y-1 max-h-[300px] overflow-y-auto scrollbar-hide relative">
                     {TOPICS.map((topic) => {
@@ -95,10 +97,9 @@ export function LeftSidebar({ selectedFilter, onSelectFilter, onSearch, recentSe
                 </nav>
             </div>
 
-            {/* Trending Tags & Recent Bubble */}
             <div className="rounded-[24px] border border-emerald-200 bg-emerald-100/50 p-4 shadow-sm backdrop-blur-md">
                 <h3 className="mb-3 px-2 text-xs font-bold text-emerald-800 uppercase tracking-wider">
-                    Trending Tags
+                    {t('communityPage.trendingTags')}
                 </h3>
                 <div className="flex flex-wrap gap-2 mb-6">
                     {TRENDING_TAGS.map((tag) => (
@@ -118,7 +119,7 @@ export function LeftSidebar({ selectedFilter, onSelectFilter, onSearch, recentSe
                 {recentSearches.length > 0 && (
                     <>
                         <h3 className="mb-3 px-2 text-xs font-bold text-emerald-800 uppercase tracking-wider border-t border-emerald-200/50 pt-4">
-                            Recent Searches
+                            {t('communityPage.recentSearches')}
                         </h3>
                         <div className="flex flex-col gap-1">
                             {recentSearches.map((term, idx) => (

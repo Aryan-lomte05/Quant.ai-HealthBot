@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, PenLine, Filter, Sparkles, Plus, AlertCircle, X, Check, Flag, Heart, Share2, MessageCircle, ThumbsUp, ChevronDown, User, Calendar, Tag as TagIcon, ArrowRight, MessageSquareDashed } from "lucide-react";
+import { Search, PenLine, Filter, Sparkles, Plus, AlertCircle, X, Check, Flag, Heart, Share2, MessageCircle, ThumbsUp, ChevronDown, User, Calendar, Tag as TagIcon, ArrowRight, ArrowLeft, MessageSquareDashed } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 import { FilterBar } from "@/components/community/FilterBar";
 import { QuestionCard, Question, Answer } from "@/components/community/QuestionCard";
 import { AskQuestionModal } from "@/components/community/AskQuestionModal";
@@ -87,8 +88,11 @@ const MOCK_QUESTIONS: Question[] = [
 ];
 
 export default function CommunityPage() {
+  const { t } = useTranslation();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   // Modals
   const [isAskModalOpen, setIsAskModalOpen] = useState(false);
@@ -112,6 +116,8 @@ export default function CommunityPage() {
         params.append("search", searchQuery);
       }
       params.append("sortBy", sortBy);
+      params.append("page", page.toString());
+      params.append("limit", "3");
 
       const response = await fetch(`/api/community?${params.toString()}`);
       const data = await response.json();
@@ -135,6 +141,9 @@ export default function CommunityPage() {
             timestamp: formatTimestamp(a.timestamp),
           })),
         })));
+        if (data.pagination) {
+          setTotalPages(data.pagination.totalPages);
+        }
       }
     } catch (error) {
       console.error("Failed to fetch questions:", error);
@@ -162,7 +171,7 @@ export default function CommunityPage() {
   // Fetch questions on mount and when filters change
   useEffect(() => {
     fetchQuestions();
-  }, [selectedFilter, searchQuery, sortBy]);
+  }, [selectedFilter, searchQuery, sortBy, page]);
 
   // --- Handlers ---
 
@@ -176,6 +185,7 @@ export default function CommunityPage() {
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
     setSearchQuery(""); // Reset search on topic change
+    setPage(1); // Reset page on filter change
   };
 
   const handleAskQuestion = () => {
@@ -337,9 +347,9 @@ export default function CommunityPage() {
             <div className="space-y-4 pb-20">
               <div className="flex items-center justify-between px-1">
                 <h2 className="text-xl font-bold text-gray-900">
-                  {selectedFilter === "General" ? "All Questions" :
-                    selectedFilter === "my_questions" ? "My Questions" :
-                      `${selectedFilter} Questions`}
+                  {selectedFilter === "General" ? t('communityPage.allQuestions') :
+                    selectedFilter === "my_questions" ? t('communityPage.myQuestions') :
+                      `${selectedFilter} ${t('communityPage.allQuestions').replace('All ', '')}`}
                 </h2>
               </div>
 
@@ -379,7 +389,7 @@ export default function CommunityPage() {
                       <MessageSquareDashed className="h-8 w-8 text-emerald-400" />
                     </div>
                     <h3 className="mb-2 text-lg font-bold text-gray-900">
-                      {searchQuery ? `No results for "${searchQuery}"` : "No questions here yet"}
+                      {searchQuery ? `${t('communityPage.noResults')} "${searchQuery}"` : t('communityPage.noQuestionsYet')}
                     </h3>
                     <p className="mb-6 max-w-xs text-sm text-gray-500">
                       {searchQuery
@@ -393,20 +403,43 @@ export default function CommunityPage() {
                         onClick={() => handleSearch("")}
                         className="rounded-full bg-gray-100 px-6 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-200"
                       >
-                        Clear Search
+                        {t('communityPage.clearSearch')}
                       </button>
                     ) : (
                       <button
                         onClick={() => setIsAskModalOpen(true)}
                         className="rounded-full bg-emerald-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-emerald-600/20 transition-all hover:bg-emerald-700 hover:scale-105 active:scale-95"
                       >
-                        Ask a Question
+                        {t('communityPage.askQuestion')}
                       </button>
                     )}
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Pagination Controls */}
+            {questions.length > 0 && (
+              <div className="flex justify-center items-center gap-4 mt-4 pb-20">
+                <button
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="p-2 rounded-full bg-white border border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50 transition-colors"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <span className="text-sm font-medium text-gray-600">
+                  {t('communityPage.page')} {page} / {totalPages}
+                </span>
+                <button
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="p-2 rounded-full bg-white border border-gray-200 text-gray-600 disabled:opacity-50 hover:bg-gray-50 transition-colors"
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Right Sidebar */}

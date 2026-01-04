@@ -25,49 +25,60 @@ import { useState, useEffect } from "react";
 import { FloatingSOS } from "./emergency/FloatingSOS";
 import { clearAuth } from "@/lib/auth";
 import { useUser } from "@/context/UserContext";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useSettings } from "@/context/SettingsContext";
 
-// Grouped Routes Configuration
-const routeGroups = [
-  {
-    title: "Main",
-    items: [
-      { href: "/", label: "Home", icon: Home },
-      { href: "/chat", label: "Chat", icon: MessageCircle },
-      { href: "/explore", label: "Explore", icon: Compass },
-    ],
-  },
-  {
-    title: "Health",
-    items: [
-      { href: "/tracking", label: "Tracking", icon: Activity },
-      { href: "/insights", label: "Insights", icon: LineChart },
-      { href: "/alerts", label: "Alerts", icon: Bell },
-      { href: "/emergency", label: "Emergency", icon: Phone },
-    ],
-  },
-  {
-    title: "Community",
-    items: [
-      { href: "/community", label: "Community", icon: Users },
-      { href: "/family", label: "Family", icon: Heart },
-      { href: "/engage", label: "Engage", icon: Gamepad2 },
-    ],
-  },
-  {
-    title: "System",
-    items: [
-      { href: "/settings", label: "Settings", icon: Settings },
-    ],
-  },
+const LANGUAGES = [
+  { code: "english", label: "English" },
+  { code: "hindi", label: "हिन्दी" },
+  { code: "marathi", label: "मराठी" },
+  { code: "telugu", label: "తెలుగు" },
+  { code: "tamil", label: "தமிழ்" },
+  { code: "kannada", label: "ಕನ್ನಡ" },
 ];
-
-const langs = ["English", "हिन्दी", "தமிழ்", "বাংলা"];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [lang, setLang] = useState("English");
+
+  const { t } = useTranslation();
+  const { language, updateSetting } = useSettings();
+
+  // Route configuration with translations
+  const routeGroups = [
+    {
+      title: "Main", // Could translate group titles too if needed, but keeping simple for now or mapping
+      items: [
+        { href: "/", label: t("home"), icon: Home },
+        { href: "/chat", label: t("chat"), icon: MessageCircle },
+        { href: "/explore", label: t("explore"), icon: Compass },
+      ],
+    },
+    {
+      title: "Health",
+      items: [
+        { href: "/tracking", label: t("tracking"), icon: Activity },
+        { href: "/insights", label: t("insights"), icon: LineChart },
+        { href: "/alerts", label: t("alerts"), icon: Bell },
+        { href: "/emergency", label: t("emergency"), icon: Phone },
+      ],
+    },
+    {
+      title: "Community",
+      items: [
+        { href: "/community", label: t("community"), icon: Users },
+        { href: "/family", label: t("family"), icon: Heart },
+        { href: "/engage", label: t("engage"), icon: Gamepad2 },
+      ],
+    },
+    {
+      title: "System",
+      items: [
+        { href: "/settings", label: t("settings"), icon: Settings },
+      ],
+    },
+  ];
 
   const handleLogout = () => {
     clearAuth();
@@ -163,7 +174,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   </motion.div>
                   <div>
                     <span className="font-bold text-xl bg-gradient-to-r from-emerald-700 to-teal-700 bg-clip-text text-transparent">SwasthyaSakha</span>
-                    <p className="text-xs text-emerald-600/70">Your Health Companion</p>
+                    <p className="text-xs text-emerald-600/70">{t("healthCompanion")}</p>
                   </div>
                 </div>
                 <motion.button
@@ -269,7 +280,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       >
                         <LogOut className="h-5 w-5 text-red-500 group-hover:text-red-600 transition-colors" />
                       </motion.div>
-                      <span className="relative z-10 font-bold text-sm text-red-600 group-hover:text-red-700 transition-colors">Logout</span>
+                      <span className="relative z-10 font-bold text-sm text-red-600 group-hover:text-red-700 transition-colors">{t("logout")}</span>
 
                       {/* Animated Arrow on Hover */}
                       <motion.div
@@ -299,13 +310,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       whileHover={{ scale: 1.1 }}
                       className="h-11 w-11 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-emerald-500/30"
                     >
-                      {loading ? '...' : getInitials(user?.name || 'Guest')}
+                      {loading ? '...' : getInitials(user?.name || t("guestUser"))}
                     </motion.div>
                     <div className="flex-1">
                       <p className="font-semibold text-sm text-emerald-900 group-hover:text-emerald-700 transition-colors">
-                        {loading ? 'Loading...' : (user?.name || 'Guest User')}
+                        {loading ? t("loading") : (user?.name || t("guestUser"))}
                       </p>
-                      <p className="text-xs text-emerald-600/70">{user?.phone || 'Not Logged In'}</p>
+                      <p className="text-xs text-emerald-600/70">{user?.phone || t("notLoggedIn")}</p>
                     </div>
                   </Link>
                   <Link href="/settings">
@@ -352,12 +363,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <select
                   aria-label="Select language"
                   className="bg-transparent font-medium outline-none cursor-pointer text-emerald-700"
-                  value={lang}
-                  onChange={(e) => setLang(e.target.value)}
+                  value={language}
+                  onChange={(e) => updateSetting("language", e.target.value)}
                 >
-                  {langs.map((l) => (
-                    <option key={l} value={l} className="bg-white">
-                      {l}
+                  {LANGUAGES.map((l) => (
+                    <option key={l.code} value={l.code} className="bg-white">
+                      {l.label}
                     </option>
                   ))}
                 </select>
@@ -371,7 +382,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                   className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-semibold rounded-full shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all"
                 >
                   <MessageCircle className="h-4 w-4" />
-                  <span className="hidden sm:inline">Ask Sakha</span>
+                  <span className="hidden sm:inline">{t("askSakha")}</span>
                 </motion.button>
               </Link>
 
