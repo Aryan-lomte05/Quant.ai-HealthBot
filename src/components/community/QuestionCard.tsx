@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { MessageCircle, ThumbsUp, ShieldCheck, User, Check } from "lucide-react";
+import { MessageCircle, ThumbsUp, ShieldCheck, User, Check, Sparkles } from "lucide-react";
 
 export interface Answer {
     id: string;
@@ -85,6 +85,24 @@ export function QuestionCard({ question, onUpvote }: QuestionCardProps) {
                     <p className="mt-1.5 text-xs text-gray-600 line-clamp-2 leading-relaxed">{question.details}</p>
                 )}
             </div>
+
+            {/* AI Answer Preview */}
+            {!verifiedAnswer && ((question.answers.find(a => a.isAI)) as Answer | undefined) && (
+                (() => {
+                    const aiAnswer = question.answers.find(a => a.isAI)!;
+                    return (
+                        <div className="mb-3 mt-1 rounded-2xl bg-gradient-to-br from-purple-50/80 to-pink-50/80 p-3.5 border border-purple-100/60 shadow-sm">
+                            <div className="flex items-center gap-1.5 mb-2">
+                                <Sparkles className="h-3.5 w-3.5 text-purple-600" />
+                                <span className="text-[10px] font-extrabold text-purple-700 uppercase tracking-wider">SwasthyaSakha AI</span>
+                            </div>
+                            <p className="text-xs text-gray-700 leading-relaxed line-clamp-3">
+                                {aiAnswer.text}
+                            </p>
+                        </div>
+                    );
+                })()
+            )}
 
             {/* Verified Answer Highlight (if exists) */}
             {verifiedAnswer && (
