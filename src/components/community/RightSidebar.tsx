@@ -12,7 +12,17 @@ const CHECKLIST_ITEMS = [
     { label: "Add 3 credentials", done: false },
 ];
 
+import { useTranslation } from "@/hooks/useTranslation";
+
 export function RightSidebar({ onAskQuestion }: RightSidebarProps) {
+    const { t } = useTranslation();
+    const CHECKLIST_ITEMS = [
+        { label: t('communityPage.visitQuestions'), done: true },
+        { label: t('communityPage.upvoteQuestions'), done: false },
+        { label: t('communityPage.askQuestionGoal'), done: false },
+        { label: t('communityPage.answerQuestion'), done: false },
+        { label: t('communityPage.addCredentials'), done: false },
+    ];
     return (
         <div className="hidden space-y-6 lg:block">
             {/* Primary CTA */}
@@ -21,14 +31,14 @@ export function RightSidebar({ onAskQuestion }: RightSidebarProps) {
                 className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 py-4 text-sm font-bold text-white shadow-lg shadow-emerald-500/20 transition-all hover:bg-emerald-700 hover:scale-[1.02] active:scale-95"
             >
                 <Plus className="h-5 w-5" />
-                Ask a question
+                {t('communityPage.askQuestion')}
             </button>
 
             {/* Gamification Bubble - High Contrast */}
             <div className="rounded-[24px] border border-emerald-200 bg-emerald-100/50 p-5 shadow-sm backdrop-blur-md">
                 <h3 className="mb-4 text-sm font-bold text-emerald-900 border-b border-emerald-200 pb-2 flex items-center justify-between">
-                    Improve your account
-                    <span className="text-xs font-normal text-emerald-700 bg-emerald-200/50 px-2 py-0.5 rounded-full border border-emerald-200">Lvl 1</span>
+                    {t('communityPage.improveAccount')}
+                    <span className="text-xs font-normal text-emerald-700 bg-emerald-200/50 px-2 py-0.5 rounded-full border border-emerald-200">{t('communityPage.level')} 1</span>
                 </h3>
                 <ul className="space-y-3">
                     {CHECKLIST_ITEMS.map((item, idx) => (

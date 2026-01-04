@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { MessageCircle, ThumbsUp, ShieldCheck, User, Check, Sparkles } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export interface Answer {
     id: string;
@@ -40,6 +41,7 @@ const getTopicColor = (topic: string) => {
 };
 
 export function QuestionCard({ question, onUpvote }: QuestionCardProps) {
+    const { t } = useTranslation();
     const verifiedAnswer = question.answers.find((a) => a.isVerifiedDoctor);
 
     return (
@@ -67,7 +69,7 @@ export function QuestionCard({ question, onUpvote }: QuestionCardProps) {
                 {verifiedAnswer ? (
                     <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-100/50">
                         <Check className="h-3 w-3" />
-                        <span>Verified Answer</span>
+                        <span>{t('communityPage.verifiedAnswer')}</span>
                     </div>
                 ) : (
                     <span className={`rounded-md border px-2 py-0.5 font-medium text-[10px] ${getTopicColor(question.topic)}`}>
@@ -94,7 +96,7 @@ export function QuestionCard({ question, onUpvote }: QuestionCardProps) {
                         <div className="mb-3 mt-1 rounded-2xl bg-gradient-to-br from-purple-50/80 to-pink-50/80 p-3.5 border border-purple-100/60 shadow-sm">
                             <div className="flex items-center gap-1.5 mb-2">
                                 <Sparkles className="h-3.5 w-3.5 text-purple-600" />
-                                <span className="text-[10px] font-extrabold text-purple-700 uppercase tracking-wider">SwasthyaSakha AI</span>
+                                <span className="text-[10px] font-extrabold text-purple-700 uppercase tracking-wider">{t('communityPage.aiName')}</span>
                             </div>
                             <p className="text-xs text-gray-700 leading-relaxed line-clamp-3">
                                 {aiAnswer.text}
@@ -109,7 +111,7 @@ export function QuestionCard({ question, onUpvote }: QuestionCardProps) {
                 <div className="mb-1 mt-1 flex gap-3 rounded-lg bg-emerald-50/60 p-3 text-xs border border-emerald-100/50">
                     <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                     <div>
-                        <p className="font-bold text-emerald-800 text-[10px] uppercase tracking-wide mb-1">Doctor's Response</p>
+                        <p className="font-bold text-emerald-800 text-[10px] uppercase tracking-wide mb-1">{t('communityPage.doctorResponse')}</p>
                         <p className="text-gray-800 leading-relaxed italic">
                             &quot;{verifiedAnswer.text}&quot;
                         </p>

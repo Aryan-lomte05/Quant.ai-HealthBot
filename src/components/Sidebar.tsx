@@ -14,37 +14,39 @@ import {
     Gamepad2,
     Settings,
     X,
-    LogOut
+    LogOut,
+    Link2
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { clearAuth } from "@/lib/auth";
 import { useUser } from "@/context/UserContext";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const navigationSections = [
     {
-        title: "MAIN",
+        titleKey: "navMain",
         items: [
-            { icon: Home, label: "Home", href: "/" },
-            { icon: MessageSquare, label: "Chat", href: "/chat" },
-            { icon: Compass, label: "Explore", href: "/explore" },
+            { icon: Home, labelKey: "home", href: "/" },
+            { icon: MessageSquare, labelKey: "chat", href: "/chat" },
+            { icon: Compass, labelKey: "explore", href: "/explore" },
         ],
     },
     {
-        title: "HEALTH",
+        titleKey: "navHealth",
         items: [
-            { icon: Activity, label: "Tracking", href: "/tracking" },
-            { icon: BarChart3, label: "Insights", href: "/insights" },
-            { icon: Bell, label: "Alerts", href: "/alerts" },
-            { icon: Phone, label: "Emergency", href: "/emergency" },
+            { icon: Activity, labelKey: "tracking", href: "/tracking" },
+            { icon: BarChart3, labelKey: "insights", href: "/insights" },
+            { icon: Bell, labelKey: "alerts", href: "/alerts" },
+            { icon: Phone, labelKey: "emergency", href: "/emergency" },
         ],
     },
     {
-        title: "COMMUNITY",
+        titleKey: "navCommunity",
         items: [
-            { icon: Users, label: "Community", href: "/community" },
-            { icon: Heart, label: "Family", href: "/family" },
-            { icon: Gamepad2, label: "Engage", href: "/engage" },
+            { icon: Users, labelKey: "community", href: "/community" },
+            { icon: Heart, labelKey: "family", href: "/family" },
+            { icon: Gamepad2, labelKey: "engage", href: "/engage" },
         ],
     },
 ];
@@ -53,6 +55,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
     const pathname = usePathname();
     const router = useRouter();
     const { user, loading } = useUser();
+    const { t } = useTranslation();
 
     const handleLogout = () => {
         clearAuth();
@@ -87,11 +90,11 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             {/* Navigation Sections */}
             <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
                 {navigationSections.map((section) => (
-                    <div key={section.title}>
+                    <div key={section.titleKey}>
                         {/* Section Header */}
                         <div className="px-2 mb-3">
                             <h3 className="text-[11px] font-bold tracking-wider text-emerald-500 uppercase">
-                                {section.title}
+                                {t(section.titleKey)}
                             </h3>
                         </div>
 
@@ -102,7 +105,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                                 const isActive = pathname === item.href;
 
                                 return (
-                                    <Link key={item.label} href={item.href}>
+                                    <Link key={item.labelKey} href={item.href}>
                                         <motion.div
                                             whileHover={{ x: 2 }}
                                             className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition-all ${isActive
@@ -121,7 +124,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                                             {/* Label */}
                                             <span className={`text-[15px] font-medium transition-colors ${isActive ? "text-gray-900" : "group-hover:text-gray-900"
                                                 }`}>
-                                                {item.label}
+                                                {t(item.labelKey)}
                                             </span>
 
                                             {/* Active Dot */}
@@ -148,7 +151,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                             className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-gray-600 hover:bg-gray-50 transition-all"
                         >
                             <Settings className="w-5 h-5 text-teal-500 group-hover:text-emerald-500 transition-colors" />
-                            <span className="text-[15px] font-medium group-hover:text-gray-900">Settings</span>
+                            <span className="text-[15px] font-medium group-hover:text-gray-900">{t('settings')}</span>
                         </motion.div>
                     </Link>
 
@@ -160,7 +163,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                             className="group flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-gray-600 hover:bg-red-50 transition-all"
                         >
                             <LogOut className="w-5 h-5 text-red-500 group-hover:text-red-600 transition-colors" />
-                            <span className="text-[15px] font-medium group-hover:text-red-600">Logout</span>
+                            <span className="text-[15px] font-medium group-hover:text-red-600">{t('logout')}</span>
                         </motion.div>
                     </button>
                 </div>
@@ -174,10 +177,10 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-gray-900 text-sm font-semibold truncate">
-                            {loading ? 'Loading...' : (user?.name || 'Guest User')}
+                            {loading ? t('loading') : (user?.name || t('guestUser'))}
                         </p>
                         <p className="text-emerald-600 text-xs font-medium">
-                            {user?.phone ? user.phone : 'Not Logged In'}
+                            {user?.phone ? user.phone : t('notLoggedIn')}
                         </p>
                     </div>
                     <Settings className="w-4 h-4 text-gray-400 hover:text-emerald-500 transition-colors flex-shrink-0" />
