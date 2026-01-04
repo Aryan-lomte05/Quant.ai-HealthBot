@@ -19,6 +19,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { clearAuth } from "@/lib/auth";
+import { useUser } from "@/context/UserContext";
 
 const navigationSections = [
     {
@@ -51,10 +52,16 @@ const navigationSections = [
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
     const pathname = usePathname();
     const router = useRouter();
+    const { user, loading } = useUser();
 
     const handleLogout = () => {
         clearAuth();
         router.push("/login");
+    };
+
+    const getInitials = (name: string) => {
+        if (!name) return "JD";
+        return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
     };
 
     return (
@@ -163,11 +170,15 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             <div className="border-t border-emerald-50 p-4">
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-emerald-50/50 hover:bg-emerald-50 cursor-pointer transition-all">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                        JD
+                        {loading ? '...' : getInitials(user?.name || 'Guest')}
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-gray-900 text-sm font-semibold truncate">John Doe</p>
-                        <p className="text-emerald-600 text-xs font-medium">Premium Plan</p>
+                        <p className="text-gray-900 text-sm font-semibold truncate">
+                            {loading ? 'Loading...' : (user?.name || 'Guest User')}
+                        </p>
+                        <p className="text-emerald-600 text-xs font-medium">
+                            {user?.phone ? user.phone : 'Not Logged In'}
+                        </p>
                     </div>
                     <Settings className="w-4 h-4 text-gray-400 hover:text-emerald-500 transition-colors flex-shrink-0" />
                 </div>

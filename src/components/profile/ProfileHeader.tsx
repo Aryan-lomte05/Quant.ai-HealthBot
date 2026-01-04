@@ -2,8 +2,15 @@
 
 import { motion } from "framer-motion";
 import { Camera, Edit2, MapPin, Share2 } from "lucide-react";
+import { useUser } from "@/context/UserContext";
 
 export function ProfileHeader() {
+  const { user, loading } = useUser();
+
+  const getInitials = (name: string) => {
+    if (!name) return "JD";
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -19,7 +26,7 @@ export function ProfileHeader() {
         {/* Avatar */}
         <div className="group relative">
           <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white/20 bg-white/10 text-3xl font-bold backdrop-blur-sm shadow-inner md:h-32 md:w-32 md:text-4xl">
-            JD
+            {loading ? '...' : getInitials(user?.name || 'Guest')}
           </div>
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -32,14 +39,16 @@ export function ProfileHeader() {
 
         {/* Info */}
         <div className="flex-1 text-center md:text-left">
-          <h1 className="text-3xl font-bold tracking-tight text-white">John Doe</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">
+            {loading ? 'Loading...' : (user?.name || 'Guest User')}
+          </h1>
           <div className="mt-1 flex items-center justify-center gap-2 text-emerald-100/80 md:justify-start">
             <MapPin className="h-4 w-4" />
-            <span className="text-sm font-medium">Mumbai, India</span>
+            <span className="text-sm font-medium">{user?.location || 'India'}</span>
           </div>
-          
+
           <p className="mt-4 max-w-lg text-emerald-50/90 text-sm leading-relaxed">
-            Passionate about holistic health and community wellness. Tracking my journey towards better heart health with SwasthyaSakha.
+            {user?.email ? `Email: ${user.email}` : 'Member of SwasthyaSakha community.'} {user?.phone ? `| Phone: ${user.phone}` : ''}
           </p>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3 md:justify-start">

@@ -23,6 +23,8 @@ export const metadata: Metadata = {
     "A friendly health companion for rural families. Learn, track, and plan your care in simple language.",
 };
 
+import { UserProvider } from "@/context/UserContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,9 +35,11 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${poppins.variable} font-sans antialiased h-full`}
       >
-        <SettingsProvider>
-          <AppShell>{children}</AppShell>
-        </SettingsProvider>
+        <UserProvider>
+          <SettingsProvider>
+            <AppShell>{children}</AppShell>
+          </SettingsProvider>
+        </UserProvider>
       </body>
     </html>
   );

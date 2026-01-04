@@ -1,15 +1,18 @@
 "use client";
 
 import { User, Droplet, StickyNote, Phone, AlertCircle } from "lucide-react";
+import { useUser } from "@/context/UserContext";
 
 export function MedicalIDCard() {
-    // Static placeholder data
+    const { user, loading } = useUser();
+
+    // Data from user or defaults
     const medicalData = {
-        name: "John Doe",
-        bloodGroup: "O+",
-        allergies: ["Peanuts", "Penicillin"],
-        conditions: ["Asthma"],
-        emergencyContact: "+91 98765 43210 (Sister)",
+        name: user?.name || "Guest User",
+        bloodGroup: user?.bloodGroup || "Not Set",
+        allergies: user?.allergies.length ? user.allergies : ["None Logged"],
+        conditions: user?.conditions.length ? user.conditions : ["None Logged"],
+        emergencyContact: user?.emergencyContact || "+91 00000 00000",
     };
 
     return (
@@ -72,13 +75,13 @@ export function MedicalIDCard() {
                     <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider flex items-center gap-1 mb-2">
                         <Phone className="h-3 w-3" /> Emergency Contact
                     </label>
-                    <a href="tel:+919876543210" className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group">
+                    <a href={`tel:${medicalData.emergencyContact}`} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group">
                         <div className="h-10 w-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 group-hover:bg-green-200 transition-colors">
                             <Phone className="h-5 w-5" />
                         </div>
                         <div>
-                            <p className="font-bold text-gray-900">+91 98765 43210</p>
-                            <p className="text-xs text-gray-500">Sister</p>
+                            <p className="font-bold text-gray-900">{medicalData.emergencyContact.split(' (')[0]}</p>
+                            <p className="text-xs text-gray-500">Contact</p>
                         </div>
                     </a>
                 </div>
