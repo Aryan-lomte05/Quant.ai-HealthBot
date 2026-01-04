@@ -67,10 +67,10 @@ export default function EmergencyPage() {
                                 {t('liveSystem')}
                             </div>
                             <h1 className="text-3xl sm:text-4xl lg:text-6xl font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 pb-2 leading-tight">
-                                {t('title')}
+                                EMERGENCY RESPONSE
                             </h1>
                             <p className="text-sm sm:text-base text-slate-600 font-semibold max-w-2xl">
-                                {t('subtitle')}
+                                Immediate assistance and critical resources
                             </p>
                         </div>
                         <div className="hidden sm:block">
@@ -187,9 +187,9 @@ export default function EmergencyPage() {
                                 <AlertCircle className="h-5 w-5 text-slate-500" />
                             </div>
                             <div className="flex-1 text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                <h4 className="font-bold text-slate-800 mb-1">{t('disclaimerTitle')}</h4>
+                                <h4 className="font-bold text-slate-800 mb-1">Medical Disclaimer</h4>
                                 <p>
-                                    {t('disclaimerText')} <strong className="text-red-600">108</strong> (India) directly.
+                                    This is an AI-assisted tool. For life-threatening emergencies, please call <strong className="text-red-600">108</strong> (India) directly.
                                 </p>
                             </div>
                         </div>
