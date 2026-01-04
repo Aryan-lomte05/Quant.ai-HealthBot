@@ -6,6 +6,7 @@ interface Answer {
     id: string;
     author: string;
     text: string;
+    isAI?: boolean; // true if this is an AI-generated response
     isVerifiedDoctor: boolean;
     timestamp: string;
 }
@@ -139,15 +140,39 @@ export function QuestionDetailModal({
                             ) : (
                                 question.answers.map((answer) => (
                                     <div key={answer.id} className="flex gap-4">
-                                        <div className={`mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${answer.isVerifiedDoctor ? "bg-emerald-100 text-emerald-600" : "bg-gray-100 text-gray-500"}`}>
-                                            {answer.isVerifiedDoctor ? <ShieldCheck className="h-4 w-4" /> : <User className="h-4 w-4" />}
+                                        <div className={`mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${answer.isAI
+                                                ? "bg-gradient-to-br from-purple-100 to-pink-100 text-purple-600"
+                                                : answer.isVerifiedDoctor
+                                                    ? "bg-emerald-100 text-emerald-600"
+                                                    : "bg-gray-100 text-gray-500"
+                                            }`}>
+                                            {answer.isAI ? (
+                                                <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                                                </svg>
+                                            ) : answer.isVerifiedDoctor ? <ShieldCheck className="h-4 w-4" /> : <User className="h-4 w-4" />}
                                         </div>
-                                        <div className={`w-full rounded-2xl p-4 ${answer.isVerifiedDoctor ? "bg-emerald-50/50 ring-1 ring-emerald-100" : "bg-gray-50"}`}>
+                                        <div className={`w-full rounded-2xl p-4 ${answer.isAI
+                                                ? "bg-gradient-to-br from-purple-50/50 to-pink-50/50 ring-1 ring-purple-100"
+                                                : answer.isVerifiedDoctor
+                                                    ? "bg-emerald-50/50 ring-1 ring-emerald-100"
+                                                    : "bg-gray-50"
+                                            }`}>
                                             <div className="mb-1 flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <span className={`text-sm font-bold ${answer.isVerifiedDoctor ? "text-emerald-800" : "text-gray-900"}`}>
+                                                    <span className={`text-sm font-bold ${answer.isAI
+                                                            ? "text-purple-800"
+                                                            : answer.isVerifiedDoctor
+                                                                ? "text-emerald-800"
+                                                                : "text-gray-900"
+                                                        }`}>
                                                         {answer.author}
                                                     </span>
+                                                    {answer.isAI && (
+                                                        <span className="flex items-center gap-0.5 rounded-md bg-gradient-to-r from-purple-100 to-pink-100 px-1.5 py-0.5 text-[10px] font-medium text-purple-700">
+                                                            ✨ AI RESPONSE
+                                                        </span>
+                                                    )}
                                                     {answer.isVerifiedDoctor && (
                                                         <span className="flex items-center gap-0.5 rounded-md bg-emerald-100 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
                                                             <ShieldCheck className="h-3 w-3" /> VERIFIED
@@ -156,7 +181,7 @@ export function QuestionDetailModal({
                                                 </div>
                                                 <span className="text-xs text-gray-400">{answer.timestamp}</span>
                                             </div>
-                                            <p className="text-sm text-gray-700 leading-relaxed">
+                                            <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
                                                 {answer.text}
                                             </p>
                                         </div>

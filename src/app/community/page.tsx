@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, PenLine, Filter, Sparkles, Plus, AlertCircle, X, Check, Flag, Heart, Share2, MessageCircle, ThumbsUp, ChevronDown, User, Calendar, Tag as TagIcon, ArrowRight, MessageSquareDashed } from "lucide-react";
 import { FilterBar } from "@/components/community/FilterBar";
@@ -87,7 +87,8 @@ const MOCK_QUESTIONS: Question[] = [
 ];
 
 export default function CommunityPage() {
-  const [questions, setQuestions] = useState<Question[]>(MOCK_QUESTIONS);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Modals
   const [isAskModalOpen, setIsAskModalOpen] = useState(false);
@@ -98,6 +99,70 @@ export default function CommunityPage() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [selectedFilter, setSelectedFilter] = useState("General"); // Default to "General"
   const [sortBy, setSortBy] = useState<"newest" | "upvoted">("newest");
+
+  // --- Fetch Questions from Database ---
+  const fetchQuestions = async () => {
+    try {
+      setLoading(true);
+      const params = new URLSearchParams();
+      if (selectedFilter && selectedFilter !== "General") {
+        params.append("topic", selectedFilter);
+      }
+      if (searchQuery) {
+        params.append("search", searchQuery);
+      }
+      params.append("sortBy", sortBy);
+
+      const response = await fetch(`/api/community?${params.toString()}`);
+      const data = await response.json();
+
+      if (data.success) {
+        setQuestions(data.questions.map((q: any) => ({
+          id: q.id,
+          author: q.author,
+          text: q.text,
+          details: q.details,
+          topic: q.topic,
+          upvotes: q.upvotes,
+          hasUserUpvoted: false, // TODO: Check if current user has upvoted
+          timestamp: formatTimestamp(q.timestamp),
+          answers: q.answers.map((a: any) => ({
+            id: a.id,
+            author: a.author,
+            text: a.text,
+            isAI: a.isAI,
+            isVerifiedDoctor: a.isVerifiedDoctor,
+            timestamp: formatTimestamp(a.timestamp),
+          })),
+        })));
+      }
+    } catch (error) {
+      console.error("Failed to fetch questions:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Helper function to format timestamps
+  const formatTimestamp = (timestamp: string | Date): string => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return "Just now";
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
+  };
+
+  // Fetch questions on mount and when filters change
+  useEffect(() => {
+    fetchQuestions();
+  }, [selectedFilter, searchQuery, sortBy]);
 
   // --- Handlers ---
 
@@ -113,95 +178,103 @@ export default function CommunityPage() {
     setSearchQuery(""); // Reset search on topic change
   };
 
-  const handleAskQuestion = (newQ: { text: string; details: string; topic: string }) => {
-    const questionStub: Question = {
-      id: `q-${Date.now()}`,
-      author: CURRENT_USER_NAME,
-      text: newQ.text,
-      details: newQ.details,
-      topic: newQ.topic,
-      upvotes: 0,
-      hasUserUpvoted: false,
-      timestamp: "Just now",
-      answers: [],
-    };
-    // Add to top of list
-    setQuestions([questionStub, ...questions]);
-    // Automatically switch to "My Questions" or stay on "General" to see it
-    setSelectedFilter("General");
+  const handleAskQuestion = () => {
+    // Refresh questions list after posting
+    fetchQuestions();
   };
 
-  const handleUpvote = (id: string) => {
-    setQuestions((prev) =>
-      prev.map((q) => {
-        if (q.id === id) {
-          const isRemovingVote = q.hasUserUpvoted;
-          return {
-            ...q,
-            upvotes: isRemovingVote ? q.upvotes - 1 : q.upvotes + 1,
-            hasUserUpvoted: !isRemovingVote,
-          };
+  const handleUpvote = async (id: string) => {
+    try {
+      // Optimistically update UI
+      setQuestions((prev) =>
+        prev.map((q) => {
+          if (q.id === id) {
+            const isRemovingVote = q.hasUserUpvoted;
+            return {
+              ...q,
+              upvotes: isRemovingVote ? q.upvotes - 1 : q.upvotes + 1,
+              hasUserUpvoted: !isRemovingVote,
+            };
+          }
+          return q;
+        })
+      );
+
+      // Also update selected question if open
+      if (selectedQuestion?.id === id) {
+        setSelectedQuestion(prev => prev ? { ...prev, upvotes: prev.hasUserUpvoted ? prev.upvotes - 1 : prev.upvotes + 1, hasUserUpvoted: !prev.hasUserUpvoted } : null);
+      }
+
+      // Call API (implement later with user IDs)
+      // await fetch(`/api/community/${id}`, {
+      //   method: 'PATCH',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ action: 'upvote', userId: 'current-user-id' }),
+      // });
+    } catch (error) {
+      console.error("Failed to upvote:", error);
+      // Revert on error
+      fetchQuestions();
+    }
+  };
+
+  const handleAddAnswer = async (questionId: string, text: string) => {
+    try {
+      const response = await fetch(`/api/community/${questionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'add_answer',
+          answerText: text,
+          author: CURRENT_USER_NAME,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Update local state
+        setQuestions(prev => prev.map(q => {
+          if (q.id === questionId) {
+            return {
+              ...q, answers: data.answers.map((a: any) => ({
+                id: a.id,
+                author: a.author,
+                text: a.text,
+                isAI: a.isAI,
+                isVerifiedDoctor: a.isVerifiedDoctor,
+                timestamp: formatTimestamp(a.timestamp),
+              }))
+            };
+          }
+          return q;
+        }));
+
+        // Update modal view
+        if (selectedQuestion?.id === questionId) {
+          const updated = questions.find(q => q.id === questionId);
+          if (updated) {
+            setSelectedQuestion({
+              ...updated, answers: data.answers.map((a: any) => ({
+                id: a.id,
+                author: a.author,
+                text: a.text,
+                isAI: a.isAI,
+                isVerifiedDoctor: a.isVerifiedDoctor,
+                timestamp: formatTimestamp(a.timestamp),
+              }))
+            });
+          }
         }
-        return q;
-      })
-    );
-    // Also update selected question if open
-    if (selectedQuestion?.id === id) {
-      setSelectedQuestion(prev => prev ? { ...prev, upvotes: prev.hasUserUpvoted ? prev.upvotes - 1 : prev.upvotes + 1, hasUserUpvoted: !prev.hasUserUpvoted } : null);
-    }
-  };
-
-  const handleAddAnswer = (questionId: string, text: string) => {
-    const newAnswer: Answer = {
-      id: `a-${Date.now()}`,
-      author: CURRENT_USER_NAME,
-      text: text,
-      isVerifiedDoctor: false,
-      timestamp: "Just now"
-    };
-
-    setQuestions(prev => prev.map(q => {
-      if (q.id === questionId) {
-        return { ...q, answers: [...q.answers, newAnswer] };
       }
-      return q;
-    }));
-
-    // Update the modal view as well
-    if (selectedQuestion?.id === questionId) {
-      setSelectedQuestion(prev => prev ? { ...prev, answers: [...prev.answers, newAnswer] } : null);
+    } catch (error) {
+      console.error("Failed to add answer:", error);
     }
   };
 
 
-  // --- Filter Logic ---
 
-  const filteredQuestions = questions
-    .filter((q) => {
-      // 1. Search Query
-      const qText = q.text.toLowerCase();
-      const qDetails = q.details?.toLowerCase() || "";
-      const query = searchQuery.toLowerCase();
-      const matchesSearch = qText.includes(query) || qDetails.includes(query);
-
-      // 2. Category / Topic / My Questions Filter
-      let matchesFilter = true;
-      if (selectedFilter === "General") {
-        matchesFilter = true; // Show ALL
-      } else if (selectedFilter === "my_questions") {
-        matchesFilter = q.author === CURRENT_USER_NAME;
-      } else {
-        // Exact Match for Topics
-        matchesFilter = q.topic === selectedFilter;
-      }
-
-      return matchesSearch && matchesFilter;
-    })
-    .sort((a, b) => {
-      if (sortBy === "upvoted") return b.upvotes - a.upvotes;
-      // Default: Newest (We assume mock data order is roughly chronological or we'd parse timestamps)
-      return 0;
-    });
+  // Filtering is now done on the backend via the API
 
   return (
     <div className="relative h-full flex flex-col overflow-hidden">
@@ -271,8 +344,12 @@ export default function CommunityPage() {
               </div>
 
               <AnimatePresence mode="popLayout" initial={false}>
-                {filteredQuestions.length > 0 ? (
-                  filteredQuestions.map((q) => (
+                {loading ? (
+                  <div className="flex items-center justify-center py-16">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+                  </div>
+                ) : questions.length > 0 ? (
+                  questions.map((q) => (
                     <motion.div
                       layout
                       initial={{ opacity: 0, y: 20 }}

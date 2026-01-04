@@ -28,7 +28,7 @@ export async function GET(request: Request) {
         return NextResponse.json({
             success: true,
             user: {
-                id: user._id,
+                id: user.id,
                 name: user.name,
                 email: user.email,
                 phone: user.phone,
@@ -88,7 +88,7 @@ export async function PATCH(request: Request) {
             success: true,
             message: 'Profile updated successfully',
             user: {
-                id: updatedUser._id,
+                id: updatedUser.id,
                 name: updatedUser.name,
                 email: updatedUser.email,
                 phone: updatedUser.phone,

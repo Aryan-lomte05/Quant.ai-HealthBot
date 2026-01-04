@@ -11,6 +11,13 @@ export function ProfileForm() {
         username: "",
         mobile: "",
         email: "",
+        age: "",
+        weight: "",
+        height: "",
+        gender: "",
+        location: "",
+        bloodGroup: "",
+        emergencyContact: "",
     });
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -22,11 +29,18 @@ export function ProfileForm() {
                 username: user.name || "",
                 mobile: user.phone || "",
                 email: user.email || "",
+                age: user.age?.toString() || "",
+                weight: user.weight?.toString() || "",
+                height: user.height?.toString() || "",
+                gender: user.gender || "",
+                location: user.location || "",
+                bloodGroup: user.bloodGroup || "",
+                emergencyContact: user.emergencyContact || "",
             });
         }
     }, [user]);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
         setSuccess(false);
@@ -34,6 +48,11 @@ export function ProfileForm() {
     };
 
     const handleSave = async () => {
+        if (!user?.id) {
+            setError("User profile not loaded. Please try again.");
+            return;
+        }
+
         setLoading(true);
         setError("");
         setSuccess(false);
@@ -45,7 +64,14 @@ export function ProfileForm() {
                     id: user?.id,
                     name: formData.username,
                     email: formData.email,
-                    phone: formData.mobile
+                    phone: formData.mobile,
+                    age: formData.age,
+                    weight: formData.weight,
+                    height: formData.height,
+                    gender: formData.gender,
+                    location: formData.location,
+                    bloodGroup: formData.bloodGroup,
+                    emergencyContact: formData.emergencyContact
                 })
             });
             const data = await res.json();
@@ -95,46 +121,144 @@ export function ProfileForm() {
                         </div>
                     </div>
 
-                    {/* Username */}
-                    <div className="space-y-2">
-                        <label htmlFor="username" className="text-sm font-medium text-emerald-900/80 ml-1">
-                            Username
-                        </label>
-                        <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <User className="h-5 w-5 text-emerald-500/50 group-focus-within:text-emerald-600 transition-colors" />
+                    {/* Username and Email Row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label htmlFor="username" className="text-sm font-medium text-emerald-900/80 ml-1">
+                                Full Name
+                            </label>
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <User className="h-5 w-5 text-emerald-500/50 group-focus-within:text-emerald-600 transition-colors" />
+                                </div>
+                                <input
+                                    type="text"
+                                    id="username"
+                                    name="username"
+                                    value={formData.username}
+                                    onChange={handleChange}
+                                    placeholder="Enter full name"
+                                    className="block w-full rounded-2xl border border-emerald-100 bg-white/50 pl-12 pr-4 py-3.5 text-emerald-900 placeholder:text-emerald-900/30 focus:border-emerald-300 focus:bg-white focus:ring-4 focus:ring-emerald-100 transition-all duration-300 outline-none"
+                                />
                             </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label htmlFor="email" className="text-sm font-medium text-emerald-900/80 ml-1">
+                                Email Address
+                            </label>
+                            <div className="relative group">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <Mail className="h-5 w-5 text-emerald-500/50 group-focus-within:text-emerald-600 transition-colors" />
+                                </div>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="Enter email address"
+                                    className="block w-full rounded-2xl border border-emerald-100 bg-white/50 pl-12 pr-4 py-3.5 text-emerald-900 placeholder:text-emerald-900/30 focus:border-emerald-300 focus:bg-white focus:ring-4 focus:ring-emerald-100 transition-all duration-300 outline-none"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Age and Gender Row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label htmlFor="age" className="text-sm font-medium text-emerald-900/80 ml-1">Age</label>
                             <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                value={formData.username}
+                                type="number"
+                                id="age"
+                                name="age"
+                                value={formData.age}
                                 onChange={handleChange}
-                                placeholder="Enter username"
-                                className="block w-full rounded-2xl border border-emerald-100 bg-white/50 pl-12 pr-4 py-3.5 text-emerald-900 placeholder:text-emerald-900/30 focus:border-emerald-300 focus:bg-white focus:ring-4 focus:ring-emerald-100 transition-all duration-300 outline-none"
+                                className="block w-full rounded-2xl border border-emerald-100 bg-white/50 px-4 py-3.5 text-emerald-900 outline-none focus:border-emerald-300 focus:bg-white transition-all"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label htmlFor="gender" className="text-sm font-medium text-emerald-900/80 ml-1">Gender</label>
+                            <select
+                                id="gender"
+                                name="gender"
+                                value={formData.gender}
+                                onChange={handleChange}
+                                className="block w-full rounded-2xl border border-emerald-100 bg-white/50 px-4 py-3.5 text-emerald-900 outline-none focus:border-emerald-300 focus:bg-white transition-all"
+                            >
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {/* Weight and Height Row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label htmlFor="weight" className="text-sm font-medium text-emerald-900/80 ml-1">Weight (kg)</label>
+                            <input
+                                type="number"
+                                id="weight"
+                                name="weight"
+                                value={formData.weight}
+                                onChange={handleChange}
+                                className="block w-full rounded-2xl border border-emerald-100 bg-white/50 px-4 py-3.5 text-emerald-900 outline-none focus:border-emerald-300 focus:bg-white transition-all"
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label htmlFor="height" className="text-sm font-medium text-emerald-900/80 ml-1">Height (cm)</label>
+                            <input
+                                type="number"
+                                id="height"
+                                name="height"
+                                value={formData.height}
+                                onChange={handleChange}
+                                className="block w-full rounded-2xl border border-emerald-100 bg-white/50 px-4 py-3.5 text-emerald-900 outline-none focus:border-emerald-300 focus:bg-white transition-all"
                             />
                         </div>
                     </div>
 
-                    {/* Email */}
-                    <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium text-emerald-900/80 ml-1">
-                            Email Address
-                        </label>
-                        <div className="relative group">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Mail className="h-5 w-5 text-emerald-500/50 group-focus-within:text-emerald-600 transition-colors" />
-                            </div>
+                    {/* Blood Group and Emergency Contact */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <label htmlFor="bloodGroup" className="text-sm font-medium text-emerald-900/80 ml-1">Blood Group</label>
                             <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={formData.email}
+                                type="text"
+                                id="bloodGroup"
+                                name="bloodGroup"
+                                placeholder="e.g. O+"
+                                value={formData.bloodGroup}
                                 onChange={handleChange}
-                                placeholder="Enter email address"
-                                className="block w-full rounded-2xl border border-emerald-100 bg-white/50 pl-12 pr-4 py-3.5 text-emerald-900 placeholder:text-emerald-900/30 focus:border-emerald-300 focus:bg-white focus:ring-4 focus:ring-emerald-100 transition-all duration-300 outline-none"
+                                className="block w-full rounded-2xl border border-emerald-100 bg-white/50 px-4 py-3.5 text-emerald-900 outline-none focus:border-emerald-300 focus:bg-white transition-all"
                             />
                         </div>
+                        <div className="space-y-2">
+                            <label htmlFor="emergencyContact" className="text-sm font-medium text-emerald-900/80 ml-1">Emergency Phone</label>
+                            <input
+                                type="tel"
+                                id="emergencyContact"
+                                name="emergencyContact"
+                                value={formData.emergencyContact}
+                                onChange={handleChange}
+                                className="block w-full rounded-2xl border border-emerald-100 bg-white/50 px-4 py-3.5 text-emerald-900 outline-none focus:border-emerald-300 focus:bg-white transition-all"
+                            />
+                        </div>
+                    </div>
+
+                    {/* Location */}
+                    <div className="space-y-2">
+                        <label htmlFor="location" className="text-sm font-medium text-emerald-900/80 ml-1">Location</label>
+                        <input
+                            type="text"
+                            id="location"
+                            name="location"
+                            placeholder="City, State"
+                            value={formData.location}
+                            onChange={handleChange}
+                            className="block w-full rounded-2xl border border-emerald-100 bg-white/50 px-4 py-3.5 text-emerald-900 outline-none focus:border-emerald-300 focus:bg-white transition-all"
+                        />
                     </div>
 
                     {/* Feedback Messages */}
