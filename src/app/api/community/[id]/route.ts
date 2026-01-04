@@ -5,10 +5,10 @@ import Question from '@/models/Community';
 // GET - Fetch specific question by ID
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         await connectDB();
 
@@ -62,10 +62,10 @@ export async function GET(
 // PATCH - Update question (upvotes, add answer)
 export async function PATCH(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     try {
-        const { id } = params;
         const body = await request.json();
         const { action, userId, answerText, author } = body;
 
@@ -146,10 +146,10 @@ export async function PATCH(
 // DELETE - Delete question (owner only)
 export async function DELETE(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     try {
-        const { id } = params;
         const { searchParams } = new URL(request.url);
         const userId = searchParams.get('userId');
 
