@@ -92,8 +92,7 @@ export const api = {
 
     // Chat Endpoint
     sendChatMessage: async (phone: string, message: string): Promise<ChatResponse> => {
-        const baseUrl = API_BASE_URL.includes('localhost') ? 'https://cormlike-willodean-unpeddled.ngrok-free.dev' : API_BASE_URL;
-        const res = await fetch(`${baseUrl}/api/chat/web`, {
+        const res = await fetch(`https://cormlike-willodean-unpeddled.ngrok-free.dev/api/chat/web`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ phone, message }),
