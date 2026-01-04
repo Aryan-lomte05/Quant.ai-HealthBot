@@ -4,8 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Award, Star, Zap, Shield, Heart, Trophy, Share2, Check, Copy, Facebook, Twitter, Linkedin, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
+import { useUser } from "@/context/UserContext";
 
-const badges = [
+const ALL_BADGES = [
   { id: 1, name: "Early Adopter", icon: Star, color: "text-yellow-500", bg: "bg-yellow-100", desc: "Joined during beta", date: "Dec 12, 2024" },
   { id: 2, name: "Health Hero", icon: Heart, color: "text-pink-500", bg: "bg-pink-100", desc: "Completed 7 day streak", date: "Jan 15, 2025" },
   { id: 3, name: "Fast Learner", icon: Zap, color: "text-blue-500", bg: "bg-blue-100", desc: "Completed 5 quizzes", date: "Jan 20, 2025" },
@@ -15,9 +16,18 @@ const badges = [
 ];
 
 export function BadgeGallery() {
-  const [selectedBadge, setSelectedBadge] = useState<typeof badges[0] | null>(null);
+  const { user, loading } = useUser();
+  const [selectedBadge, setSelectedBadge] = useState<typeof ALL_BADGES[0] | null>(null);
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  // Filter badges based on user's unlocked badges
+  const unlockedBadges = ALL_BADGES.filter(badge =>
+    user?.badges?.includes(badge.name)
+  );
+
+  // If no badges, maybe show the first one as "claimed" for early adopters? 
+  // No, let's keep it real.
 
   const handleCopyLink = () => {
     setCopied(true);
@@ -41,29 +51,39 @@ export function BadgeGallery() {
             Badge Gallery
           </h3>
           <span className="text-xs font-semibold px-2 py-1 bg-emerald-100 text-emerald-700 rounded-full">
-            {badges.length} Unlocked
+            {loading ? '...' : unlockedBadges.length} Unlocked
           </span>
         </div>
 
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
-          {badges.map((badge, i) => (
-            <motion.div
-              key={badge.id}
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.1 }}
-              whileHover={{ y: -5, scale: 1.1 }}
-              onClick={() => setSelectedBadge(badge)}
-              className="flex flex-col items-center gap-2 group cursor-pointer relative"
-            >
-              <div className={`h-16 w-16 rounded-2xl ${badge.bg} ${badge.color} flex items-center justify-center shadow-sm group-hover:shadow-md transition-all`}>
-                <badge.icon className="h-8 w-8" />
-              </div>
-              <span className="text-[10px] font-bold text-gray-600 text-center leading-tight group-hover:text-emerald-600 transition-colors">
-                {badge.name}
-              </span>
-            </motion.div>
-          ))}
+          {loading ? (
+            <div className="col-span-full py-8 flex justify-center">
+              <span className="text-sm font-medium text-gray-400">Loading achievements...</span>
+            </div>
+          ) : unlockedBadges.length > 0 ? (
+            unlockedBadges.map((badge, i) => (
+              <motion.div
+                key={badge.id}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ y: -5, scale: 1.1 }}
+                onClick={() => setSelectedBadge(badge)}
+                className="flex flex-col items-center gap-2 group cursor-pointer relative"
+              >
+                <div className={`h-16 w-16 rounded-2xl ${badge.bg} ${badge.color} flex items-center justify-center shadow-sm group-hover:shadow-md transition-all`}>
+                  <badge.icon className="h-8 w-8" />
+                </div>
+                <span className="text-[10px] font-bold text-gray-600 text-center leading-tight group-hover:text-emerald-600 transition-colors">
+                  {badge.name}
+                </span>
+              </motion.div>
+            ))
+          ) : (
+            <div className="col-span-full py-8 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+              <p className="text-sm text-gray-500">Your achievements will appear here. Start healthy habits to earn your first badge!</p>
+            </div>
+          )}
         </div>
       </div>
 

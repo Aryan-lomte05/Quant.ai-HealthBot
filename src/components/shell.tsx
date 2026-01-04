@@ -24,6 +24,7 @@ import {
 import { useState, useEffect } from "react";
 import { FloatingSOS } from "./emergency/FloatingSOS";
 import { clearAuth } from "@/lib/auth";
+import { useUser } from "@/context/UserContext";
 
 // Grouped Routes Configuration
 const routeGroups = [
@@ -77,6 +78,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [pathname]);
+
+  const { user, loading } = useUser();
+
+  const getInitials = (name: string) => {
+    if (!name) return "JD";
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
@@ -291,11 +299,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                       whileHover={{ scale: 1.1 }}
                       className="h-11 w-11 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-emerald-500/30"
                     >
-                      JD
+                      {loading ? '...' : getInitials(user?.name || 'Guest')}
                     </motion.div>
                     <div className="flex-1">
-                      <p className="font-semibold text-sm text-emerald-900 group-hover:text-emerald-700 transition-colors">John Doe</p>
-                      <p className="text-xs text-emerald-600/70">Premium Member</p>
+                      <p className="font-semibold text-sm text-emerald-900 group-hover:text-emerald-700 transition-colors">
+                        {loading ? 'Loading...' : (user?.name || 'Guest User')}
+                      </p>
+                      <p className="text-xs text-emerald-600/70">{user?.phone || 'Not Logged In'}</p>
                     </div>
                   </Link>
                   <Link href="/settings">

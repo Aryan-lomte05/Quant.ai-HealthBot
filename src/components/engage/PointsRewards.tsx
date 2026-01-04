@@ -4,11 +4,18 @@ import { motion } from "framer-motion";
 import { CopyPlus, Gift, ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { Modal } from "@/components/ui/Modal";
+import { useUser } from "@/context/UserContext";
 
 export function PointsRewards() {
+    const { user, loading } = useUser();
     const [showRedeemModal, setShowRedeemModal] = useState(false);
     const [isRedeeming, setIsRedeeming] = useState(false);
     const [redeemSuccess, setRedeemSuccess] = useState(false);
+
+    const points = user?.points || 0;
+    const nextRewardPoints = 3000;
+    const progress = Math.min(100, Math.floor((points / nextRewardPoints) * 100));
+    const pointsNeeded = Math.max(0, nextRewardPoints - points);
 
     const handleRedeem = () => {
         setIsRedeeming(true);
@@ -38,7 +45,9 @@ export function PointsRewards() {
                     <div className="flex items-start justify-between mb-8">
                         <div>
                             <p className="text-emerald-100 text-sm font-medium mb-1">Total Points</p>
-                            <h3 className="text-4xl font-bold tracking-tight">2,450</h3>
+                            <h3 className="text-4xl font-bold tracking-tight">
+                                {loading ? '...' : points.toLocaleString()}
+                            </h3>
                         </div>
                         <div className="bg-white/20 backdrop-blur-md p-2 rounded-xl">
                             <Gift className="h-6 w-6 text-white" />
@@ -67,14 +76,14 @@ export function PointsRewards() {
                         <div className="w-full bg-black/20 rounded-full h-2 overflow-hidden">
                             <motion.div
                                 initial={{ width: 0 }}
-                                animate={{ width: "81%" }}
+                                animate={{ width: `${progress}%` }}
                                 transition={{ duration: 1.5, ease: "easeOut" }}
                                 className="h-full bg-yellow-400"
                             />
                         </div>
                         <div className="flex justify-between text-xs text-emerald-100 font-medium">
-                            <span>81% to next reward</span>
-                            <span>550 pts needed</span>
+                            <span>{progress}% to next reward</span>
+                            <span>{pointsNeeded.toLocaleString()} pts needed</span>
                         </div>
 
                         <motion.button

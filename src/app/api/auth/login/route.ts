@@ -87,6 +87,12 @@ export async function POST(request: Request) {
             gender: user.gender,
             location: user.location,
             isVerified: user.isVerified,
+            points: user.points,
+            badges: user.badges,
+            bloodGroup: user.bloodGroup,
+            allergies: user.allergies,
+            conditions: user.conditions,
+            emergencyContact: user.emergencyContact,
             createdAt: user.createdAt,
         };
 
