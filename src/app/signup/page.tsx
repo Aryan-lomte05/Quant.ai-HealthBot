@@ -121,7 +121,7 @@ export default function SignupPage() {
                 age: parseInt(formData.age),
                 weight: parseFloat(formData.weight),
                 height: parseFloat(formData.height),
-                gender: formData.gender as 'male' | 'female' | 'other',
+                gender: formData.gender.toLowerCase() as 'male' | 'female' | 'other',
                 location: formData.location
             };
 
