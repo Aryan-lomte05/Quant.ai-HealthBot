@@ -1,4 +1,4 @@
-# SwasthyaSakha — a multilingual health companion grounded in real clinical reference data
+# SwasthyaSakha: a multilingual health companion grounded in real clinical reference data
 
 **Health guidance in six Indian languages, answered from scraped and quality-audited NHS reference material
 rather than from model memory, with a 3D conversational doctor and audio for users who cannot read comfortably.**
@@ -12,7 +12,7 @@ rather than from model memory, with a 3D conversational doctor and audio for use
 
 A health chatbot that answers from an LLM's memory is a liability: it will produce a confident dosage for a
 drug it has half-remembered. SwasthyaSakha instead treats clinical reference text as the source of truth. A
-scraping pipeline pulls condition and medicine pages from **NHS.uk**, and — importantly — a separate audit pass
+scraping pipeline pulls condition and medicine pages from **NHS.uk**, and, importantly, a separate audit pass
 grades every scraped entry and records where the extraction is weak.
 
 That audit (`medicine-audit-report.json`) is the part worth looking at. It flags entries as
@@ -36,7 +36,7 @@ export type Language = 'english' | 'hindi' | 'marathi' | 'telugu' | 'tamil' | 'k
 
 825 lines of translation keys covering the whole interface, not just the chat window. Paired with
 text-to-speech, so a user who cannot read comfortably in any of these scripts can still use the product by
-listening — which is the actual accessibility barrier for a large part of the intended audience, and is usually
+listening, which is the actual accessibility barrier for a large part of the intended audience, and is usually
 the first thing dropped from a hackathon build.
 
 ## What is in it
@@ -57,7 +57,7 @@ the first thing dropped from a hackathon build.
 ### API
 
 `/api/chat/web`, `/api/diseases`, `/api/medicines`, `/api/symptoms`, `/api/tts`, `/api/community`,
-`/api/user`, and a phone-based auth flow (`send-otp`, `verify-otp`, `login`, `signup`) using JWT and bcrypt —
+`/api/user`, and a phone-based auth flow (`send-otp`, `verify-otp`, `login`, `signup`) using JWT and bcrypt,
 OTP rather than passwords, because the target user is on a phone and will not maintain a password.
 
 ### The data pipeline
@@ -110,7 +110,7 @@ A hackathon-winning prototype, in active shape but not a medical product.
 
 ## Team
 
-**HealthFourUs** — Aryan Lomte, Shivam Verma, Aditya Yadav, Sujal Thakkar. First prize, Periscope 2025.
+**HealthFourUs**: Aryan Lomte, Shivam Verma, Aditya Yadav, Sujal Thakkar. First prize, Periscope 2025.
 
 Related: the multi-agent medical backend lives in
 [Agentfoundry](https://github.com/Aryan-lomte05/Agentfoundry).
